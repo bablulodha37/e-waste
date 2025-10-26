@@ -1,0 +1,229 @@
+/* Home.css */
+
+.home-container {
+    font-family: Arial, sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* --- HERO SECTION --- */
+.hero-section {
+    background-image: url('https://via.placeholder.com/1500x600/6A8E40/ffffff?text=Ecosaathi+Hero'); /* Replace with a real eco-friendly image */
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+    position: relative;
+}
+ 
+/* NOTE: These navbar styles might conflict with styles in NavBar.css if imported globally. */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for readability */
+}
+
+.logo {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+
+.nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.nav-links li {
+    margin-left: 30px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #a7d97e; /* Lighter green on hover */
+}
+/* --- END NAVBAR STYLES --- */
+
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 50px;
+}
+
+.hero-content h1 {
+    font-size: 3.5em;
+    margin-bottom: 20px;
+    color: #a7d97e;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.hero-content p {
+    font-size: 1.3em;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: #6A8E40; /* Eco-friendly green */
+    color: white;
+    padding: 15px 30px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #557233; /* Darker green on hover */
+}
+
+/* --- UPDATED FEATURES SECTION (Grid Layout for 6 cards) --- */
+.features-section {
+    display: grid;
+    /* 3 columns of equal size on large screens */
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 30px; 
+    
+    padding: 60px 20px;
+    background-color: #f8f8f8;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.feature-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Slightly stronger shadow on hover */
+}
+
+.feature-card h3 {
+    color: #6A8E40;
+    font-size: 1.5em; 
+    margin-bottom: 15px;
+}
+
+.feature-card p {
+    font-size: 1em; 
+    line-height: 1.6;
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    color: #4CAF50;
+    margin-bottom: 15px;
+    /* Visual block for the image placeholder */
+    height: 60px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e0f2d4; 
+    border-radius: 5px;
+    font-weight: bold;
+}
+/* --- END UPDATED FEATURES SECTION --- */
+
+
+/* --- CALL TO ACTION --- */
+.call-to-action {
+    text-align: center;
+    padding: 80px 20px;
+    background-color: #e0f2d4; /* Light green background */
+    color: #333;
+}
+
+.call-to-action h2 {
+    font-size: 2.8em;
+    margin-bottom: 20px;
+    color: #6A8E40;
+}
+
+.call-to-action p {
+    font-size: 1.2em;
+    margin-bottom: 40px;
+}
+
+.cta-button.secondary {
+    background-color: #4CAF50; /* Another shade of green */
+}
+
+.cta-button.secondary:hover {
+    background-color: #45a049;
+}
+
+/* --- FOOTER --- */
+.footer {
+    text-align: center;
+    padding: 30px 20px;
+    color: white;
+    background-color: #333;
+    font-size: 0.9em;
+}
+
+/* --- RESPONSIVE ADJUSTMENTS --- */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        padding: 15px 20px;
+        position: relative;
+    }
+
+    .nav-links {
+        margin-top: 15px;
+        flex-direction: column;
+    }
+
+    .nav-links li {
+        margin: 10px 0;
+    }
+
+    .hero-content h1 {
+        font-size: 2.5em;
+    }
+
+    .hero-content p {
+        font-size: 1em;
+    }
+
+    /* ✅ UPDATED: Features switch to 1 column on small screens */
+    .features-section {
+        grid-template-columns: 1fr; 
+        padding: 40px 15px;
+        gap: 20px;
+    }
+
+    .feature-card {
+        max-width: 100%; /* Ensure card takes full width */
+    }
+
+    .call-to-action h2 {
+        font-size: 2em;
+    }
+}

@@ -1,0 +1,95 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #007bff, #00b4d8);
+  color: white;
+  padding: 1rem 1rem;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  
+}
+
+.nav-links {
+  width: 500px;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+/* Base style for all links */
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  transition: all 0.3s ease; /* Added for smoother effects */
+}
+
+/* Standard link hover effect (Services, About, Contact, Login, Register) */
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  background: white;
+  left: 0;
+  bottom: -4px;
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* ------------------------------------------------------------------ */
+
+/* ✅ STYLES FOR ADMIN AND PROFILE LINKS */
+/* We'll give these a subtle background and padding to make them look like chips/badges */
+.nav-links a[href*="/profile"],
+.nav-links a[href="/admin"] {
+    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white background */
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+/* Remove the underline hover effect for these specific links to use the background hover instead */
+.nav-links a[href*="/profile"]::after,
+.nav-links a[href="/admin"]::after {
+    display: none;
+}
+
+/* Hover effect for Profile and Admin links */
+.nav-links a[href*="/profile"]:hover,
+.nav-links a[href="/admin"]:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px); /* Slight lift on hover */
+}
+
+/* ------------------------------------------------------------------ */
+
+.logout-btn {
+  background: white;
+  color: #007bff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer; /* Ensures it looks clickable */
+  transition: all 0.2s ease; /* Added for smoother hover/scale */
+}
+
+.logout-btn:hover {
+  background: #e6f0ff;
+  transform: scale(1.05);
+}

@@ -1,0 +1,52 @@
+.container {
+  max-width: 420px;
+  margin: 4rem auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease;
+}
+
+h2 {
+  text-align: center;
+  color: #6f42c1;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+form input {
+  width: 90%;
+  padding: 10px 12px;
+  margin-top: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+form input:focus {
+  border-color: #6f42c1;
+  box-shadow: 0 0 6px rgba(111, 66, 193, 0.3);
+  outline: none;
+}
+
+form button {
+  width: 30%;
+  margin-top: 18px;
+  background: linear-gradient(90deg, #6f42c1, #b689f8);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(111, 66, 193, 0.3);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

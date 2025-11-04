@@ -1,10 +1,12 @@
+/* src/css/NavBar.css */
+
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(90deg, #007bff, #00b4d8);
+  background: #023117;
   color: white;
-  padding: 1rem 1rem;
+  padding: 0.4rem 1rem;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
@@ -15,7 +17,7 @@
   font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: 1px;
-  
+  color: white;
 }
 
 .nav-links {
@@ -23,6 +25,8 @@
   display: flex;
   align-items: center;
   gap: 1.2rem;
+  /* CHANGE: justify-content ko flex-end kar diya */
+  justify-content: flex-end; 
 }
 
 /* Base style for all links */
@@ -31,7 +35,7 @@
   text-decoration: none;
   font-weight: 500;
   position: relative;
-  transition: all 0.3s ease; /* Added for smoother effects */
+  transition: all 0.3s ease; 
 }
 
 /* Standard link hover effect (Services, About, Contact, Login, Register) */
@@ -53,26 +57,23 @@
 /* ------------------------------------------------------------------ */
 
 /* ✅ STYLES FOR ADMIN AND PROFILE LINKS */
-/* We'll give these a subtle background and padding to make them look like chips/badges */
 .nav-links a[href*="/profile"],
 .nav-links a[href="/admin"] {
-    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white background */
-    padding: 6px 10px;
-    border-radius: 20px;
-    font-weight: 600;
+  background-color: rgba(255, 255, 255, 0.2); 
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-weight: 600;
 }
 
-/* Remove the underline hover effect for these specific links to use the background hover instead */
 .nav-links a[href*="/profile"]::after,
 .nav-links a[href="/admin"]::after {
-    display: none;
+  display: none;
 }
 
-/* Hover effect for Profile and Admin links */
 .nav-links a[href*="/profile"]:hover,
 .nav-links a[href="/admin"]:hover {
-    background-color: rgba(255, 255, 255, 0.4);
-    transform: translateY(-1px); /* Slight lift on hover */
+  background-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px); 
 }
 
 /* ------------------------------------------------------------------ */
@@ -85,11 +86,14 @@
   border-radius: 8px;
   font-weight: 600;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  cursor: pointer; /* Ensures it looks clickable */
-  transition: all 0.2s ease; /* Added for smoother hover/scale */
+  cursor: pointer; 
+  transition: all 0.2s ease; 
 }
 
 .logout-btn:hover {
   background: #e6f0ff;
   transform: scale(1.05);
 }
+
+/* IMPORTANT: The margin-left: auto rule for /login is REMOVED from CSS
+   and applied conditionally in the JS file instead. */

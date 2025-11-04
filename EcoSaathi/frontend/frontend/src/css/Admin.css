@@ -13,6 +13,7 @@
     margin-bottom: 1.5rem;
 }
 
+/* --- User Table Styles (Existing) --- */
 .user-table {
     width: 100%;
     border-collapse: collapse;
@@ -52,4 +53,114 @@
 
 .verify-btn:hover {
     background-color: #218838;
+}
+
+/* --- NEW: Admin Tabs --- */
+.admin-tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+}
+
+.admin-tabs button {
+    padding: 12px 20px;
+    border: none;
+    border-bottom: 3px solid transparent;
+    background: none;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 500;
+    color: #555;
+    transition: all 0.3s;
+}
+
+.admin-tabs button.active {
+    color: #007bff;
+    border-bottom: 3px solid #007bff;
+    font-weight: bold;
+}
+
+.tab-content {
+    padding: 10px 0;
+}
+
+/* --- NEW: Request Management Layout --- */
+.request-management-section {
+    padding: 10px;
+}
+
+.requests-and-form {
+    display: flex;
+    gap: 25px;
+    margin-top: 15px;
+}
+
+.requests-list {
+    flex: 3; /* Takes up more space */
+    overflow-x: auto;
+}
+
+/* --- Request Table Styles --- */
+.request-table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    background-color: white;
+}
+
+.request-table th, .request-table td {
+    border: 1px solid #eee;
+    padding: 10px;
+    text-align: left;
+    font-size: 0.9em;
+}
+
+.request-table th {
+    background-color: #f0f0f0;
+}
+
+/* Highlight for selected request row */
+.request-table .selected-row {
+    background-color: #e6f7ff;
+    transition: background-color 0.2s;
+}
+
+/* --- Schedule Form Card --- */
+.schedule-form-card {
+    flex: 1; /* Takes up less space */
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.schedule-form-card h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #007bff;
+}
+
+.schedule-form-card form input[type="datetime-local"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.schedule-form-card button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.schedule-form-card button:hover:not(:disabled) {
+    background-color: #0056b3;
 }

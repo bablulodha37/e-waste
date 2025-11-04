@@ -1,52 +1,70 @@
+/* EditProfile.css */
 .container {
-  max-width: 420px;
-  margin: 4rem auto;
-  padding: 2rem;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  animation: fadeIn 0.5s ease;
+    max-width: 420px;
+    margin: 4rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s ease;
 }
 
 h2 {
-  text-align: center;
-  color: #6f42c1;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
+    text-align: center;
+    color: #6f42c1;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
 }
 
-form input {
-  width: 90%;
-  padding: 10px 12px;
-  margin-top: 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  transition: all 0.2s ease;
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Ensures inputs and button are centered */
 }
 
-form input:focus {
-  border-color: #6f42c1;
-  box-shadow: 0 0 6px rgba(111, 66, 193, 0.3);
-  outline: none;
+form input,
+form textarea /* ✅ NEW: Added textarea styling for the address field */
+{
+    width: 90%;
+    padding: 10px 12px;
+    margin-top: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    box-sizing: border-box; /* Ensures the width is calculated correctly */
+    font-family: 'Poppins', sans-serif; /* Keep font consistent */
+}
+
+form textarea {
+    resize: vertical; /* Allows users to resize vertically if needed */
+    min-height: 80px; /* Minimum height for the address box */
+}
+
+form input:focus,
+form textarea:focus {
+    border-color: #6f42c1;
+    box-shadow: 0 0 6px rgba(111, 66, 193, 0.3);
+    outline: none;
 }
 
 form button {
-  width: 30%;
-  margin-top: 18px;
-  background: linear-gradient(90deg, #6f42c1, #b689f8);
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 6px;
-  font-weight: 600;
+    width: 60%; /* Adjusted from 30% for a better button size in the form */
+    margin-top: 25px; /* Increased top margin for separation */
+    background: linear-gradient(90deg, #6f42c1, #b689f8);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 1.1em;
 }
 
-form button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 3px 8px rgba(111, 66, 193, 0.3);
+form button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(111, 66, 193, 0.4);
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }

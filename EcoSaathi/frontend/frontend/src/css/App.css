@@ -1,7 +1,7 @@
 /* 🌿 Global Styling */
 body {
   font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg, #e8f0ff, #f5f7fa);
+  background: #cee9dfad;
   margin: 0;
   min-height: 100vh;
   color: #333;
@@ -10,15 +10,92 @@ body {
 
 .container {
   box-sizing: border-box;
-  padding: 1rem;
+  padding: 2rem; /* Increased padding for better spacing */
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 button {
   cursor: pointer;
   transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  background-color: #ccc !important;
+}
+
+/* --- Global Form Element Styling --- */
+
+form {
+  padding: 20px;
+  background:#68777633;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form select,
+form textarea {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 1em;
+  transition: border-color 0.3s;
+}
+
+form input:focus,
+form textarea:focus,
+form select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+form button[type="submit"] {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 1.1em;
+  margin-top: 10px;
+}
+
+form button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+
+/* --- Global Utility Classes --- */
+
+/* Error Messages */
+.error, .error-msg, .error-text {
+  color: #dc3545; /* Red */
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 15px;
+  text-align: center;
+}
+
+/* Success Messages */
+.success-msg {
+  color: #155724; /* Dark Green */
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 15px;
+  text-align: center;
 }

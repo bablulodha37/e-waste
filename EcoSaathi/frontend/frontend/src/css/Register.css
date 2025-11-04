@@ -1,36 +1,49 @@
+/* src/css/Register.css */
 .container {
-  max-width: 380px;
-  margin: 4rem auto;
-  padding: 2rem;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  animation: slideUp 0.5s ease;
+    max-width: 700px;
+    margin: 4rem auto;
+    padding: 2rem;
+    background: #d8e6dc;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    animation: slideUp 0.5s ease;
 }
 
 h2 {
-  text-align: center;
-  color: #198754;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
+    text-align: center;
+    color: #198754; /* Green theme */
+    font-weight: 700;
+    margin-bottom: 1.5rem;
 }
 
-form input {
+form input,
+form textarea /* ✅ NEW: Added styling for textarea (Pickup Address) */
+{
     width: 80%; 
     display: block; 
     margin: 12px auto 0 auto; 
-
+    
     padding: 10px 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
     transition: all 0.2s ease;
+    box-sizing: border-box; /* Ensures width: 80% includes padding */
+    font-family: inherit; /* Inherit font for consistency */
+    font-size: 1em;
 }
 
-form input:focus {
-  border-color: #198754;
-  box-shadow: 0 0 6px rgba(25, 135, 84, 0.3);
-  outline: none;
+form textarea {
+    resize: vertical; /* Allows vertical resizing */
+    min-height: 80px; /* Minimum height for the address box */
 }
+
+form input:focus,
+form textarea:focus {
+    border-color: #198754;
+    box-shadow: 0 0 6px rgba(25, 135, 84, 0.3);
+    outline: none;
+}
+
 form button {
     width: 80%; 
     display: block; 
@@ -39,24 +52,45 @@ form button {
     background: linear-gradient(90deg, #198754, #34d399);
     color: white;
     border: none;
-    padding: 10px;
+    padding: 12px; /* Increased padding slightly for better feel */
     border-radius: 6px;
     font-weight: 600;
+    font-size: 1.1em;
 }
 
-form button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 3px 8px rgba(25, 135, 84, 0.3);
+form button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(25, 135, 84, 0.4); /* Increased shadow on hover */
 }
 
-.error {
-  color: #ff4d4f;
-  text-align: center;
-  margin-top: 10px;
-  font-size: 0.9rem;
+/* --- Error/Success Messages (Integrated) --- */
+.error, .error-msg {
+    width: 80%;
+    margin: 15px auto 0 auto; /* Center like other elements */
+    padding: 8px;
+    background-color: #f0fdf4; /* Very light green background */
+    color: #198754;
+    border: 1px solid #c8e6cb;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+}
+
+.success-msg {
+    width: 80%;
+    margin: 15px auto 0 auto;
+    padding: 8px;
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 0.95rem;
+    box-sizing: border-box;
 }
 
 @keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }

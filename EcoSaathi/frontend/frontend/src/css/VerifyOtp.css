@@ -1,0 +1,60 @@
+/* src/css/VerifyOtp.css */
+
+.verify-otp-container {
+    max-width: 450px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.verify-otp-container h2 {
+    color: #007bff; /* Primary brand color */
+    margin-bottom: 20px;
+}
+
+.email-display {
+    font-size: 1.1em;
+    margin: 15px 0;
+    color: #333;
+}
+
+.verify-otp-container form input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1.1em;
+    text-align: center; /* OTP field is centered */
+    letter-spacing: 5px; /* Spacing for OTP digits */
+}
+
+.verify-otp-container button {
+    width: 100%;
+    padding: 12px;
+    background-color: #28a745; /* Success color for verification */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.verify-otp-container button:hover:not(:disabled) {
+    background-color: #218838;
+}
+
+.verify-otp-container button:disabled {
+    background-color: #90ee90;
+    cursor: not-allowed;
+}
+
+.note {
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #666;
+}

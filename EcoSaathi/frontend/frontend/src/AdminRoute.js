@@ -11,8 +11,10 @@ import { Navigate } from 'react-router-dom';
 export default function AdminRoute({ children }) {
     const user = JSON.parse(localStorage.getItem('user'));
     
-    // Check if the user is logged in AND if they have the isAdmin flag set to true
-    if (!user || !user.isAdmin) {
+    //  Verify if the user exists AND if their role is exactly "ADMIN"
+    // The backend now returns the role as a string ("ADMIN" or "USER").
+    if (!user || user.role !== 'ADMIN') {
+        
         // You can use a more specific alert if needed
         alert("Access Denied. Administrator privileges required.");
         

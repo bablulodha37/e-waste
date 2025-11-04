@@ -27,7 +27,7 @@ public class DataLoader {
                 admin.setPhone("9876543210");
 
                 userRepository.save(admin);
-                System.out.println("✅ Admin User created with email: admin@ecosaathi.com");
+                System.out.println("Admin User created with email: admin@ecosaathi.com");
             }
         };
     }

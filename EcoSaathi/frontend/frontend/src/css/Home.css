@@ -1,229 +1,288 @@
-/* Home.css */
-
-.home-container {
-    font-family: Arial, sans-serif;
-    color: #333;
-    margin: 0;
-    padding: 0;
+/* --- HERO BANNER WITH ENVIRONMENT IMAGE AND DIALOGUE --- */
+.hero-banner {
+  position: relative;
+  width: 100%;
+  height: 70vh;
+  overflow: hidden;
 }
 
-/* --- HERO SECTION --- */
-.hero-section {
-    background-image: url('https://via.placeholder.com/1500x600/6A8E40/ffffff?text=Ecosaathi+Hero'); /* Replace with a real eco-friendly image */
-    background-size: cover;
-    background-position: center;
-    color: white;
-    text-align: center;
-    padding: 100px 20px;
-    position: relative;
-}
- 
-/* NOTE: These navbar styles might conflict with styles in NavBar.css if imported globally. */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 40px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for readability */
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(65%);
+  transition: transform 5s ease;
 }
 
-.logo {
-    font-size: 1.8em;
-    font-weight: bold;
-    color: white;
-    text-decoration: none;
+.hero-banner:hover .hero-image {
+  transform: scale(1.05);
 }
 
-.nav-links {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-}
-
-.nav-links li {
-    margin-left: 30px;
-}
-
-.nav-links a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s ease;
-}
-
-.nav-links a:hover {
-    color: #a7d97e; /* Lighter green on hover */
-}
-/* --- END NAVBAR STYLES --- */
-
-
-.hero-content {
-    max-width: 800px;
-    margin: 0 auto;
-    padding-top: 50px;
-}
-
-.hero-content h1 {
-    font-size: 3.5em;
-    margin-bottom: 20px;
-    color: #a7d97e;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-}
-
-.hero-content p {
-    font-size: 1.3em;
-    margin-bottom: 30px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-}
-
-.cta-button {
-    display: inline-block;
-    background-color: #6A8E40; /* Eco-friendly green */
-    color: white;
-    padding: 15px 30px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-size: 1.1em;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-}
-
-.cta-button:hover {
-    background-color: #557233; /* Darker green on hover */
-}
-
-/* --- UPDATED FEATURES SECTION (Grid Layout for 6 cards) --- */
-.features-section {
-    display: grid;
-    /* 3 columns of equal size on large screens */
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 30px; 
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  padding: 20px;
+  
+  /* 🌟 THE BLENDING EFFECT IS HERE 🌟 */
+  /* This creates a dark overlay for text readability AND a gradient at the bottom for blending */
+  background: linear-gradient(
+    /* 1. Dark overlay for text at the top 
+    (from transparent dark to less transparent dark) */
+    rgba(0, 0, 0, 0.4), 
+    rgba(0, 0, 0, 0.2), 
     
-    padding: 60px 20px;
-    background-color: #f8f8f8;
+    /* 2. Transition to the light-bg color at the very bottom (last 15% of the height) */
+    transparent 85%,
+    #385d2b 100% 
+  );
+}
+
+.hero-dialogue {
+  font-size: 2em;
+  font-weight: 600;
+  max-width: 800px;
+  line-height: 1.5;
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-dialogue {
+    font-size: 1.4em;
+  }
+}
+
+/* --- COLOR VARIABLES (Updated light background) --- */
+:root {
+  --primary: #4caf50;
+  --primary-dark: #45a049;
+  --accent: #6a8e40;
+  /* Key change: Using a very light green */
+  --light-bg: #f3f9f1; 
+  --text: wheat;
+  --text-light: #555;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+.home-container {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+}
+
+/* --- IMAGE-FOCUSED INFO SECTION (Updated background and padding) --- */
+.info-cards-section {
+  padding: 20px 20px; 
+  background-color: #023220e8; /* This must match the last color stop in the gradient */
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* We need an inner container to keep the content centered and constrained */
+.info-cards-section > h2,
+.info-cards-section > p,
+.info-cards-section > section {
     max-width: 1200px;
-    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
-.feature-card {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    text-align: center;
-    transition: transform 0.3s ease;
+
+.info-cards-section h2 {
+  color: var(--primary);
+  font-size: 2.5em;
+  margin-bottom: 10px;
 }
 
-.feature-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Slightly stronger shadow on hover */
+.section-subtitle {
+  font-size: 1.2em;
+  color:#e6f0ff;
+  margin-bottom: 60px;
 }
 
-.feature-card h3 {
-    color: #6A8E40;
-    font-size: 1.5em; 
-    margin-bottom: 15px;
+.info-card {
+  display: flex;
+  align-items: center;
+  margin-bottom: 80px;
+  gap: 40px;
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  /* Added a background and padding to the card itself to lift it off the background */
+  background-color: #8c9f90; 
+  padding: 30px;
+  border-radius: 10px;
 }
 
-.feature-card p {
-    font-size: 1em; 
-    line-height: 1.6;
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px var(--shadow);
 }
 
-.feature-icon {
-    font-size: 2.5rem;
-    color: #4CAF50;
-    margin-bottom: 15px;
-    /* Visual block for the image placeholder */
-    height: 60px; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #e0f2d4; 
-    border-radius: 5px;
-    font-weight: bold;
+.info-image-container {
+  position: relative;
+  flex: 1;
+  min-width: 45%;
+  box-shadow: 0 10px 25px var(--shadow);
+  border-radius: 10px;
+  overflow: hidden;
 }
-/* --- END UPDATED FEATURES SECTION --- */
 
+.info-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+  border-radius: 10px;
+}
+
+.info-card:hover .info-image-container img {
+  transform: scale(1.05);
+}
+
+.info-content {
+  flex: 1;
+  min-width: 45%;
+  padding: 20px 0;
+}
+
+.info-content h3 {
+  color: #203805;
+  font-size: 1.8em;
+  margin-bottom: 20px;
+}
+
+.info-content p {
+  font-size: 1.1em;
+  line-height: 1.7;
+  color: #000000;
+}
+
+
+
+/* --- LAYOUT SWITCHING --- */
+.right-image-layout {
+  flex-direction: row-reverse;
+}
 
 /* --- CALL TO ACTION --- */
 .call-to-action {
-    text-align: center;
-    padding: 80px 20px;
-    background-color: #e0f2d4; /* Light green background */
-    color: #333;
+  text-align: center;
+  padding: 80px 20px;
+  /* Kept this section separate with a slightly darker background */
+  background-color: #007070; 
+  color: var(--text);
+  border-top: 1px solid #ddd;
 }
 
 .call-to-action h2 {
-    font-size: 2.8em;
-    margin-bottom: 20px;
-    color: #6A8E40;
+  font-size: 2.2em;
+  margin-bottom: 20px;
+  color: #f7e8e8;
+  animation: slideInFromBottom 1s ease-out forwards;
+}
+@keyframes slideInFromBottom {
+    0% {
+        /* Animation ke shuru mein (at the start) */
+        transform: translateY(30px); /* Element ko 30px neeche shift kiya */
+        opacity: 0; /* Usko poora chhipa diya */
+    }
+    100% {
+        /* Animation ke ant (at the end) mein */
+        transform: translateY(0); /* Uski asli jagah par wapas le aaye */
+        opacity: 1; /* Usko poora dikha diya */
+    }
 }
 
 .call-to-action p {
-    font-size: 1.2em;
-    margin-bottom: 40px;
+  font-size: 1.2em;
+  margin-bottom: 40px;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 15px 30px;
+  border-radius: 50px;
+  color: #fff;
+  font-size: 1.1em;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .cta-button.secondary {
-    background-color: #4CAF50; /* Another shade of green */
+  background-color: var(--primary);
 }
 
 .cta-button.secondary:hover {
-    background-color: #45a049;
+  background-color: var(--primary-dark);
+  transform: scale(1.05);
 }
 
 /* --- FOOTER --- */
 .footer {
-    text-align: center;
-    padding: 30px 20px;
-    color: white;
-    background-color: #333;
-    font-size: 0.9em;
+  text-align: center;
+  padding: 30px 20px;
+  color: white;
+  background-color: #333;
+  font-size: 0.9em;
 }
 
 /* --- RESPONSIVE ADJUSTMENTS --- */
-@media (max-width: 768px) {
-    .navbar {
-        flex-direction: column;
-        padding: 15px 20px;
-        position: relative;
-    }
+@media (max-width: 992px) {
+  /* Resetting margin and padding for info-cards-section h2/p for mobile */
+  .info-cards-section > h2,
+  .info-cards-section > p {
+      padding-left: 0;
+      padding-right: 0;
+  }
 
-    .nav-links {
-        margin-top: 15px;
-        flex-direction: column;
-    }
+  .info-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px; /* Reduced padding on card for smaller screens */
+  }
 
-    .nav-links li {
-        margin: 10px 0;
-    }
+  .right-image-layout {
+    flex-direction: column;
+  }
 
-    .hero-content h1 {
-        font-size: 2.5em;
-    }
+  .info-image-container,
+  .info-content {
+    min-width: 100%;
+  }
 
-    .hero-content p {
-        font-size: 1em;
-    }
+  .info-image-container {
+    margin-bottom: 20px;
+  }
 
-    /* ✅ UPDATED: Features switch to 1 column on small screens */
-    .features-section {
-        grid-template-columns: 1fr; 
-        padding: 40px 15px;
-        gap: 20px;
-    }
+  .info-step-number {
+    top: 10px;
+    right: 10px;
+    left: auto;
+  }
 
-    .feature-card {
-        max-width: 100%; /* Ensure card takes full width */
-    }
-
-    .call-to-action h2 {
-        font-size: 2em;
-    }
+  .info-cards-section h2 {
+    font-size: 2em;
+  }
 }

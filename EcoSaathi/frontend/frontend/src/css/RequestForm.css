@@ -1,0 +1,181 @@
+/* src/css/RequestForm.css */
+
+/* --- GENERAL FORM CONTAINER STYLES --- */
+.request-form-card {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 30px auto;
+    text-align: left;
+    border-left: 5px solid #0b8457; /* Accent color */
+}
+
+.request-form-card h3 {
+    color: #0b8457;
+    border-bottom: 2px solid #e0f2f1;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.request-form-card label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #084c26;
+}
+
+/* Common input/select/textarea style */
+.request-form-card input[type="text"],
+.request-form-card select,
+.request-form-card textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #aaa; /* Update from previous #ccc */
+    border-radius: 6px;
+    box-sizing: border-box; 
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.request-form-card textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* --- ADDRESS AUTOCOMPLETE STYLES (OSM/Nominatim) --- */
+
+.autocomplete-container {
+    /* Suggestions list को इनपुट के नीचे ठीक से रखने के लिए */
+    position: relative; 
+    width: 100%;
+    /* Ensure no double margin */
+    margin-bottom: 0; 
+}
+
+/* The actual input field inside the component */
+.autocomplete-container .address-input {
+    width: 100%;
+    z-index: 2; 
+    position: relative;
+    /* Overrides the default input margin for cleaner layout */
+    margin: 0 0 10px 0; 
+}
+
+/* Suggestions List Container */
+.suggestions-list {
+    position: absolute; 
+    top: 100%; /* इनपुट के ठीक नीचे शुरू करें */
+    left: 0;
+    right: 0;
+    border: 1px solid #ccc;
+    border-top: none;
+    background-color: white;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000; /* सुनिश्चित करें कि यह बाकी तत्वों के ऊपर दिखाई दे */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: left; 
+}
+
+.suggestions-list li {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: #333;
+}
+
+.suggestions-list li:hover {
+    background-color: #e0f2f1;
+    color: #0b8457;
+}
+
+.suggestion-status {
+    padding: 5px 10px;
+    font-size: 12px;
+    color: #0b8457;
+    margin-top: 5px;
+}
+
+/* --- PHOTO UPLOAD STYLES --- */
+
+.photo-upload-section {
+    margin-top: 25px;
+    padding: 15px;
+    border: 1px dashed #0b8457;
+    border-radius: 8px;
+    background-color: #f6fff9;
+}
+
+.photo-hint {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.photo-inputs {
+    /* Desktop: 2 columns; Mobile: 1 column */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+    gap: 20px;
+}
+
+.file-input-group {
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+.file-input-group label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #084c26;
+    margin-top: 0;
+}
+
+.file-input-group input[type="file"] {
+    width: 100%;
+    margin: 5px 0; 
+    padding: 5px 0;
+    border: none;
+    box-shadow: none;
+}
+
+.file-name-display {
+    display: block;
+    font-size: 12px;
+    color: #0b8457;
+    margin-top: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* --- MESSAGE STYLES --- */
+
+.success-msg {
+    color: #1a7e44;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.error-msg {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 15px;
+    font-weight: bold;
+}

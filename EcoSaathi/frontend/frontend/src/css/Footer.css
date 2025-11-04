@@ -1,0 +1,130 @@
+/* -------------------------------------- */
+/* --- FOOTER CONTAINER & LAYOUT --- */
+/* -------------------------------------- */
+.footer-container {
+    background-color: #333; /* Dark background */
+    color: #fff; /* White text */
+    padding: 40px 20px;
+    font-family: Arial, sans-serif;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap; 
+    gap: 30px;
+    padding-bottom: 20px; 
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 200px; 
+}
+
+/* --- TEXT STYLES --- */
+.footer-section h3 {
+    color: #4caf50; /* Primary green color for headings */
+    margin-bottom: 20px;
+    font-size: 1.4em;
+}
+
+.footer-section p {
+    font-size: 0.95em;
+    line-height: 1.6;
+    color: #ccc; 
+    margin-bottom: 10px;
+}
+
+/* -------------------------------------- */
+/* ✅ NEW: DESKTOP ALIGNMENT FIXES (Applies globally) */
+/* -------------------------------------- */
+
+/* Social Section: Ensures alignment for the 'Connect' heading and icons */
+.footer-section.social {
+    text-align: center; /* Centers the 'Connect' heading */
+}
+
+/* Contact Section: Ensures alignment for the 'Reach Us' content */
+.footer-section.contact {
+    text-align: center; /* Centers the 'Reach Us' heading and paragraphs */
+}
+
+/* --- LINKS SECTION STYLES --- */
+.footer-section.links ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section.links a {
+    color: #ccc; 
+    line-height: 1.4;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-section.links a:hover {
+    color: #4caf50; 
+}
+
+
+/* --- ✅ सोशल मीडिया स्टाइल्स (UPDATED) --- */
+.social-icons {
+    display: flex;
+    gap: 15px; 
+    margin-top: 15px;
+    /* ✅ FIX: Icons को हमेशा सेंटर में रखने के लिए इसे ग्लोबल स्टाइल में लाए */
+    justify-content: center; 
+}
+
+.social-icons a {
+    color: #fff; 
+    font-size: 1.5em; 
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-icons a:hover {
+    color: #4caf50; 
+    transform: scale(1.1);
+}
+
+/* --- बॉटम कॉपीराइट स्टाइल्स --- */
+.footer-bottom {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 20px;
+    border-top: 1px solid #444; 
+    text-align: center;
+}
+
+.footer-bottom p {
+    font-size: 0.9em;
+    color: #aaa;
+}
+
+/* -------------------------------------- */
+/* --- RESPONSIVENESS (MOBILE) --- */
+/* -------------------------------------- */
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        align-items: center; 
+        /* text-align: center already set on sections */
+    }
+
+    .footer-section {
+        min-width: 100%;
+        margin-bottom: 30px;
+    }
+    
+    .footer-section.links ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    /* सोशल आइकन्स के लिए justify-content: center; अब ग्लोबल स्टाइल में है,
+       इसलिए यहाँ इसकी आवश्यकता नहीं है।
+    */
+}

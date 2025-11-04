@@ -1,55 +1,91 @@
-import React from "react";
+// src/App.js
+import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NavBar from "./components/NavBar";
-import Login from "./components/Login";
-import Home from "./components/Home";
-import Register from "./components/Register";
-import Profile from "./components/Profile";
-import EditProfile from "./components/EditProfile";
+import Footer from "./components/Footer"; // Import Footer
 import ProtectedRoute from "./ProtectedRoute";
-// ✅ Import the new components and route
-import Admin from "./components/Admin"; 
-import AdminRoute from "./AdminRoute"; 
+import AdminRoute from "./AdminRoute";
 import "./css/App.css";
+
+// ✅ Lazy load components (performance optimization)
+const Home = lazy(() => import("./components/Home"));
+const Login = lazy(() => import("./components/Login"));
+const Register = lazy(() => import("./components/Register"));
+const VerifyOtp = lazy(() => import("./components/VerifyOtp"));
+const Profile = lazy(() => import("./components/Profile"));
+const EditProfile = lazy(() => import("./components/EditProfile"));
+const Admin = lazy(() => import("./components/Admin"));
+const NotFound = lazy(() => import("./components/NotFound")); // 404 page
 
 export default function App() {
   return (
     <Router>
+      {/* 🌿 1. Navbar visible globally */}
       <NavBar />
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
 
-        {/* ✅ New Admin Protected Route */}
-        <Route
-          path="/admin"
-          element={
-            <AdminRoute>
-              <Admin />
-            </AdminRoute>
-          }
-        />
+      {/* Suspense wrapper for lazy loading */}
+      <Suspense
+        fallback={
+          <div
+            style={{
+              textAlign: "center",
+              marginTop: "50px",
+              fontSize: "18px",
+              color: "#0b8457",
+            }}
+          >
+            🌱 Loading EcoSaathi...
+          </div>
+        }
+      >
+        <Routes>
+          {/* === 🌍 Public Routes === */}
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/verify-otp" element={<VerifyOtp />} />
+          
+          {/* ✅ 2. New Placeholder Routes for Footer Links */}
+          {/* Replace <Home /> with actual components later (e.g., <Services />) */}
+          <Route path="/services" element={<Home />} /> 
+          <Route path="/about" element={<Home />} />
+          <Route path="/contact" element={<Home />} />
 
-        {/* User Protected Routes */}
-        <Route
-          path="/profile/:id"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/profile/:id/edit"
-          element={
-            <ProtectedRoute>
-              <EditProfile />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+          {/* === 🔒 User Protected Routes === */}
+          <Route
+            path="/profile/:id"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/:id/edit"
+            element={
+              <ProtectedRoute>
+                <EditProfile />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* === 🛠️ Admin Protected Route === */}
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <Admin />
+              </AdminRoute>
+            }
+          />
+
+          {/* === ❌ 404 Not Found === */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
+      
+      {/* 🌳 3. GLOBAL FOOTER: Rendered outside <Routes> to appear on every page */}
+      <Footer />
     </Router>
   );
 }

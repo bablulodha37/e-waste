@@ -4,6 +4,9 @@ import { api } from "../api";
 import "../css/Register.css";
 
 export default function Register() {
+  const [firstName, setFirstName] = useState(""); 
+  const [lastName, setLastName] = useState("");   
+  const [pickupAddress, setPickupAddress] = useState(""); 
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
@@ -12,21 +15,56 @@ export default function Register() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setError(""); // Clear previous errors
+    
+    //   the registration body
+    const body = { 
+        firstName, 
+        lastName, 
+        email, 
+        phone, 
+        password,
+        pickupAddress 
+    };
+    
     try {
       await api("/api/auth/register", {
         method: "POST",
-        body: { email, phone, password },
+        body,
       });
-      navigate("/login");
+      
+      alert("Registration successful! Check your email for the verification code.");
+      
+      //  Go to the verification page, passing the email
+      navigate("/verify-otp", { state: { email } });
+      
     } catch (err) {
-      setError("Registration failed");
+      console.error(err);
+      setError("Registration failed. Email might be already in use.");
     }
   };
 
   return (
     <div className="container">
-      <h2>Register</h2>
+      <h2>Create an account</h2>
       <form onSubmit={handleRegister}>
+        {/*  Name Fields */}
+        <input
+          type="text"
+          placeholder="First Name"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Last Name"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          required
+        />
+        
+        {/* Existing Fields */}
         <input
           type="email"
           placeholder="Email"
@@ -47,7 +85,16 @@ export default function Register() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Register</button>
+        
+        {/*  Pickup Address */}
+         <textarea
+            placeholder="Default Pickup Address"
+            value={pickupAddress}
+            onChange={(e) => setPickupAddress(e.target.value)}
+            required
+        ></textarea>
+        
+        <button type="submit">Create</button>
         {error && <p className="error">{error}</p>}
       </form>
     </div>

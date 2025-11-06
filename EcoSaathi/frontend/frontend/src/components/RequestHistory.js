@@ -1,7 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { api } from '../api';
+// src/components/RequestHistory.js
 
-export default function RequestHistory({ userId }) {
+import React, { useEffect, useState } from 'react';
+// 💡 Import useParams to read the ID from the URL
+import { useParams } from "react-router-dom"; 
+import { api } from '../api';
+import "../css/RequestHistory.css";
+
+// 💡 Props are no longer needed; use useParams()
+export default function RequestHistory() { 
+    // 💡 Get the 'id' parameter from the URL
+    const { id } = useParams();
+    
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -9,7 +18,8 @@ export default function RequestHistory({ userId }) {
     useEffect(() => {
         const fetchRequests = async () => {
             try {
-                const data = await api(`/api/auth/user/${userId}/requests`);
+                // Use the ID obtained from useParams
+                const data = await api(`/api/auth/user/${id}/requests`); 
                 setRequests(data);
             } catch (err) {
                 setError('Failed to load request history.');
@@ -18,12 +28,15 @@ export default function RequestHistory({ userId }) {
                 setLoading(false);
             }
         };
-        fetchRequests();
-    }, [userId]);
+        // Use 'id' to trigger the fetch
+        if (id) {
+            fetchRequests();
+        }
+    }, [id]); 
 
-    if (loading) return <div>Loading request history...</div>;
-    if (error) return <div className="error-msg">{error}</div>;
-    if (requests.length === 0) return <div>You have not submitted any requests yet.</div>;
+    if (loading) return <div className="container">Loading request history...</div>;
+    if (error) return <div className="container error-msg">{error}</div>;
+    if (requests.length === 0) return <div className="container">You have not submitted any requests yet.</div>;
 
     const getStatusClass = (status) => {
         if (status === 'SCHEDULED') return 'status-scheduled';
@@ -32,7 +45,7 @@ export default function RequestHistory({ userId }) {
     };
 
     return (
-        <div className="request-history-card">
+        <div className="container request-history-card">
             <h3>Your Requests</h3>
             <table className="request-table">
                 <thead>

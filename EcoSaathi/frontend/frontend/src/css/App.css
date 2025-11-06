@@ -6,6 +6,7 @@ body {
   min-height: 100vh;
   color: #333;
   transition: background 0.4s ease-in-out;
+  overflow-y: scroll;
 }
 
 .container {
@@ -24,7 +25,7 @@ button {
 button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  background-color: #ccc !important;
+  background-color:#0e7ea7 !important;
 }
 
 /* --- Global Form Element Styling --- */

@@ -3,14 +3,14 @@ package com.lodha.EcoSaathi.Service;
 import com.lodha.EcoSaathi.Dto.UserDto;
 import com.lodha.EcoSaathi.Entity.User;
 import com.lodha.EcoSaathi.Repository.UserRepository;
-import com.lodha.EcoSaathi.Config.FileStorageProperties; // ✅ REQUIRED: File Storage Config
+import com.lodha.EcoSaathi.Config.FileStorageProperties;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
+// ! REMOVED: java.time.LocalDateTime, java.util.Random
+
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,14 +24,10 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    private final EmailService emailService;
-    private final FileStorageProperties fileStorageProperties; // ✅ FINAL DEPENDENCY
-    private static final long OTP_VALID_DURATION_MINUTES = 5;
+    private final FileStorageProperties fileStorageProperties;
 
-    // Now requires all three final dependencies
-    public UserService(UserRepository userRepository, EmailService emailService, FileStorageProperties fileStorageProperties) {
+    public UserService(UserRepository userRepository, FileStorageProperties fileStorageProperties) {
         this.userRepository = userRepository;
-        this.emailService = emailService;
         this.fileStorageProperties = fileStorageProperties;
 
         // सुनिश्चित करें कि फ़ाइल अपलोड डायरेक्टरी मौजूद है
@@ -43,14 +39,7 @@ public class UserService {
         }
     }
 
-    // Helper method to generate a 6-digit OTP (Unchanged)
-    private String generateOtp() {
-        Random random = new Random();
-        int otpValue = 100000 + random.nextInt(900000);
-        return String.valueOf(otpValue);
-    }
 
-    // registerUser (Unchanged)
     public User registerUser(User user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new RuntimeException("Email already in use.");
@@ -58,42 +47,16 @@ public class UserService {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole("USER");
+
         user.setVerified(false);
 
-        String otp = generateOtp();
-        user.setOtp(otp);
-        user.setOtpGeneratedTime(LocalDateTime.now());
+
 
         User savedUser = userRepository.save(user);
-        emailService.sendOtpEmail(user.getEmail(), otp);
 
         return savedUser;
     }
 
-    // verifyOtp (Unchanged)
-    public User verifyOtp(String email, String otp) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found for verification."));
-
-        if (user.isVerified()) {
-            throw new RuntimeException("User is already verified.");
-        }
-
-        if (!otp.equals(user.getOtp())) {
-            throw new RuntimeException("Invalid OTP.");
-        }
-
-        if (user.getOtpGeneratedTime().plusMinutes(OTP_VALID_DURATION_MINUTES).isBefore(LocalDateTime.now())) {
-            throw new RuntimeException("OTP expired. Please register again or request a resend.");
-        }
-
-        user.setVerified(true);
-        user.setOtp(null);
-        user.setOtpGeneratedTime(null);
-        return userRepository.save(user);
-    }
-
-    // login (Unchanged)
     public User login(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -102,14 +65,11 @@ public class UserService {
             throw new RuntimeException("Invalid credentials");
         }
 
-        if (!user.isVerified()) {
-            throw new RuntimeException("User is not verified. Please verify using OTP.");
-        }
 
         return user;
     }
 
-    // verifyUser (Unchanged)
+    // verifyUser (Kept for Admin verification as per your instruction)
     public User verifyUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
@@ -150,7 +110,6 @@ public class UserService {
         return userRepository.save(existingUser);
     }
 
-    //  Real File saving logic
     private String saveFile(MultipartFile file) {
         try {
             // 1. Create a unique filename (UUID + extension)
@@ -160,7 +119,6 @@ public class UserService {
             if (dotIndex > 0) {
                 fileExtension = originalFileName.substring(dotIndex);
             }
-            // Use UUID to ensure the filename is unique and safe
             String fileName = UUID.randomUUID().toString() + fileExtension;
 
             // 2. Resolve the target path within the 'uploads' folder
@@ -169,8 +127,7 @@ public class UserService {
             // 3. Copy/Save the file to the disk
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
-            // 4. Return the relative URL that the ResourceController will serve
-            // The browser will request: http://localhost:8080/images/{fileName}
+
             return "/images/" + fileName;
 
         } catch (Exception ex) {
@@ -179,7 +136,6 @@ public class UserService {
         }
     }
 
-    // updateProfilePicture (Unchanged logic, now uses real saveFile)
     public User updateProfilePicture(Long userId, MultipartFile file) {
         if (file.isEmpty()) {
             throw new RuntimeException("File is empty. Cannot upload profile picture.");
@@ -199,7 +155,6 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
     }
 
-    // findAllUsersDto (Unchanged)
     public List<UserDto> findAllUsersDto() {
         return userRepository.findAll().stream()
                 .map(UserDto::new)

@@ -1,9 +1,13 @@
 // src/components/RequestForm.js
 
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; 
 import axios from "axios"; 
 import "../css/RequestForm.css";
-import AddressAutocomplete from "./AddressAutocomplete";
+// सुनिश्चित करें कि यह कंपोनेंट आपके पास मौजूद है
+import AddressAutocomplete from "./AddressAutocomplete"; 
+
+// --- Constants ---
 const customPhotoLabels = [
     "Top Side (Required)",
     "Bottom Side",
@@ -14,28 +18,52 @@ const customPhotoLabels = [
 
 const API_BASE_URL = "http://localhost:8080"; 
 
-export default function RequestForm({ userId, defaultAddress }) {
+// 💡 कंपोनेंट अब कोई props नहीं लेता है
+export default function RequestForm() {
+    
+    // --- 1. HOOKS MUST BE CALLED FIRST (Unconditional) ---
+    const navigate = useNavigate();
+    
+    // --- Get User Data and Initial Values ---
+    // 💡 लोकल स्टोरेज से यूजर डेटा सुरक्षित रूप से प्राप्त करें
+    const user = JSON.parse(localStorage.getItem('user'));
+    
+    // null या undefined से बचने के लिए Optional Chaining का उपयोग करें
+    const initialAddress = user?.pickupAddress || ''; 
+    
+    // --- 2. STATE INITIALIZATION (Unconditional) ---
     const [type, setType] = useState('Recycling Pickup');
     const [description, setDescription] = useState('');
-    //  defaultAddress का उपयोग करें और इसे Autocomplete कंपोनेंट को पास करें
-    const [pickupLocation, setPickupLocation] = useState(defaultAddress || ''); 
-    
-    // 5 फ़ाइल इनपुट को ट्रैक करने के लिए
+    const [pickupLocation, setPickupLocation] = useState(initialAddress); 
     const [files, setFiles] = useState([null, null, null, null, null]);
-    
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
 
-    //  AddressAutocomplete से चुना गया पता प्राप्त करने का फ़ंक्शन
+    // --- 3. EARLY RETURN CHECK (AFTER ALL HOOKS) ---
+    if (!user || !user.id) {
+        return (
+            <div className="request-form-card error-msg">
+                ❌ Error: User data not found. Please log in again to submit a request.
+            </div>
+        );
+    }
+    
+    // Assign userId after the check
+    const userId = user.id; 
+    
+    // --- Handlers ---
+    
     const handleAddressChange = (address) => {
         setPickupLocation(address);
+        setMessage('');
     };
 
-    //  फ़ाइल बदलने पर फ़ाइल को संभालता है 
     const handleFileChange = (e, index) => {
+        const selectedFile = e.target.files[0];
         const newFiles = [...files];
-        newFiles[index] = e.target.files[0]; 
+        newFiles[index] = selectedFile || null; 
         setFiles(newFiles);
+        setMessage('');
     };
 
     const handleSubmit = async (e) => {
@@ -45,45 +73,55 @@ export default function RequestForm({ userId, defaultAddress }) {
 
         const selectedFiles = files.filter(file => file !== null);
         
-        if (selectedFiles.length === 0) {
-            setMessage('❌ Please upload at least one photo.');
-            setLoading(false);
-            return;
+        // --- Client-Side Validation ---
+        if (files[0] === null) {
+             setMessage('❌ Top Side photo is required for submission.');
+             setLoading(false);
+             return;
         }
         
-    
         if (!pickupLocation || pickupLocation.trim() === '') {
             setMessage('❌ Pickup location is required.');
             setLoading(false);
             return;
         }
-
-        const formData = new FormData();
         
-        // 1. Request details
+        if (!description || description.trim() === '') {
+            setMessage('❌ Item description is required.');
+            setLoading(false);
+            return;
+        }
+
+        // --- Data Preparation ---
+        const formData = new FormData();
         formData.append('type', type);
         formData.append('description', description);
-        formData.append('pickupLocation', pickupLocation); //  Autocomplete से आया हुआ पता
+        formData.append('pickupLocation', pickupLocation);
         
-        // 2. Files
         selectedFiles.forEach((file) => {
-            // 'files' key backend @RequestParam("files") से मेल खाना चाहिए
             formData.append('files', file); 
         });
 
-
+        // --- API Call ---
         try {
+            // 🔑 FIX: userId का उपयोग API पाथ में किया जाता है
             await axios.post(`${API_BASE_URL}/api/auth/user/${userId}/request`, formData);
             
-            setMessage('Request submitted successfully with photos! We will schedule it soon.');
+            setMessage('✅ Request submitted successfully! We will schedule it soon.');
+            
+            // Clear fields and redirect
             setDescription(''); 
-            setFiles([null, null, null, null, null]); // File state रीसेट करें
-            // setPickupLocation(defaultAddress); // Address को डिफ़ॉल्ट पर रीसेट कर सकते हैं
+            setFiles([null, null, null, null, null]); 
+
+            setTimeout(() => {
+                navigate(`/profile/${userId}/history`);
+            }, 1500);
             
         } catch (error) {
+            // बेहतर त्रुटि संदेशों के लिए error.response का उपयोग करें
             const errorMessage = error.response?.data?.message || 'Failed to submit request. Check file size or server status.';
             setMessage(`❌ ${errorMessage}`);
-            console.error('Request submission error:', error);
+            console.error('Request submission error:', error.response || error);
         } finally {
             setLoading(false);
         }
@@ -93,6 +131,7 @@ export default function RequestForm({ userId, defaultAddress }) {
         <div className="request-form-card">
             <h3>New Pickup/Dropoff Request</h3>
             <form onSubmit={handleSubmit}>
+                
                 <label>Request Type:</label>
                 <select value={type} onChange={(e) => setType(e.target.value)} required>
                     <option>Recycling Pickup</option>
@@ -111,35 +150,30 @@ export default function RequestForm({ userId, defaultAddress }) {
                 {/* Address Autocomplete Component का उपयोग */}
                 <label>Pickup Location :</label>
                 <AddressAutocomplete
-                    initialValue={defaultAddress || pickupLocation}
+                    initialValue={pickupLocation} 
                     onPlaceSelect={handleAddressChange}
                     placeholder="Search for pickup address..."
                 />
                 
-                {/*  5 Photo Upload Fields */}
+                {/* 5 Photo Upload Fields */}
                 <div className="photo-upload-section">
                     <label>Upload Photos (Max 5):</label>
                     <p className="photo-hint">Photos help us understand the size and type of the items.</p>
                     <div className="photo-inputs">
-                        {/* 5 फ़ाइल इनपुट फ़ील्ड्स को लूप करें */}
                         {files.map((file, index) => (
                             <div key={index} className="file-input-group">
-    {/* 👇️ यहाँ बदलाव किया गया है */}
-    <label htmlFor={`file-${index + 1}`}>
-        {customPhotoLabels[index]} 
-        {/* अगर customPhotoLabels में उस index पर कोई नाम नहीं है, तो एक डिफ़ॉल्ट नाम दिखाएँ */}
-        {/* उदाहरण: customPhotoLabels[index] || `Photo ${index + 1}` */}
-    </label>
-    <input
-        id={`file-${index + 1}`}
-        type="file"
-        accept="image/*"
-        // पहली फ़ाइल अनिवार्य (required) है
-        required={index === 0} 
-        onChange={(e) => handleFileChange(e, index)}
-    />
-    {files[index] && <span className="file-name-display">{files[index].name}</span>}
-</div>
+                                <label htmlFor={`file-${index + 1}`}>
+                                    {customPhotoLabels[index]} 
+                                </label>
+                                <input
+                                    id={`file-${index + 1}`}
+                                    type="file"
+                                    accept="image/*"
+                                    required={index === 0} 
+                                    onChange={(e) => handleFileChange(e, index)}
+                                />
+                                {files[index] && <span className="file-name-display">{files[index].name}</span>}
+                            </div>
                         ))}
                     </div>
                 </div>
@@ -148,7 +182,7 @@ export default function RequestForm({ userId, defaultAddress }) {
                     {loading ? 'Submitting...' : 'Submit Request'}
                 </button>
                 
-                {message && <p className={message.startsWith('✅') ? 'success-msg' : 'error-msg'}>{message}</p>}
+                {message && <p className={message.startsWith('✅') ? 'success-message' : 'error-message'}>{message}</p>}
             </form>
         </div>
     );

@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
-// Simple DTO-like class/record for the OTP verification request
-record OtpVerificationRequest(String email, String otp) {}
 
 @RestController
 @RequestMapping("/api/auth")
@@ -24,20 +22,15 @@ public class AuthController {
         this.requestService = requestService;
     }
 
-    // UPDATED: User is registered but NOT verified. OTP is sent.
+    // ✅ UPDATED: User is registered and DIRECTLY VERIFIED. No OTP is sent.
     @PostMapping("/register")
     public User register(@RequestBody User user) {
         return userService.registerUser(user);
     }
 
-    // Endpoint for OTP verification
-    @PostMapping("/verify-otp")
-    public User verifyOtp(@RequestBody OtpVerificationRequest request) {
-        return userService.verifyOtp(request.email(), request.otp());
-    }
-
     @PostMapping("/login")
     public User login(@RequestBody User user) {
+        // user.getEmail() and user.getPassword() are used directly from the request body
         return userService.login(user.getEmail(), user.getPassword());
     }
 

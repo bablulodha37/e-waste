@@ -26,8 +26,9 @@ export default function Login() {
       if (user.isAdmin) {
         navigate("/admin"); // Redirect admin to the Admin Dashboard
       } else {
-        navigate(`/profile/${user.id}`); // Redirect regular user to their profile
+        navigate(`/Dashboard/${user.id}`); // Redirect regular user to their profile
       }
+
       
     } catch (err) {
       setError("Invalid credentials or server error");

@@ -28,11 +28,6 @@ public class User {
     //  Profile Picture
     private String profilePictureUrl;
 
-    // OTP for Verification
-    private String otp;
-    private LocalDateTime otpGeneratedTime;
-
-
     public boolean getIsAdmin() {
         return "ADMIN".equals(this.role);
     }

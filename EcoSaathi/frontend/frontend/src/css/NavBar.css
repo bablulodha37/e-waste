@@ -1,99 +1,122 @@
 /* src/css/NavBar.css */
 
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #023117;
-  color: white;
-  padding: 0.4rem 1rem;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background:white;
+    color: rgb(158, 172, 157);
+    padding: 0.4rem 1rem;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
-.logo {
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: white;
+/* --- NEW LOGO STYLES --- */
+
+.logo-link {
+    /* To ensure the image is linked and clickable */
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none; /* Remove any default link underline */
+}
+
+.logo-img {
+    /* Style the image itself */
+    height: 50px; /* Adjust this value to control the logo size */
+    width: auto;
+    object-fit: contain;
 }
 
 .nav-links {
-  width: 500px;
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-  /* CHANGE: justify-content ko flex-end kar diya */
-  justify-content: flex-end; 
+    /* ✅ CHANGE 1: Remove fixed width. The container should only take the necessary space. */
+    /* width: 500px; <-- REMOVED */ 
+    display: flex;
+    align-items: center; 
+    gap: 1.2rem;
+    justify-content: flex-end;
 }
 
 /* Base style for all links */
 .nav-links a {
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-  position: relative;
-  transition: all 0.3s ease; 
+    color: #35c94c;
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    transition: all 0.3s ease; 
 }
 
 /* Standard link hover effect (Services, About, Contact, Login, Register) */
 .nav-links a::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 2px;
-  background: white;
-  left: 0;
-  bottom: -4px;
-  transition: width 0.3s ease;
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background:linear-gradient(90deg, #0d6efd, #5ba3ff);
+    left: 0;
+    bottom: -4px;
+    transition: width 0.3s ease;
 }
 
 .nav-links a:hover::after {
-  width: 100%;
+    width: 100%;
 }
 
 /* ------------------------------------------------------------------ */
 
-/* ✅ STYLES FOR ADMIN AND PROFILE LINKS */
+/* 🔑 FIX: STYLES FOR BUTTONS (DASHBOARD, ADMIN, PROFILE, LOGOUT) */
+.nav-links .nav-btn { /* Target the new button class */
+    /* Reset button defaults */
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+    
+    /* Apply the cohesive pill style */
+    background-color: linear-gradient(90deg, #0d6efd, #5ba3ff); 
+    color: white; /* Ensure text color is white */
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    transition: all 0.3s ease; 
+}
+
+/* Apply the lifted hover effect to the new button class */
+.nav-links .nav-btn:hover {
+    background-color: #0b6f1a;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* ❌ Remove all old A-Tag based button styles */
 .nav-links a[href*="/profile"],
-.nav-links a[href="/admin"] {
-  background-color: rgba(255, 255, 255, 0.2); 
-  padding: 6px 10px;
-  border-radius: 20px;
-  font-weight: 600;
+.nav-links a[href="/admin"],
+.nav-links a[href*="/dashboard"] {
+    /* Remove original button styles from A tags to prevent conflict */
+    background-color: linear-gradient(90deg, #0d6efd, #5ba3ff); 
+    padding: 0;
+    border-radius: 0;
+    font-weight: 500; /* Reset to standard link weight */
 }
 
+/* ❌ Ensure A tags do not inherit button styles */
 .nav-links a[href*="/profile"]::after,
-.nav-links a[href="/admin"]::after {
-  display: none;
-}
-
-.nav-links a[href*="/profile"]:hover,
-.nav-links a[href="/admin"]:hover {
-  background-color: rgba(255, 255, 255, 0.4);
-  transform: translateY(-1px); 
+.nav-links a[href="/admin"]::after,
+.nav-links a[href*="/dashboard"]::after {
+    /* Re-enable standard hover underline for non-button links */
+    display: block; 
 }
 
 /* ------------------------------------------------------------------ */
-
-.logout-btn {
-  background: white;
-  color: #007bff;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 8px;
-  font-weight: 600;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  cursor: pointer; 
-  transition: all 0.2s ease; 
+/* Logout button refinement (Ensures it also uses nav-btn styles) */
+.nav-links .logout-btn {
+    /* logout-btn is styled by .nav-btn, so this section is minimal */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.logout-btn:hover {
-  background: #e6f0ff;
-  transform: scale(1.05);
+.nav-links .logout-btn:hover {
+    /* Use the same cohesive hover as other nav-btns */
+    background-color:#0b6f1a; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    transform: none;
 }
-
-/* IMPORTANT: The margin-left: auto rule for /login is REMOVED from CSS
-   and applied conditionally in the JS file instead. */

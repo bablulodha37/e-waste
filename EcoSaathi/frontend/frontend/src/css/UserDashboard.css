@@ -1,0 +1,141 @@
+/* src/css/UserDashboard.css */
+
+/* --- Main Dashboard Container --- */
+.container.dashboard-page {
+max-width: 10000px;
+margin: 0rem auto;
+padding: 2rem;
+background: #cee9dfad; /* Light background for the dashboard */
+border-radius: 12px;
+box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+text-align: left;
+}
+
+.dashboard-page h2 {
+color: #023117; /* Dark green for welcome message */
+font-weight: 700;
+margin-bottom: 0.5rem;
+}
+
+.dashboard-subheading {
+font-size: 1.1rem;
+color: #19232b;
+margin-bottom: 30px;
+}
+
+.quick-actions-title {
+font-size: 1.5rem;
+font-weight: 600;
+color: #333;
+margin-top: 40px;
+margin-bottom: 20px;
+border-bottom: 2px solid #eee;
+padding-bottom: 10px;
+}
+
+/* --- 1. Stats Cards Section (The main colored boxes) --- */
+.stats-cards-container {
+display: flex;
+justify-content: space-between;
+gap: 15px;
+margin-bottom: 40px;
+}
+
+.stat-card {
+flex: 1;
+padding: 50px 55px;
+border-radius: 22px;
+color: white;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+cursor: default;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+}
+
+.stat-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.stat-card h3 {
+font-size: 1rem;
+font-weight: 500;
+opacity: 0.9;
+margin-bottom: 15px;
+}
+
+.stat-card .value {
+font-size: 2.5rem;
+font-weight: 700;
+line-height: 1;
+text-align: right;
+}
+
+/* Specific Colors - Matching the common scheme (Blue, Yellow, Green, Darker Green/Purple) */
+.stat-card.total {
+background: linear-gradient(45deg, #16b71d, #0056b3);;
+}
+
+.stat-card.pending {
+background: linear-gradient(45deg, #0768ff, #e0a800);
+
+}
+
+.stat-card.approved {
+background: linear-gradient(45deg, #e9e300, #3a035d);
+}
+
+.stat-card.completed {
+background: linear-gradient(45deg, #2c0138, #1dab51);
+}
+
+/* --- 2. Quick Actions Section (White cards below) --- */
+.quick-actions-container {
+display: flex;
+flex-wrap: wrap;
+justify-content: space-between;
+gap: 25px;
+margin-top: 20px;
+}
+
+.action-card {
+flex: 1;
+display: flex;
+flex-wrap: wrap;
+flex-direction: column;
+align-items: center;
+text-align: center;
+padding: 30px 20px;
+border-radius: 12px;
+background-color: #ffffff;
+border: 1px solid #e0e0e0;
+text-decoration: none;
+color: #333;
+transition: all 0.3s ease;
+}
+
+.action-card:hover {
+border-color: #0d6efd;
+box-shadow: 0 6px 15px rgba(13, 110, 253, 0.15);
+transform: translateY(-3px);
+}
+
+.action-icon {
+font-size: 2.5rem;
+color: #0d6efd;
+margin-bottom: 10px;
+}
+
+.action-card h4 {
+font-size: 1.15rem;
+font-weight: 600;
+color: #023117;
+margin-bottom: 5px;
+}
+
+.action-card p {
+font-size: 0.9rem;
+color: #6c757d;
+}

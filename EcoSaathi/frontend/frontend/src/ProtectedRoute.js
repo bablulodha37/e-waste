@@ -1,24 +1,17 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom"; // useLocation imported
 
 export default function ProtectedRoute({ children }) {
-    const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user"));
+  const location = useLocation(); // Get current location
 
-    // Check if the user is logged in
-    if (!user) {
-        return <Navigate to="/login" replace />;
-    }
-
-    //  Check if the user is verified
-    //    We assume the 'user' object retrieved from login contains the 'verified' flag.
-    if (!user.verified) {
-        alert("Access Denied. Please verify your account using the OTP sent to your email.");
-        
-        // Redirect the unverified user to the OTP verification page (passing their email)
-        // Note: The email in localStorage might be stale, but we use the stored user object for redirection.
-        return <Navigate to="/verify-otp" replace state={{ email: user.email }} />;
-    }
-
-    // 3. If logged in AND verified, grant access
-    return children;
+  // 1. Check if the user is logged in
+  if (!user) {
+    // If not logged in, redirect to login page.
+    // We pass the current path in the 'state' so Login component knows where to redirect after success.
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+  
+  // 2. If logged in, render the child component (the protected page)
+  return children;
 }

@@ -1,214 +1,191 @@
-/* src/css/Profile.css */
+/* src/css/Profile.css (Final Corrected Code) */
 
 /* --- Main Container (Based on your input) --- */
 .container.profile-container { /* Added .profile-container for specificity */
-    max-width: 900px; /* Increased max-width for tabbed content */
-    margin: 3rem auto;
-    padding: 2rem;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
-    text-align: left; /* Changed to left for structured content */
-    animation: fadeIn 0.5s ease-in;
+max-width: 900px; /* Increased max-width for tabbed content */
+margin: 3rem auto;
+padding: 2rem;
+background: #d1e0d7;
+border-radius: 10px;
+box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+text-align: left; /* Changed to left for structured content */
+animation: fadeIn 0.5s ease-in;
 }
 
 h2 {
-    color: #0d6efd;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    text-align: center; /* Keep h2 centered */
+color: #0d6efd;
+font-weight: 700;
+margin-bottom: 1rem;
+text-align: center; /* Keep h2 centered */
 }
 
 p {
-    font-size: 1rem;
-    color:#023117;
-    margin: 8px 0;
-}
-
-button {
-    /* Keep button styling global but override positioning for complex layout */
-    margin-top: 20px;
-    width: auto; /* Allow button to fit content, not 30% */
-    min-width: 120px;
-    padding: 10px 15px; 
-    background: linear-gradient(90deg, #0d6efd, #5ba3ff);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-button:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-/* --- NEW: Tabs & Layout --- */
-.profile-tabs {
-    display: flex;
-    margin: 20px 0;
-    border-bottom: 2px solid #eee;
-}
-
-.profile-tabs button {
-    padding: 10px 15px;
-    margin: 0 10px 0 0; /* Adjust margin */
-    border: none;
-    border-bottom: 3px solid transparent;
-    background: none;
-    cursor: pointer;
-    font-size: 1em;
-    color: #555;
-    transition: all 0.3s;
-    width: auto;
-    transform: none;
-    box-shadow: none;
-}
-
-.profile-tabs button:hover {
-    color: #0d6efd;
-}
-
-.profile-tabs button.active {
-    color: #0d6efd;
-    border-bottom: 3px solid #0d6efd;
-    font-weight: bold;
+font-size: 1rem;
+color:#023117;
+margin: 8px 0;
 }
 
 /* --- Profile Details Card --- */
 .profile-details-card {
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
+padding: 20px;
+border: 1px solid #ddd;
+border-radius: 8px;
+background-color: #d1e0d7;
+}
+
+.profile-details-card h3 {
+color: #023117;
+margin-bottom: 15px;
+border-bottom: 1px solid #c2cec6;
+padding-bottom: 10px;
 }
 
 .profile-details-card strong {
-    color: #333;
-    display: inline-block;
-    min-width: 150px;
+color: #333;
+display: inline-block;
+min-width: 150px;
 }
 
 .address-text {
-    display: block;
-    margin-top: 10px;
-    padding: 10px;
-    border: 1px solid #e9ecef;
-    background-color: #f5f5f5;
-    border-radius: 4px;
-    white-space: pre-wrap;
-    font-style: italic;
+display: block;
+margin-top: 10px;
+padding: 10px;
+border: 1px solid #e9ecef;
+background-color: #f5f5f5;
+border-radius: 4px;
+white-space: pre-wrap;
+font-style: italic;
 }
-
-.edit-btn {
-    background: #ffc107 !important; /* Yellow for edit */
-    color: #333 !important;
-}
-.edit-btn:hover {
-    box-shadow: 0 4px 10px rgba(255, 193, 7, 0.4) !important;
-}
-
-/* --- NEW: Profile Picture Uploader --- */
-.profile-header-section {
+.profile-actions {
     display: flex;
-    justify-content: center;
-    padding: 20px 0;
+    gap: 15px;
+    margin-top: 25px; /* Ensure good vertical space */
+    clear: both; /* 🔑 FIX: Prevents layout issues if preceding elements are floating */
+    width: 100%; /* Ensure it spans the full width */
+}
+
+/* Ensure buttons inside this container don't inherit the global margin-top */
+.profile-actions button {
+    margin-top: 0; 
+}
+
+/* Specific Style for Edit Button */
+.edit-btn {
+background: #ffc107 !important;
+color: #333 !important;
+}
+
+.edit-btn:hover {
+box-shadow: 0 4px 10px rgba(255, 193, 7, 0.4) !important;
+}
+
+/* 🔑 NEW: Specific Style for Logout Button on Profile Page */
+.logout-profile-btn {
+background: #4712d7 !important;
+color: white !important;
+}
+
+.logout-profile-btn:hover {
+background-color: #2f05a0 !important;
+box-shadow: 0 4px 10px rgba(71, 18, 215, 0.4) !important;
+}
+
+/* --- Profile Picture Uploader --- */
+.profile-header-section {
+display: flex;
+justify-content: center;
+padding: 20px 0;
 }
 
 .profile-picture-uploader {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 10px;
 }
 
 .current-picture .profile-img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #0d6efd;
+width: 100px;
+height: 100px;
+border-radius: 50%;
+object-fit: cover;
+border: 3px solid #0d6efd;
 }
 
 .current-picture .default-profile-icon {
-    font-size: 100px;
-    color: #ccc;
+font-size: 100px;
+color: #ccc;
 }
 
 .profile-picture-uploader .file-input {
-    width: 250px;
+width: 250px;
 }
 
 .profile-picture-uploader .upload-btn {
-    background-color: #28a745; /* Green for upload */
-    width: auto;
-}
-.profile-picture-uploader .upload-btn:hover {
-    background-color: #218838;
-    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.4);
+background-color: #28a745;
+width: auto;
 }
 
-/* --- NEW: Request Form & History Styles --- */
+.profile-picture-uploader .upload-btn:hover {
+background-color: #218838;
+box-shadow: 0 4px 10px rgba(40, 167, 69, 0.4);
+}
+
+/* --- NEW: Request Form & History Styles (Kept for completeness) --- */
 .request-form-card, .request-history-card {
-    padding: 25px;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+padding: 25px;
+border: 1px solid #e9ecef;
+border-radius: 8px;
+background-color: #fff;
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .request-form-card label {
-    display: block;
-    margin-top: 15px;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #333;
+display: block;
+margin-top: 15px;
+margin-bottom: 5px;
+font-weight: bold;
+color: #333;
 }
 
 .request-form-card select,
 .request-form-card textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-    margin-bottom: 10px;
+width: 100%;
+padding: 10px;
+border: 1px solid #ccc;
+border-radius: 5px;
+box-sizing: border-box;
+margin-bottom: 10px;
 }
 
 /* Request History Table */
 .request-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
+width: 100%;
+border-collapse: collapse;
+margin-top: 15px;
 }
 
 .request-table th, .request-table td {
-    border: 1px solid #ddd;
-    padding: 12px 8px;
-    text-align: left;
-    font-size: 0.95em;
+border: 1px solid #ddd;
+padding: 12px 8px;
+text-align: left;
+font-size: 0.95em;
 }
 
 .request-table th {
-    background-color: #f8f8f8;
-    color: #555;
-    font-weight: 600;
+background-color: #f8f8f8;
+color: #555;
+font-weight: 600;
 }
 
 /* Status Badges */
 .status-badge {
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-size: 0.8em;
-    font-weight: bold;
-    color: white;
-    display: inline-block;
+padding: 5px 10px;
+border-radius: 15px;
+font-size: 0.8em;
+font-weight: bold;
+color: white;
+display: inline-block;
 }
 
 .status-pending { background-color: #ffc107; }

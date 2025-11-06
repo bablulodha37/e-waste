@@ -41,7 +41,7 @@
     
     /* 2. Transition to the light-bg color at the very bottom (last 15% of the height) */
     transparent 85%,
-    #385d2b 100% 
+    #fff 100%
   );
 }
 
@@ -91,7 +91,7 @@
 /* --- IMAGE-FOCUSED INFO SECTION (Updated background and padding) --- */
 .info-cards-section {
   padding: 20px 20px; 
-  background-color: #023220e8; /* This must match the last color stop in the gradient */
+  background-color: #cee9dfad; /* This must match the last color stop in the gradient */
   max-width: 100%;
   margin: 0 auto;
   text-align: center;
@@ -117,7 +117,7 @@
 
 .section-subtitle {
   font-size: 1.2em;
-  color:#e6f0ff;
+  color:#0c512f;
   margin-bottom: 60px;
 }
 
@@ -129,7 +129,7 @@
   text-align: left;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   /* Added a background and padding to the card itself to lift it off the background */
-  background-color: #8c9f90; 
+  background-color: #b5fdc4; 
   padding: 30px;
   border-radius: 10px;
 }
@@ -191,7 +191,7 @@
   text-align: center;
   padding: 80px 20px;
   /* Kept this section separate with a slightly darker background */
-  background-color: #007070; 
+  background-color: #107d4c; 
   color: var(--text);
   border-top: 1px solid #ddd;
 }

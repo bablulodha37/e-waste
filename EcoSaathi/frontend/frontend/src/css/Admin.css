@@ -1,166 +1,288 @@
 /* src/css/Admin.css */
 .admin-container {
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    font-family: Arial, sans-serif;
+ padding: 2rem;
+ max-width: 1200px;
+ margin: 0 auto;
+ font-family: Arial, sans-serif;
 }
 
 .admin-container h1 {
-    color: #007bff;
-    border-bottom: 2px solid #007bff;
-    padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem;
+ color: #007bff;
+ border-bottom: 2px solid #007bff;
+ padding-bottom: 0.5rem;
+ margin-bottom: 1.5rem;
 }
 
 /* --- User Table Styles (Existing) --- */
 .user-table {
-    width: 100%;
-    border-collapse: collapse;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: white;
+ width: 100%;
+ border-collapse: collapse;
+ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+ background-color: white;
 }
 
 .user-table th, .user-table td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
+ border: 1px solid #ddd;
+ padding: 12px;
+ text-align: left;
 }
 
 .user-table th {
-    background-color: #f8f9fa;
-    color: #343a40;
-    font-weight: 600;
+ background-color: #f8f9fa;
+ color: #343a40;
+ font-weight: 600;
 }
 
 .user-table tr:nth-child(even) {
-    background-color: #f2f2f2;
+ background-color: #f2f2f2;
 }
 
 .user-table tr:hover {
-    background-color: #e9ecef;
+ background-color: #e9ecef;
 }
 
-.verify-btn {
-    background-color: #28a745; /* Green for success/verification */
+/* --- Action Buttons (Updated/New) --- */
+
+/* Base style for all action buttons */
+.verify-btn, .schedule-btn, .complete-btn, .delete-btn, .edit-btn, .cancel-btn {
     color: white;
     border: none;
     padding: 6px 10px;
     border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+    margin-right: 5px; /* Space between multiple buttons */
+    font-size: 0.85em;
+    min-width: 70px; /* Ensure button minimum width */
 }
 
+/* Verify/Approve Button (Green) */
+.verify-btn {
+background-color: #28a745; 
+}
 .verify-btn:hover {
-    background-color: #218838;
+ background-color: #218838;
 }
 
-/* --- NEW: Admin Tabs --- */
+/* 🆕 New: Reject/Delete Button (Red) */
+.delete-btn { 
+    background-color: #dc3545; /* Red for rejection/deletion */
+}
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+/* 🆕 New: Edit/Cancel Button (Gray/Secondary) */
+.edit-btn, .cancel-btn {
+    background-color: #6c757d; /* Gray for edit/secondary action */
+}
+.edit-btn:hover, .cancel-btn:hover {
+    background-color: #5a6268;
+}
+
+/* 🆕 New: Schedule Button (Blue) */
+.schedule-btn {
+    background-color: #007bff;
+}
+.schedule-btn:hover {
+    background-color: #0056b3;
+}
+
+/* 🆕 New: Complete Button (Purple/Success) */
+.complete-btn {
+    background-color: #6f42c1; /* Purple/Violet for completion */
+}
+.complete-btn:hover {
+    background-color: #5c37a7;
+}
+
+/* Disabled state */
+.user-table button:disabled, .schedule-form-card button:disabled {
+    background-color: #ccc !important;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* --- NEW: Admin Tabs (Existing) --- */
 .admin-tabs {
-    display: flex;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #ddd;
+ display: flex;
+ margin-bottom: 20px;
+ border-bottom: 2px solid #ddd;
 }
 
 .admin-tabs button {
-    padding: 12px 20px;
-    border: none;
-    border-bottom: 3px solid transparent;
-    background: none;
-    cursor: pointer;
-    font-size: 1.1em;
-    font-weight: 500;
-    color: #555;
-    transition: all 0.3s;
+ padding: 12px 20px;
+ border: none;
+ border-bottom: 3px solid transparent;
+ background: none;
+ cursor: pointer;
+ font-size: 1.1em;
+ font-weight: 500;
+ color: #555;
+ transition: all 0.3s;
 }
 
 .admin-tabs button.active {
-    color: #007bff;
-    border-bottom: 3px solid #007bff;
-    font-weight: bold;
+ color: #007bff;
+ border-bottom: 3px solid #007bff;
+ font-weight: bold;
 }
 
 .tab-content {
-    padding: 10px 0;
+ padding: 10px 0;
 }
 
-/* --- NEW: Request Management Layout --- */
+/* --- NEW: Request Status Badges --- */
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-weight: bold;
+    font-size: 0.8em;
+    color: white;
+    text-transform: uppercase;
+}
+
+.status-badge.status-pending {
+    background-color: #ffc107; /* Yellow */
+    color: #343a40;
+}
+.status-badge.status-approved { /* 🆕 New Status */
+    background-color: #17a2b8; /* Cyan/Teal */
+}
+.status-badge.status-scheduled {
+    background-color: #007bff; /* Blue */
+}
+.status-badge.status-completed {
+    background-color: #28a745; /* Green */
+}
+.status-badge.status-rejected { /* 🆕 New Status */
+    background-color: #dc3545; /* Red */
+}
+
+/* --- NEW: Request Filter and Schedule Form Layout --- */
 .request-management-section {
+ padding: 10px;
+}
+
+.status-filter { /* 🆕 Filter section style */
+    margin-bottom: 15px;
     padding: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.status-filter label {
+    font-weight: 600;
+}
+.status-filter p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #6c757d;
 }
 
 .requests-and-form {
-    display: flex;
-    gap: 25px;
-    margin-top: 15px;
+ display: flex;
+ gap: 25px;
+ margin-top: 15px;
 }
 
 .requests-list {
-    flex: 3; /* Takes up more space */
-    overflow-x: auto;
+ flex: 3; 
+ overflow-x: auto;
 }
 
-/* --- Request Table Styles --- */
-.request-table {
-    width: 100%;
-    border-collapse: collapse;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    background-color: white;
-}
-
-.request-table th, .request-table td {
-    border: 1px solid #eee;
-    padding: 10px;
-    text-align: left;
-    font-size: 0.9em;
-}
-
-.request-table th {
-    background-color: #f0f0f0;
-}
-
-/* Highlight for selected request row */
-.request-table .selected-row {
-    background-color: #e6f7ff;
-    transition: background-color 0.2s;
-}
-
-/* --- Schedule Form Card --- */
 .schedule-form-card {
-    flex: 1; /* Takes up less space */
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+ flex: 1;
+padding: 20px;
+ border: 1px solid #ccc;
+border-radius: 8px;
+ background-color: #fff;
+ box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .schedule-form-card h4 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: #007bff;
+ margin-top: 0;
+ margin-bottom: 15px;
+ color: #007bff;
 }
 
 .schedule-form-card form input[type="datetime-local"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
+ width: 100%;
+ padding: 10px;
+ margin-bottom: 15px;
+ border: 1px solid #ccc;
+ border-radius: 5px;
+ box-sizing: border-box;
 }
 
 .schedule-form-card button {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+ width: 100%;
+ padding: 10px;
+ background-color: #007bff;
+ color: white;
+ border: none;
+ border-radius: 5px;
+ cursor: pointer;
+ transition: background-color 0.3s;
 }
 
 .schedule-form-card button:hover:not(:disabled) {
-    background-color: #0056b3;
+ background-color: #0056b3;
+}
+
+/* --- NEW: Pickup Person Management Styles --- */
+
+.pickup-person-management-section {
+    padding: 10px;
+}
+
+.form-card {
+    padding: 20px;
+    border: 1px solid #007bff;
+    border-radius: 8px;
+    background-color: #f0f8ff; /* Light blue background */
+    margin-bottom: 30px;
+}
+
+.form-card h4 {
+    color: #007bff;
+    margin-top: 0;
+}
+
+.form-card form input {
+    width: calc(33.33% - 10px); /* Three inputs per row, minus margin */
+    padding: 10px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    display: inline-block;
+}
+
+.form-card form button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.form-card form button[type="submit"] {
+    background-color: #28a745;
+    color: white;
+}
+.form-card form button[type="submit"]:hover {
+    background-color: #218838;
+}
+
+.form-card .cancel-btn {
+    margin-left: 10px;
+}
+
+.persons-list {
+    margin-top: 20px;
 }

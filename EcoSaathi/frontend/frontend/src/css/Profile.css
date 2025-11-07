@@ -71,12 +71,12 @@ font-style: italic;
 
 /* Specific Style for Edit Button */
 .edit-btn {
-background: #ffc107 !important;
-color: #333 !important;
+background: #654c02 !important;
+color: white !important;
 }
 
 .edit-btn:hover {
-box-shadow: 0 4px 10px rgba(255, 193, 7, 0.4) !important;
+background-color: #fabd04 !important;
 }
 
 /* 🔑 NEW: Specific Style for Logout Button on Profile Page */

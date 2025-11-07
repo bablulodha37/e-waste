@@ -1,0 +1,93 @@
+/* src/css/PhotoPreviewModal.css */
+
+/* Background overlay */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85); /* Dark semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's above everything else */
+}
+
+/* Modal content container */
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Close button */
+.modal-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #dc3545; /* Red/Error color */
+    padding: 5px;
+    z-index: 1001; /* Above other modal content */
+}
+
+/* Controls (Zoom buttons) */
+.modal-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 10px;
+}
+.modal-controls button {
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.modal-controls button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+.modal-controls span {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Image container area */
+.modal-image-container {
+    overflow: auto; /* Allows scrolling when zoomed in */
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-image-container img {
+    /* Base style for the image */
+    max-width: 100%;
+    max-height: 100%;
+    transition: transform 0.2s ease-out; /* Smooth zoom transition */
+    transform-origin: center center;
+    object-fit: contain;
+}
+
+/* Disable drag on image when not zoomed (optional, for better UX) */
+.modal-image-container img:not([style*="scale(1)"]) {
+    user-select: none;
+    -webkit-user-drag: none;
+}

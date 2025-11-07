@@ -13,7 +13,7 @@ public class Request {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Type of request (e.g., "Recycling Pickup", "Compost Dropoff")
+    // Type of Device (e.g., "laptop", "Computer")
     private String type;
 
     private String description;

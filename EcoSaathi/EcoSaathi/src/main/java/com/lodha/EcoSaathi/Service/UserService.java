@@ -77,6 +77,19 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User unverifyUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        // Set verified to false to reject/unverify the user
+        user.setVerified(false);
+
+        // Also, optionally change the role to prevent future login if you want a complete block
+        // user.setRole("REJECTED_USER");
+
+        return userRepository.save(user);
+    }
+
     // updateUser (Unchanged)
     public User updateUser(Long userId, User updatedUserDetails) {
         User existingUser = userRepository.findById(userId)

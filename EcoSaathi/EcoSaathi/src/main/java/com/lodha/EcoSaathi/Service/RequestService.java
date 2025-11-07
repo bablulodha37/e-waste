@@ -1,16 +1,16 @@
 package com.lodha.EcoSaathi.Service;
 
-import com.lodha.EcoSaathi.Config.FileStorageProperties; // 🆕 New Import
+import com.lodha.EcoSaathi.Config.FileStorageProperties;
 import com.lodha.EcoSaathi.Entity.Request;
 import com.lodha.EcoSaathi.Entity.User;
 import com.lodha.EcoSaathi.Repository.RequestRepository;
 import com.lodha.EcoSaathi.Repository.UserRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile; // 🆕 New Import
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.ArrayList; // New Import
+import java.util.ArrayList;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,13 +23,13 @@ public class RequestService {
 
     private final RequestRepository requestRepository;
     private final UserRepository userRepository;
-    private final FileStorageProperties fileStorageProperties; // 🆕 New Field
+    private final FileStorageProperties fileStorageProperties;
 
-    // 🆕 Updated Constructor
+    // 🆕 Updated Constructor (Kept from your original, just for context)
     public RequestService(RequestRepository requestRepository, UserRepository userRepository, FileStorageProperties fileStorageProperties) {
         this.requestRepository = requestRepository;
         this.userRepository = userRepository;
-        this.fileStorageProperties = fileStorageProperties; // Initialize the new dependency
+        this.fileStorageProperties = fileStorageProperties;
 
         // Ensure the directory exists (optional, but good practice)
         try {
@@ -40,15 +40,13 @@ public class RequestService {
         }
     }
 
-    // --- HELPER METHOD FOR MULTIPLE FILE UPLOAD ---
-    // 🆕 New Private Method
+    // --- HELPER METHOD FOR MULTIPLE FILE UPLOAD (Kept from your original) ---
     private List<String> saveMultipleFiles(List<MultipartFile> files) {
         List<String> fileUrls = new ArrayList<>();
-
-        // Use the same logic as UserService's saveFile, but in a loop
+        // ... (your existing saveMultipleFiles logic remains here) ...
         for (MultipartFile file : files) {
             if (file.isEmpty()) {
-                continue; // Skip empty files
+                continue;
             }
             try {
                 String originalFileName = file.getOriginalFilename();
@@ -62,21 +60,19 @@ public class RequestService {
 
                 Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
-                // Return the relative URL
                 fileUrls.add("/images/" + fileName);
 
             } catch (Exception ex) {
                 System.err.println("Multiple File Storage Error: " + ex.getMessage());
-                // In a real app, you might want a more sophisticated rollback or error message here.
                 throw new RuntimeException("Could not store file " + file.getOriginalFilename() + ". Please try again!", ex);
             }
         }
         return fileUrls;
     }
 
-    // --- USER ACTIONS (Updated) ---
+    // --- USER ACTIONS (Kept from your original) ---
 
-    // 🆕 Now accepts List<MultipartFile> along with requestDetails
+    // Submit Request (Kept from your original)
     public Request submitRequestWithPhotos(Long userId, Request requestDetails, List<MultipartFile> files) {
         if (files.isEmpty()) {
             throw new RuntimeException("At least one photo must be uploaded for the request.");
@@ -96,33 +92,60 @@ public class RequestService {
         }
 
         // 3. Set the URLs on the Request entity
-        requestDetails.setPhotoUrls(photoUrls); // 🆕 Set the photo URLs
+        requestDetails.setPhotoUrls(photoUrls);
 
-        requestDetails.setStatus("PENDING");
+        requestDetails.setStatus("PENDING"); // Initial status
         return requestRepository.save(requestDetails);
     }
 
-    //  User views their own requests
+    // User views their own requests (Kept from your original)
     public List<Request> getRequestsByUser(Long userId) {
         return requestRepository.findByUserId(userId);
     }
 
-    // --- ADMIN ACTIONS ---
+    // --- ADMIN ACTIONS (Updated) ---
 
-    //  Admin views all PENDING requests
+    // Admin views all PENDING requests (Kept from your original)
     public List<Request> getAllPendingRequests() {
         return requestRepository.findAll().stream()
                 .filter(r -> "PENDING".equals(r.getStatus()))
                 .toList();
     }
 
-    //  Admin manages/schedules a request
-    public Request scheduleRequest(Long requestId, LocalDateTime scheduledTime) {
+    // 🆕 New: Admin approves a PENDING request
+    public Request approveRequest(Long requestId) {
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found with id: " + requestId));
 
         if (!"PENDING".equals(request.getStatus())) {
-            throw new RuntimeException("Cannot schedule a request that is not PENDING.");
+            throw new RuntimeException("Only PENDING requests can be APPROVED.");
+        }
+
+        request.setStatus("APPROVED"); // New status
+        return requestRepository.save(request);
+    }
+
+    // 🆕 New: Admin rejects a PENDING request
+    public Request rejectRequest(Long requestId) {
+        Request request = requestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Request not found with id: " + requestId));
+
+        if (!"PENDING".equals(request.getStatus()) && !"APPROVED".equals(request.getStatus())) {
+            throw new RuntimeException("Only PENDING or APPROVED requests can be REJECTED/CANCELLED.");
+        }
+
+        request.setStatus("REJECTED"); // New status
+        return requestRepository.save(request);
+    }
+
+    // Admin manages/schedules an APPROVED request (Updated logic)
+    public Request scheduleRequest(Long requestId, LocalDateTime scheduledTime) {
+        Request request = requestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Request not found with id: " + requestId));
+
+        // 🔄 Updated: Only APPROVED requests can be scheduled
+        if (!"APPROVED".equals(request.getStatus())) {
+            throw new RuntimeException("Cannot schedule a request that is not APPROVED. Current status: " + request.getStatus());
         }
 
         request.setScheduledTime(scheduledTime);
@@ -130,7 +153,21 @@ public class RequestService {
         return requestRepository.save(request);
     }
 
-    // Admin to view all requests
+    // 🆕 New: Admin marks a SCHEDULED request as completed
+    public Request completeRequest(Long requestId) {
+        Request request = requestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Request not found with id: " + requestId));
+
+        if (!"SCHEDULED".equals(request.getStatus())) {
+            throw new RuntimeException("Only SCHEDULED requests can be marked as COMPLETED. Current status: " + request.getStatus());
+        }
+
+        request.setStatus("COMPLETED");
+        return requestRepository.save(request);
+    }
+
+
+    // Admin to view all requests (Kept from your original)
     public List<Request> getAllRequests() {
         return requestRepository.findAll();
     }

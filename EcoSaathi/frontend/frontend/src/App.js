@@ -11,32 +11,29 @@ import "./css/App.css";
 const Home = lazy(() => import("./components/Home"));
 const Login = lazy(() => import("./components/Login"));
 const Register = lazy(() => import("./components/Register"));
-
-// Lazy load UserDashboard
-const UserDashboard = lazy(() => import("./components/UserDashboard")); 
-
+const UserDashboard = lazy(() => import("./components/UserDashboard"));
 const Profile = lazy(() => import("./components/Profile"));
+const CertificateGenerator = lazy(() => import("./components/CertificateGenerator"));
 const EditProfile = lazy(() => import("./components/EditProfile"));
-// Lazy load RequestForm and RequestHistory for dedicated pages
 const RequestForm = lazy(() => import("./components/RequestForm"));
 const RequestHistory = lazy(() => import("./components/RequestHistory"));
-
+const UserReport = lazy(() => import("./components/UserReport"));
 const Admin = lazy(() => import("./components/Admin"));
-const NotFound = lazy(() => import("./components/NotFound")); // 404 page
+const NotFound = lazy(() => import("./components/NotFound"));
 
 export default function App() {
   return (
-    <div className="app-container"> 
+    <div className="app-container">
       <Router>
         <NavBar />
 
-        <main className="main-content"> 
+        <main className="main-content">
           <Suspense
             fallback={
               <div
                 style={{
                   textAlign: "center",
-                  marginTop: "50px", 
+                  marginTop: "50px",
                   fontSize: "18px",
                   color: "#0b8457",
                 }}
@@ -55,8 +52,6 @@ export default function App() {
               <Route path="/contact" element={<Home />} />
 
               {/* === 🔒 User Protected Routes === */}
-              
-              {/* 1. User Dashboard */}
               <Route
                 path="/dashboard/:id"
                 element={
@@ -66,7 +61,6 @@ export default function App() {
                 }
               />
 
-              {/* 2. Dedicated Route for submitting a Request */}
               <Route
                 path="/request/submit/:id"
                 element={
@@ -75,16 +69,16 @@ export default function App() {
                   </ProtectedRoute>
                 }
               />
-              
-              {/* 3. ✅ FIX HERE: Dedicated Route for Request History */}
-              <Route path="/profile/:id/history" element={
+
+              <Route
+                path="/profile/:id/history"
+                element={
                   <ProtectedRoute>
                     <RequestHistory />
                   </ProtectedRoute>
                 }
               />
 
-              {/* 4. Profile Details */}
               <Route
                 path="/profile/:id"
                 element={
@@ -94,10 +88,28 @@ export default function App() {
                 }
               />
               <Route
+                path="/certificate/:id"
+                element={
+                  <ProtectedRoute>
+                      <CertificateGenerator />
+                  </ProtectedRoute>
+                  }
+              />
+              <Route
                 path="/profile/:id/edit"
                 element={
                   <ProtectedRoute>
                     <EditProfile />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* 🔑 NEW: Route for the User Report (Profile + History + PDF) */}
+              <Route
+                path="/report/:id"
+                element={
+                  <ProtectedRoute>
+                    <UserReport />
                   </ProtectedRoute>
                 }
               />

@@ -1,6 +1,6 @@
 /* EditProfile.css */
 .container {
-    max-width: 420px;
+    max-width: 650px;
     margin: 4rem auto;
     padding: 2rem;
     background: white;
@@ -23,7 +23,7 @@ form {
 }
 
 form input,
-form textarea /* ✅ NEW: Added textarea styling for the address field */
+form textarea /*  styling for the address field */
 {
     width: 90%;
     padding: 10px 12px;

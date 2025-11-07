@@ -1,16 +1,14 @@
 // src/components/RequestHistory.js
 
 import React, { useEffect, useState } from 'react';
-// 💡 Import useParams to read the ID from the URL
-import { useParams } from "react-router-dom"; 
+import { useParams } from "react-router-dom";
 import { api } from '../api';
 import "../css/RequestHistory.css";
 
-// 💡 Props are no longer needed; use useParams()
-export default function RequestHistory() { 
-    // 💡 Get the 'id' parameter from the URL
+export default function RequestHistory() {
+    // Get the 'id' parameter from the URL
     const { id } = useParams();
-    
+
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -18,8 +16,7 @@ export default function RequestHistory() {
     useEffect(() => {
         const fetchRequests = async () => {
             try {
-                // Use the ID obtained from useParams
-                const data = await api(`/api/auth/user/${id}/requests`); 
+                const data = await api(`/api/auth/user/${id}/requests`);
                 setRequests(data);
             } catch (err) {
                 setError('Failed to load request history.');
@@ -28,11 +25,10 @@ export default function RequestHistory() {
                 setLoading(false);
             }
         };
-        // Use 'id' to trigger the fetch
         if (id) {
             fetchRequests();
         }
-    }, [id]); 
+    }, [id]);
 
     if (loading) return <div className="container">Loading request history...</div>;
     if (error) return <div className="container error-msg">{error}</div>;
@@ -41,17 +37,21 @@ export default function RequestHistory() {
     const getStatusClass = (status) => {
         if (status === 'SCHEDULED') return 'status-scheduled';
         if (status === 'COMPLETED') return 'status-completed';
-        return 'status-pending'; // PENDING
+        return 'status-pending';
     };
 
     return (
         <div className="container request-history-card">
             <h3>Your Requests</h3>
+            {/* 💡 NEW LINE: Display the total number of requests */}
+            <p className="request-count">
+                **Total Requests: {requests.length}**
+            </p>
             <table className="request-table">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Type</th>
+                        <th>Device Type</th>
                         <th>Description</th>
                         <th>Status</th>
                         <th>Scheduled Time</th>
@@ -69,10 +69,9 @@ export default function RequestHistory() {
                                 </span>
                             </td>
                             <td>
-                                {req.scheduledTime ? 
-                                    new Date(req.scheduledTime).toLocaleString() : 
-                                    'Awaiting Schedule'
-                                }
+                                {req.scheduledTime
+                                    ? new Date(req.scheduledTime).toLocaleString()
+                                    : 'Awaiting Schedule'}
                             </td>
                         </tr>
                     ))}

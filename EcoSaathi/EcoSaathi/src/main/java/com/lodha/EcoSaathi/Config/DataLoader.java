@@ -19,6 +19,7 @@ public class DataLoader {
             if (userRepository.findByEmail("admin@ecosaathi.com").isEmpty()) {
 
                 User admin = new User();
+
                 admin.setEmail("admin@ecosaathi.com");
 
                 admin.setPassword(passwordEncoder.encode("Admin@123"));

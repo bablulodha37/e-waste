@@ -1,0 +1,124 @@
+/* src/css/UserReport.css */
+
+.report-page {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.report-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ddd;
+}
+
+.pdf-download-btn {
+    padding: 10px 15px;
+    background-color: #007bff; /* Primary color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.pdf-download-btn:hover {
+    background-color: #0056b3;
+}
+
+.report-content-wrapper {
+    /* Styles for the content that will be converted to PDF */
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #eee;
+    font-family: Arial, sans-serif;
+}
+
+.report-main-title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.report-date {
+    text-align: center;
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.report-section {
+    margin-bottom: 30px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.report-section h3 {
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
+    margin-top: 0;
+    color: #007bff;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.report-table th, .report-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    font-size: 0.9em;
+}
+
+.report-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+/* Status Badges - Reusing your existing logic */
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: bold;
+    color: white;
+    display: inline-block;
+}
+
+.status-pending { background-color: #ffc107; color: #333; }
+.status-approved { background-color: #28a745; }
+.status-scheduled { background-color: #007bff; }
+.status-completed { background-color: #6f42c1; }
+
+.report-footer {
+    text-align: center;
+    padding-top: 20px;
+    color: #999;
+    font-style: italic;
+    border-top: 1px solid #eee;
+}
+
+/* **Print/PDF Specific Styles** */
+/* Hide the download button when printing to the PDF */
+@media print {
+    .report-controls {
+        display: none;
+    }
+}

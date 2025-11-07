@@ -224,18 +224,18 @@
   display: inline-block;
   padding: 15px 30px;
   border-radius: 50px;
-  color: #fff;
+  color: #39370a;
   font-size: 1.1em;
   text-decoration: none;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .cta-button.secondary {
-  background-color: var(--primary);
+  background-color: #c2e317;
 }
 
 .cta-button.secondary:hover {
-  background-color: var(--primary-dark);
+  background-color: #03f066;
   transform: scale(1.05);
 }
 

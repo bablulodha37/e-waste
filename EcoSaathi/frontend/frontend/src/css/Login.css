@@ -1,163 +1,182 @@
-/* src/css/Login.css (Glassmorphism & Green Nature Theme) */
+/* 🌿 Full Page Layout */
+.login-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e6f4ea 0%, #c1f0d6 100%);
+  overflow: hidden;
+  gap: 60px; /* space between tree and form */
+  padding: 4px;
+  animation: fadeIn 1s ease-in-out;
+}
 
-/* ------------------------------------------- */
-/* --- 1. GLASS CONTAINER (LOGIN BOX) STYLES --- */
-/* ------------------------------------------- */
+/* 🌳 Tree Container */
+.tree-container {
+  flex: 0 0 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: float 4s ease-in-out infinite;
+}
+
+/* 🌲 SVG Tree */
+.tree-svg {
+  width: 320px;
+  height: auto;
+  transition: transform 0.6s ease, filter 0.5s ease;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.2));
+}
+
+/* 👀 Eyes open/close animation */
+.tree-svg .eyes {
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+.tree-svg .eyes-closed {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.tree-svg.sleep .eyes {
+  opacity: 0;
+}
+.tree-svg.sleep .eyes-closed {
+  opacity: 1;
+}
+
+/* 👀 Watch/Sleep transitions */
+.tree-svg.watch {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+.tree-svg.sleep {
+  transform: scale(0.95) rotate(-3deg);
+  filter: brightness(0.8);
+}
+
+/* Floating tree motion */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* 🪞 Login Box (slightly larger) */
 .container {
-    max-width: 600px;
-    /* Vertically center the box and add margin */
-    margin: 15vh auto 4rem auto; 
-    padding: 30px; 
-    
-    /* 🍏 Glassmorphism Core */
-    /* Semi-transparent white background, letting the background image/color show through */
-    background: rgba(255, 255, 255, 0.2); 
-    backdrop-filter: blur(10px); /* 🌟 Key Glass effect */
-    -webkit-backdrop-filter: blur(10px); /* For Safari support */
-    
-    border-radius: 15px; 
-    border: 1px solid rgba(255, 255, 255, 0.3); /* Light border for definition */
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15); /* Soft shadow */
-    
-    /* Dark Green text color */
-    color: #084c26; 
-    
-    animation: fadeIn 0.5s ease-in-out;
-    box-sizing: border-box; 
+  flex: 0 0 45%;
+  background: rgba(255, 255, 255, 0.28);
+  border-radius: 24px;
+  padding: 40px 50px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  text-align: center;
 }
 
-/* ------------------------------------------- */
-/* --- 2. HEADER AND FORM STRUCTURE --- */
-/* ------------------------------------------- */
+/* Heading */
 h2 {
-    text-align: center;
-    color: #0b8457; /* EcoSaathi Primary Green */
-    font-weight: 700;
-    margin-bottom: 2rem;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); 
+  color: #0b8457;
+  font-weight: 800;
+  font-size: 2.3em;
+  text-shadow: 0 2px 5px rgba(11, 132, 87, 0.25);
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
+.tagline {
+  color: rgba(8, 76, 38, 0.75);
+  margin-bottom: 1.8rem;
+  font-size: 1.05em;
 }
 
-/* ------------------------------------------- */
-/* --- 3. INPUT FIELDS STYLES --- */
-/* ------------------------------------------- */
-form input,
-form textarea {
-    width: 90%; 
-    padding: 12px 15px;
-    margin-top: 15px;
-    
-    /* 🌫️ Input Glass Look */
-    background: rgba(255, 255, 255, 0.7); 
-    border: 1px solid rgba(11, 132, 87, 0.5); /* Green border */
-    color: #084c26; 
-    border-radius: 8px;
-    transition: all 0.2s ease;
-    box-sizing: border-box; 
-    
-    /* Reset default background color on autofill */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
+/* Input Fields */
+form input {
+  width: 92%;
+  padding: 14px 16px;
+  margin-top: 18px;
+  border: 1px solid rgba(11, 132, 87, 0.5);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.8);
+  color: #084c26;
+  font-size: 1rem;
+  transition: all 0.4s ease;
+}
+form input:focus {
+  border-color: #0b8457;
+  box-shadow: 0 0 14px rgba(11, 132, 87, 0.6);
+  background: white;
+  transform: scale(1.03);
+  outline: none;
 }
 
-form input::placeholder {
-    color: rgba(8, 76, 38, 0.6); 
-}
-
-form input:focus,
-form textarea:focus {
-    /* Focus glow with primary green color */
-    border-color: #0b8457;
-    box-shadow: 0 0 8px rgba(11, 132, 87, 0.5);
-    background: white; /* Solid background on focus for readability */
-    outline: none;
-}
-
-/* ------------------------------------------- */
-/* --- 4. BUTTON STYLES --- */
-/* ------------------------------------------- */
+/* Button */
 form button {
-    width: 70%; 
-    margin-top: 30px; 
-    
-    /* 🌿 Green Gradient for a natural look */
-    background: linear-gradient(90deg, #0b8457, #1a9667); 
-    color: white;
-    border: none;
-    padding: 14px; 
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 1.1em;
-    letter-spacing: 0.5px;
-    transition: all 0.3s ease;
+  width: 75%;
+  margin-top: 30px;
+  background: linear-gradient(90deg, #0b8457, #1a9667);
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1.15em;
+  letter-spacing: 0.6px;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+form button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(11, 132, 87, 0.45);
+  background: linear-gradient(90deg, #1a9667, #0b8457);
 }
 
-form button:hover:not(:disabled) {
-    transform: translateY(-3px); 
-    box-shadow: 0 8px 15px rgba(11, 132, 87, 0.4);
-    background: linear-gradient(90deg, #1a9667, #0b8457);
+/* Shine effect */
+form button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: skewX(-45deg);
+  transition: left 0.6s;
+}
+form button:hover::after {
+  left: 200%;
 }
 
-/* ------------------------------------------- */
-/* --- 5. ERROR MESSAGES AND LINKS --- */
-/* ------------------------------------------- */
-
-/* Links Group (Forgot Password/Signup) */
+/* Links */
 .link-group {
-    display: flex;
-    justify-content: space-between;
-    width: 90%;
-    margin-top: 15px;
-    font-size: 0.9em;
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  margin-top: 18px;
+  font-size: 0.95em;
 }
-
 .link-group a {
-    color: #0b8457;
-    text-decoration: none;
-    transition: color 0.2s;
+  color: #0b8457;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
-
 .link-group a:hover {
-    color: #1a9667;
-    text-decoration: underline;
+  color: #1a9667;
+  text-decoration: underline;
 }
 
-/* Error Message Style */
-.error, .error-msg {
-    width: 90%;
-    margin-top: 15px;
-    padding: 8px;
-    background-color: rgba(255, 240, 240, 0.8); /* Light transparent red background */
-    color: #c9302c; 
-    border: 1px solid rgba(201, 48, 44, 0.5);
-    border-radius: 5px;
-    text-align: center;
-    font-size: 0.95rem;
-    box-sizing: border-box;
+/* Error Message */
+.error {
+  width: 90%;
+  margin-top: 18px;
+  padding: 10px;
+  background-color: rgba(255, 240, 240, 0.8);
+  color: #c9302c;
+  border: 1px solid rgba(201, 48, 44, 0.5);
+  border-radius: 6px;
+  text-align: center;
+  font-size: 1rem;
 }
 
-/* Success Message Style (for future use) */
-.success-msg {
-    width: 90%;
-    margin-top: 15px;
-    padding: 8px;
-    background-color: rgba(227, 252, 249, 0.8); /* Light transparent green background */
-    color: #1a7e6b;
-    border: 1px solid rgba(200, 230, 227, 0.8);
-    border-radius: 5px;
-    text-align: center;
-    font-size: 0.95rem;
-    box-sizing: border-box;
-}
-
-/* Fade in animation */
+/* Fade In Animation */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }

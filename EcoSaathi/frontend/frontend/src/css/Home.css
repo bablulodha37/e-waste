@@ -33,16 +33,7 @@
   
   /* 🌟 THE BLENDING EFFECT IS HERE 🌟 */
   /* This creates a dark overlay for text readability AND a gradient at the bottom for blending */
-  background: linear-gradient(
-    /* 1. Dark overlay for text at the top 
-    (from transparent dark to less transparent dark) */
-    rgba(0, 0, 0, 0.4), 
-    rgba(0, 0, 0, 0.2), 
-    
-    /* 2. Transition to the light-bg color at the very bottom (last 15% of the height) */
-    transparent 85%,
-    #fff 100%
-  );
+  background: linear-gradient(/* 1. Dark overlay for text at the top (from transparent dark to less transparent dark) */ rgb(23 91 50 / 40%), rgb(179 173 173 / 20%), /* 2. Transition to the light-bg color at the very bottom (last 15% of the height) */ #737976 95%, #fff 100%);
 }
 
 .hero-dialogue {
@@ -285,4 +276,64 @@
   .info-cards-section h2 {
     font-size: 2em;
   }
+}
+
+
+
+.branding-logo {
+    position: absolute;
+    top: 40px; /* Distance from the top */
+    right: 60px; /* Distance from the right */
+    display: flex; /* To align the icon and text next to each other */
+    align-items: center;
+    color: #4fdfa2; /* Text color for visibility on the image */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6); /* Optional: Shadow for better contrast */
+    z-index: 10; /* Ensure it's above the image and overlay */
+}
+
+/* Styles for the recycle icon */
+.branding-logo .logo-icon {
+    font-size: 3rem; /* Make the emoji bigger */
+    margin-right: 0px;
+    margin-top: 0px;
+}
+
+/* Container for the two-line text */
+.branding-logo .logo-text {
+    display: flex; /* Use flexbox to arrange the two spans vertically */
+    flex-direction: column;
+    line-height: 1.1; /* Adjust line spacing */
+    font-weight: bold;
+}
+
+/* EcoSaathi text - bigger font */
+.branding-logo .main-text {
+    font-size: 2rem;
+}
+
+/* .com text - smaller font on the line below */
+.branding-logo .domain-text {
+    font-size: 1rem;
+    font-weight: normal; /* Less bold for the .com part */
+}
+
+/* Optional: Adjust for smaller screens */
+@media (max-width: 768px) {
+    .branding-logo {
+        top: 10px;
+        right: 10px;
+    }
+    .branding-logo .logo-icon {
+        font-size: 1.8rem;
+
+    }
+    .branding-logo .main-text {
+      margin-right: 30px;
+      margin-top: 50px;
+        font-size: 2rem;
+    }
+    .branding-logo .domain-text {
+        font-size: 0.9rem;
+        margin-right: 30px;
+    }
 }

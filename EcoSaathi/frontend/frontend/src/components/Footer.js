@@ -56,11 +56,6 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      
-      {/* Copyright line ko center mein dikhane ke liye alag se div mein */}
-      <div className="footer-bottom">
-        <p>&copy; {new Date().getFullYear()} EcoSaathi. All rights reserved.</p>
-      </div>
     </footer>
   );
 }

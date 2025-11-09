@@ -75,20 +75,20 @@ text-align: right;
 
 /* Specific Colors - Matching the common scheme (Blue, Yellow, Green, Darker Green/Purple) */
 .stat-card.total {
-background: linear-gradient(45deg, #16b71d, #0056b3);;
+background:#86967e;
 }
 
 .stat-card.pending {
-background: linear-gradient(45deg, #0768ff, #e0a800);
+background:rgb(94, 145, 127);
 
 }
 
 .stat-card.approved {
-background: linear-gradient(45deg, #e9e300, #3a035d);
+background: rgb(255, 156, 248);
 }
 
 .stat-card.completed {
-background: linear-gradient(45deg, #2c0138, #1dab51);
+background: rgb(146, 229, 94);
 }
 
 /* --- 2. Quick Actions Section (White cards below) --- */

@@ -76,10 +76,20 @@ export default function Home() {
       {/* --- TOP ENVIRONMENT BANNER --- */}
       <div className="hero-banner">
         <img
-          src="/homeimage.jpeg"
+          src="/homeimage.png"
           alt="Green environment and nature background"
           className="hero-image"
         />
+     {/* --- NEW BRANDING LOGO & TEXT ADDED HERE --- */}
+   <div className="branding-logo">
+       <span className="logo-icon" role="img" aria-label="Recycle symbol">♻️</span>
+     <div className="logo-text">
+       <span className="main-text">EcoSaathi</span>
+      <span className="domain-text">.com</span>
+     </div>
+   </div>
+    {/* ---------------------------------------- */}
+
         <div className="hero-overlay">
           <h1 className="hero-dialogue">{displayText}</h1> 
         </div>
@@ -87,6 +97,7 @@ export default function Home() {
 
       {/* --- IMAGE-FOCUSED INFO SECTION --- */}
       <section className="info-cards-section">
+        
         <h2>How We Work: Your E-Waste Recycling Journey</h2>
         <p className="section-subtitle">
           Give your old electronics a responsible new life with EcoSaathi.

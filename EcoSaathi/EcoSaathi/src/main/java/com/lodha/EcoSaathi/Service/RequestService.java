@@ -2,6 +2,7 @@ package com.lodha.EcoSaathi.Service;
 
 import com.lodha.EcoSaathi.Config.FileStorageProperties;
 import com.lodha.EcoSaathi.Entity.Request;
+import com.lodha.EcoSaathi.Entity.PickupPerson;
 import com.lodha.EcoSaathi.Entity.User;
 import com.lodha.EcoSaathi.Repository.RequestRepository;
 import com.lodha.EcoSaathi.Repository.UserRepository;
@@ -23,13 +24,15 @@ public class RequestService {
 
     private final RequestRepository requestRepository;
     private final UserRepository userRepository;
+    private final PickupPersonService pickupPersonService;
     private final FileStorageProperties fileStorageProperties;
 
     // 🆕 Updated Constructor (Kept from your original, just for context)
-    public RequestService(RequestRepository requestRepository, UserRepository userRepository, FileStorageProperties fileStorageProperties) {
+    public RequestService(RequestRepository requestRepository, UserRepository userRepository, FileStorageProperties fileStorageProperties, PickupPersonService pickupPersonService) {
         this.requestRepository = requestRepository;
         this.userRepository = userRepository;
         this.fileStorageProperties = fileStorageProperties;
+        this.pickupPersonService = pickupPersonService;
 
         // Ensure the directory exists (optional, but good practice)
         try {
@@ -139,15 +142,19 @@ public class RequestService {
     }
 
     // Admin manages/schedules an APPROVED request (Updated logic)
-    public Request scheduleRequest(Long requestId, LocalDateTime scheduledTime) {
+    public Request scheduleRequest(Long requestId, LocalDateTime scheduledTime, Long pickupPersonId) {
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found with id: " + requestId));
 
-        // 🔄 Updated: Only APPROVED requests can be scheduled
         if (!"APPROVED".equals(request.getStatus())) {
             throw new RuntimeException("Cannot schedule a request that is not APPROVED. Current status: " + request.getStatus());
         }
 
+        // 🆕 New Logic: Find and assign the PickupPerson
+        PickupPerson pickupPerson = pickupPersonService.getPickupPersonById(pickupPersonId);
+
+        request.setAssignedPickupPerson(pickupPerson);
+        request.setPickupPersonAssigned(true); // Set the flag
         request.setScheduledTime(scheduledTime);
         request.setStatus("SCHEDULED");
         return requestRepository.save(request);

@@ -21,6 +21,9 @@ public class DataLoader {
                 User admin = new User();
 
                 admin.setEmail("admin@ecosaathi.com");
+                //  Set the admin's first name
+                admin.setFirstName("EcoSaathi");
+                admin.setLastName("Admin"); // Set a last name for consistency
 
                 admin.setPassword(passwordEncoder.encode("Admin@123"));
                 admin.setRole("ADMIN");

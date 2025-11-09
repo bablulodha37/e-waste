@@ -1,7 +1,10 @@
-// src/App.js
+// src/App.js  (fixed routes: removed duplicates and mapped to proper components)
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import NavBar from "./components/NavBar";
+import Services from "./components/Services";
+import AboutUs from "./components/AboutUs";
+import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./ProtectedRoute";
 import CopyrightBar from "./components/CopyrightBar";
@@ -41,12 +44,15 @@ export default function App() {
             }
           >
             <Routes>
+              {/* Public routes */}
               <Route path="/" element={<Home />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/about" element={<AboutUs />} />
+              <Route path="/contact" element={<Contact />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/services" element={<Home />} />
-              <Route path="/about" element={<Home />} />
-              <Route path="/contact" element={<Home />} />
+
+              {/* Protected user routes */}
               <Route path="/dashboard/:id" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
               <Route path="/request/submit/:id" element={<ProtectedRoute><RequestForm /></ProtectedRoute>} />
               <Route path="/profile/:id/history" element={<ProtectedRoute><RequestHistory /></ProtectedRoute>} />
@@ -54,7 +60,11 @@ export default function App() {
               <Route path="/certificate/:id" element={<ProtectedRoute><CertificateGenerator /></ProtectedRoute>} />
               <Route path="/profile/:id/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
               <Route path="/report/:id" element={<ProtectedRoute><UserReport /></ProtectedRoute>} />
+
+              {/* Admin route */}
               <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
+
+              {/* 404 */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

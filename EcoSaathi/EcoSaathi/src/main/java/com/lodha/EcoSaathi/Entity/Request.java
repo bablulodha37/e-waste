@@ -38,12 +38,12 @@ public class Request {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // 🔄 FIX: Added FetchType.EAGER to ensure the PickupPerson data is loaded
+    // Added FetchType.EAGER to ensure the PickupPerson data is loaded
     //         immediately, so it appears in the user's request history JSON response.
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "pickup_person_id")
     private PickupPerson assignedPickupPerson;
 
-    // 🆕 New: Field to clearly indicate if a person has been assigned
+    //  Field to clearly indicate if a person has been assigned
     private boolean isPickupPersonAssigned = false;
 }

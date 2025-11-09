@@ -1,4 +1,4 @@
-// ✅ NavBar.js (Final Corrected)
+// src/components/NavBar.js  (Final Corrected – unchanged logic)
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../css/NavBar.css";
@@ -74,9 +74,7 @@ export default function NavBar() {
           </button>
         )}
 
-        {/* 👇 CHANGE HERE: The "Dashboard" button/link now only shows if 
-            it's a Public user (showQuickLinks) OR a Logged-in **NON-ADMIN** user (user && !isAdmin).
-        */}
+        {/* 👇 Dashboard/Home logic */}
         {showQuickLinks &&
           (!user || (user && !isAdmin)) &&
           (user ? (

@@ -15,30 +15,61 @@ export default function Admin() {
   const navigate = useNavigate();
   const API_BASE_URL = 'http://localhost:8080/api/admin';
 
+  // ✅ Fetch users
   const fetchUsers = async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/users`);
-      setUsers(response.data);
+      const allUsers = response.data;
+
+      // ✅ Exclude admin accounts
+      const filteredUsers = allUsers.filter(u => u.role !== 'ADMIN');
+      setUsers(filteredUsers);
     } catch (err) {
       console.error("Error fetching users:", err);
     }
   };
 
+  // ✅ Fetch requests (all)
   const fetchRequests = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/requests`);
+      const response = await axios.get(`${API_BASE_URL}/requests/all`);
       setRequests(response.data);
     } catch (err) {
       console.error("Error fetching requests:", err);
     }
   };
 
+  // ✅ Fetch pickup persons
   const fetchPickupPersons = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/pickups`);
+      const response = await axios.get(`${API_BASE_URL}/pickuppersons`);
       setPickupPersons(response.data);
     } catch (err) {
       console.error("Error fetching pickup persons:", err);
+    }
+  };
+
+  // ✅ Verify user
+  const verifyUser = async (id) => {
+    try {
+      await axios.put(`${API_BASE_URL}/user/verify/${id}`);
+      alert('User verified successfully!');
+      fetchUsers(); // Refresh user list
+    } catch (err) {
+      console.error('Error verifying user:', err);
+      alert('Failed to verify user.');
+    }
+  };
+
+  // ✅ Reject (Block) user
+  const rejectUser = async (id) => {
+    try {
+      await axios.put(`${API_BASE_URL}/user/reject/${id}`);
+      alert('User rejected/blocked successfully!');
+      fetchUsers(); // Refresh user list
+    } catch (err) {
+      console.error('Error rejecting user:', err);
+      alert('Failed to reject user.');
     }
   };
 
@@ -70,7 +101,11 @@ export default function Admin() {
   if (loading) return <div className="admin-container">Loading...</div>;
   if (error) return <div className="admin-container error">{error}</div>;
 
+  // ✅ Stats derived from real data
+  const totalUsers = users.length;
+  const totalRequests = requests.length;
   const totalPendingRequests = requests.filter(r => r.status === "PENDING").length;
+  const totalPickupPersons = pickupPersons.length;
 
   return (
     <div className="admin-container">
@@ -82,11 +117,11 @@ export default function Admin() {
           <div className="admin-stats-container">
             <div className="admin-card total">
               <h3>Total Users</h3>
-              <div className="value">{users.length}</div>
+              <div className="value">{totalUsers}</div>
             </div>
             <div className="admin-card request">
               <h3>Total Requests</h3>
-              <div className="value">{requests.length}</div>
+              <div className="value">{totalRequests}</div>
             </div>
             <div className="admin-card pending">
               <h3>Pending Requests</h3>
@@ -94,7 +129,7 @@ export default function Admin() {
             </div>
             <div className="admin-card pickup">
               <h3>Pickup Persons</h3>
-              <div className="value">{pickupPersons.length}</div>
+              <div className="value">{totalPickupPersons}</div>
             </div>
           </div>
 
@@ -125,8 +160,14 @@ export default function Admin() {
           <table className="user-table">
             <thead>
               <tr>
-                <th>ID</th><th>Name</th><th>Email</th><th>Phone</th>
-                <th>Address</th><th>Role</th><th>Verified</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Role</th>
+                <th>Verified</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -139,6 +180,24 @@ export default function Admin() {
                   <td>{u.pickupAddress}</td>
                   <td>{u.role}</td>
                   <td>{u.verified ? '✅' : '❌'}</td>
+                  <td>
+                    {!u.verified && (
+                      <button
+                        className="verify-btn"
+                        onClick={() => verifyUser(u.id)}
+                      >
+                        ✅ Verify
+                      </button>
+                    )}
+                    {u.verified && (
+                      <button
+                        className="reject-btn"
+                        onClick={() => rejectUser(u.id)}
+                      >
+                        🚫 Block
+                      </button>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>

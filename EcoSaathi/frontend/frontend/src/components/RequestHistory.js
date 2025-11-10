@@ -6,14 +6,11 @@ import { api } from '../api';
 import "../css/RequestHistory.css";
 
 export default function RequestHistory() {
-    // Get the 'id' parameter from the URL
     const { id } = useParams();
-
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [filterStatus, setFilterStatus] = useState('ALL');
-
 
     useEffect(() => {
         const fetchRequests = async () => {
@@ -44,25 +41,20 @@ export default function RequestHistory() {
         return 'status-pending';
     };
     
-    // 🆕 Filter Logic
+    // 🧩 Filter logic
     const filteredRequests = requests.filter(req => 
         filterStatus === 'ALL' || req.status === filterStatus
     );
-
-    if (loading) return <div className="container">Loading request history...</div>;
-    if (error) return <div className="container error-msg">{error}</div>;
-    if (requests.length === 0) return <div className="container">You have not submitted any requests yet.</div>;
 
     return (
         <div className="container request-history-card">
             <h3>Your Requests</h3>
             
-            {/* 🆕 Status Filter UI */}
+            {/* 🧩 Filter Dropdown */}
             <div className="status-filter">
                 <label>Filter Status: </label>
                 <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
                     <option value="ALL">ALL ({requests.length})</option>
-                    {/* Unique statuses from requests could be calculated, but a fixed list is fine */}
                     <option value="PENDING">PENDING</option>
                     <option value="APPROVED">APPROVED</option>
                     <option value="SCHEDULED">SCHEDULED</option>
@@ -72,7 +64,7 @@ export default function RequestHistory() {
             </div>
             
             <p className="request-count">
-                **Showing {filteredRequests.length} requests**
+                Showing {filteredRequests.length} requests
             </p>
             
             <table className="request-table">
@@ -83,8 +75,7 @@ export default function RequestHistory() {
                         <th>Description</th>
                         <th>Status</th>
                         <th>Scheduled Time</th>
-                        {/* 🆕 New Header */}
-                        <th>Pickup Person</th> 
+                        <th>Pickup Person</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -103,10 +94,11 @@ export default function RequestHistory() {
                                     ? new Date(req.scheduledTime).toLocaleString()
                                     : 'Awaiting Schedule'}
                             </td>
-                            {/* 🆕 Display Pickup Person Info */}
+
+                            {/* ✅ Show only Pickup Person name & phone if assigned */}
                             <td>
-                                {req.isPickupPersonAssigned && req.assignedPickupPerson 
-                                    ? `Name: ${req.assignedPickupPerson.name} | Contact: ${req.assignedPickupPerson.phone}` 
+                                {req.assignedPickupPerson
+                                    ? `${req.assignedPickupPerson.name} (${req.assignedPickupPerson.phone})`
                                     : 'Not Assigned Yet'}
                             </td>
                         </tr>

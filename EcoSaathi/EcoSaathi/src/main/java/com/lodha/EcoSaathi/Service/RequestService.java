@@ -10,14 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
-
 
 @Service
 public class RequestService {
@@ -27,14 +26,17 @@ public class RequestService {
     private final PickupPersonService pickupPersonService;
     private final FileStorageProperties fileStorageProperties;
 
-    // 🆕 Updated Constructor (Kept from your original, just for context)
-    public RequestService(RequestRepository requestRepository, UserRepository userRepository, FileStorageProperties fileStorageProperties, PickupPersonService pickupPersonService) {
+    // 🧩 Constructor
+    public RequestService(RequestRepository requestRepository,
+                          UserRepository userRepository,
+                          FileStorageProperties fileStorageProperties,
+                          PickupPersonService pickupPersonService) {
         this.requestRepository = requestRepository;
         this.userRepository = userRepository;
         this.fileStorageProperties = fileStorageProperties;
         this.pickupPersonService = pickupPersonService;
 
-        // Ensure the directory exists (optional, but good practice)
+        // Ensure upload folder exists
         try {
             Path fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize();
             Files.createDirectories(fileStorageLocation);
@@ -43,14 +45,29 @@ public class RequestService {
         }
     }
 
-    // --- HELPER METHOD FOR MULTIPLE FILE UPLOAD (Kept from your original) ---
+    // ✅ Get Stats for a Specific User (for dashboard & certificate)
+    public Map<String, Long> getUserStats(Long userId) {
+        List<Request> userRequests = requestRepository.findByUserId(userId);
+
+        long total = userRequests.size();
+        long pending = userRequests.stream().filter(r -> "PENDING".equals(r.getStatus())).count();
+        long approved = userRequests.stream().filter(r -> "APPROVED".equals(r.getStatus())).count();
+        long completed = userRequests.stream().filter(r -> "COMPLETED".equals(r.getStatus())).count();
+
+        Map<String, Long> stats = new HashMap<>();
+        stats.put("total", total);
+        stats.put("pending", pending);
+        stats.put("approved", approved);
+        stats.put("completed", completed);
+        return stats;
+    }
+
+    // --- File Upload Helper for Multiple Files ---
     private List<String> saveMultipleFiles(List<MultipartFile> files) {
         List<String> fileUrls = new ArrayList<>();
-        // ... (your existing saveMultipleFiles logic remains here) ...
+
         for (MultipartFile file : files) {
-            if (file.isEmpty()) {
-                continue;
-            }
+            if (file.isEmpty()) continue;
             try {
                 String originalFileName = file.getOriginalFilename();
                 String fileExtension = "";
@@ -62,9 +79,7 @@ public class RequestService {
                 Path targetLocation = Paths.get(fileStorageProperties.getUploadDir()).resolve(fileName);
 
                 Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-
                 fileUrls.add("/images/" + fileName);
-
             } catch (Exception ex) {
                 System.err.println("Multiple File Storage Error: " + ex.getMessage());
                 throw new RuntimeException("Could not store file " + file.getOriginalFilename() + ". Please try again!", ex);
@@ -73,18 +88,14 @@ public class RequestService {
         return fileUrls;
     }
 
-    // --- USER ACTIONS (Kept from your original) ---
-
-    // Submit Request (Kept from your original)
+    // --- USER ACTIONS ---
     public Request submitRequestWithPhotos(Long userId, Request requestDetails, List<MultipartFile> files) {
         if (files.isEmpty()) {
             throw new RuntimeException("At least one photo must be uploaded for the request.");
         }
 
-        // 1. Save files and get URLs
         List<String> photoUrls = saveMultipleFiles(files);
 
-        // 2. Existing request submission logic
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found to submit request."));
 
@@ -94,28 +105,22 @@ public class RequestService {
             requestDetails.setPickupLocation(user.getPickupAddress());
         }
 
-        // 3. Set the URLs on the Request entity
         requestDetails.setPhotoUrls(photoUrls);
-
-        requestDetails.setStatus("PENDING"); // Initial status
+        requestDetails.setStatus("PENDING");
         return requestRepository.save(requestDetails);
     }
 
-    // User views their own requests (Kept from your original)
     public List<Request> getRequestsByUser(Long userId) {
         return requestRepository.findByUserId(userId);
     }
 
-    // --- ADMIN ACTIONS (Updated) ---
-
-    // Admin views all PENDING requests (Kept from your original)
+    // --- ADMIN ACTIONS ---
     public List<Request> getAllPendingRequests() {
         return requestRepository.findAll().stream()
                 .filter(r -> "PENDING".equals(r.getStatus()))
-                .toList();
+                .collect(Collectors.toList());
     }
 
-    // 🆕 New: Admin approves a PENDING request
     public Request approveRequest(Long requestId) {
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found with id: " + requestId));
@@ -124,57 +129,51 @@ public class RequestService {
             throw new RuntimeException("Only PENDING requests can be APPROVED.");
         }
 
-        request.setStatus("APPROVED"); // New status
+        request.setStatus("APPROVED");
         return requestRepository.save(request);
     }
 
-    // 🆕 New: Admin rejects a PENDING request
     public Request rejectRequest(Long requestId) {
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found with id: " + requestId));
 
         if (!"PENDING".equals(request.getStatus()) && !"APPROVED".equals(request.getStatus())) {
-            throw new RuntimeException("Only PENDING or APPROVED requests can be REJECTED/CANCELLED.");
+            throw new RuntimeException("Only PENDING or APPROVED requests can be REJECTED.");
         }
 
-        request.setStatus("REJECTED"); // New status
+        request.setStatus("REJECTED");
         return requestRepository.save(request);
     }
 
-    // Admin manages/schedules an APPROVED request (Updated logic)
     public Request scheduleRequest(Long requestId, LocalDateTime scheduledTime, Long pickupPersonId) {
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found with id: " + requestId));
 
         if (!"APPROVED".equals(request.getStatus())) {
-            throw new RuntimeException("Cannot schedule a request that is not APPROVED. Current status: " + request.getStatus());
+            throw new RuntimeException("Cannot schedule a request that is not APPROVED.");
         }
 
-        // 🆕 New Logic: Find and assign the PickupPerson
         PickupPerson pickupPerson = pickupPersonService.getPickupPersonById(pickupPersonId);
 
         request.setAssignedPickupPerson(pickupPerson);
-        request.setPickupPersonAssigned(true); // Set the flag
+        request.setPickupPersonAssigned(true);
         request.setScheduledTime(scheduledTime);
         request.setStatus("SCHEDULED");
         return requestRepository.save(request);
     }
 
-    // 🆕 New: Admin marks a SCHEDULED request as completed
     public Request completeRequest(Long requestId) {
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found with id: " + requestId));
 
         if (!"SCHEDULED".equals(request.getStatus())) {
-            throw new RuntimeException("Only SCHEDULED requests can be marked as COMPLETED. Current status: " + request.getStatus());
+            throw new RuntimeException("Only SCHEDULED requests can be marked as COMPLETED.");
         }
 
         request.setStatus("COMPLETED");
         return requestRepository.save(request);
     }
 
-
-    // Admin to view all requests (Kept from your original)
     public List<Request> getAllRequests() {
         return requestRepository.findAll();
     }

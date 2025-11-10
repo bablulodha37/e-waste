@@ -1,141 +1,239 @@
-/* src/css/UserDashboard.css */
-
 /* --- Main Dashboard Container --- */
 .container.dashboard-page {
-max-width: 10000px;
-margin: 0rem auto;
-padding: 2rem;
-background: #cee9dfad; /* Light background for the dashboard */
-border-radius: 12px;
-box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-text-align: left;
+  max-width: 10000px;
+  margin: 0rem auto;
+  padding: 2rem;
+  background: #cee9dfad;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  text-align: left;
+  animation: fadeIn 0.8s ease-in-out; /* ✨ smooth fade-in */
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .dashboard-page h2 {
-color: #023117; /* Dark green for welcome message */
-font-weight: 700;
-margin-bottom: 0.5rem;
+  color: #023117;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  animation: slideDown 0.6s ease-in-out;
+}
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .dashboard-subheading {
-font-size: 1.1rem;
-color: #19232b;
-margin-bottom: 30px;
+  font-size: 1.1rem;
+  color: #19232b;
+  margin-bottom: 30px;
+  opacity: 0.9;
+  animation: fadeIn 1s ease-in-out;
 }
 
 .quick-actions-title {
-font-size: 1.5rem;
-font-weight: 600;
-color: #333;
-margin-top: 40px;
-margin-bottom: 20px;
-border-bottom: 2px solid #eee;
-padding-bottom: 10px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+  position: relative;
+  animation: fadeIn 1.1s ease-in-out;
 }
 
-/* --- 1. Stats Cards Section (The main colored boxes) --- */
+/* --- Stats Cards --- */
 .stats-cards-container {
-display: flex;
-justify-content: space-between;
-gap: 15px;
-margin-bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  animation: fadeInUp 1s ease-in-out;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .stat-card {
-flex: 1;
-padding: 50px 55px;
-border-radius: 22px;
-color: white;
-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-transition: transform 0.3s ease, box-shadow 0.3s ease;
-cursor: default;
-display: flex;
-flex-direction: column;
-justify-content: space-between;
+  flex: 1;
+  padding: 50px 55px;
+  border-radius: 22px;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.15);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s ease-in-out;
+  z-index: 0;
+}
+
+.stat-card:hover::before {
+  transform: scaleX(1);
 }
 
 .stat-card:hover {
-transform: translateY(-5px);
-box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transform: translateY(-7px) scale(1.03);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card h3,
+.stat-card .value {
+  position: relative;
+  z-index: 1;
 }
 
 .stat-card h3 {
-font-size: 1rem;
-font-weight: 500;
-opacity: 0.9;
-margin-bottom: 15px;
+  font-size: 1rem;
+  font-weight: 500;
+  opacity: 0.9;
+  margin-bottom: 15px;
 }
 
 .stat-card .value {
-font-size: 2.5rem;
-font-weight: 700;
-line-height: 1;
-text-align: right;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+  text-align: right;
+  animation: countUp 1s ease-in-out;
 }
 
-/* Specific Colors - Matching the common scheme (Blue, Yellow, Green, Darker Green/Purple) */
+@keyframes countUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Stat Card Colors --- */
 .stat-card.total {
-background:#86967e;
+  background: #86967e;
 }
 
 .stat-card.pending {
-background:rgb(94, 145, 127);
-
+  background: rgb(94, 145, 127);
 }
 
 .stat-card.approved {
-background: rgb(255, 156, 248);
+  background: rgb(201, 156, 255);
 }
 
 .stat-card.completed {
-background: rgb(146, 229, 94);
+  background: rgb(94, 188, 229);
 }
 
-/* --- 2. Quick Actions Section (White cards below) --- */
+/* --- Quick Actions --- */
 .quick-actions-container {
-display: flex;
-flex-wrap: wrap;
-justify-content: space-between;
-gap: 25px;
-margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 25px;
+  margin-top: 20px;
+  animation: fadeInUp 1.2s ease-in-out;
 }
 
 .action-card {
-flex: 1;
-display: flex;
-flex-wrap: wrap;
-flex-direction: column;
-align-items: center;
-text-align: center;
-padding: 30px 20px;
-border-radius: 12px;
-background-color: #ffffff;
-border: 1px solid #e0e0e0;
-text-decoration: none;
-color: #333;
-transition: all 0.3s ease;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 30px 20px;
+  border-radius: 12px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  text-decoration: none;
+  color: #333;
+  transition: all 0.4s ease;
+  transform: translateY(0);
+  overflow: hidden;
+  position: relative;
+}
+
+.action-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(13, 110, 253, 0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+
+.action-card:hover::before {
+  opacity: 1;
 }
 
 .action-card:hover {
-border-color: #0d6efd;
-box-shadow: 0 6px 15px rgba(13, 110, 253, 0.15);
-transform: translateY(-3px);
+  border-color: #0d6efd;
+  box-shadow: 0 8px 20px rgba(13, 110, 253, 0.15);
+  transform: translateY(-6px);
 }
 
 .action-icon {
-font-size: 2.5rem;
-color: #0d6efd;
-margin-bottom: 10px;
+  font-size: 2.5rem;
+  color: #0d6efd;
+  margin-bottom: 10px;
+  z-index: 1;
+  transition: transform 0.4s ease;
+}
+
+.action-card:hover .action-icon {
+  transform: rotate(10deg) scale(1.2);
 }
 
 .action-card h4 {
-font-size: 1.15rem;
-font-weight: 600;
-color: #023117;
-margin-bottom: 5px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #023117;
+  margin-bottom: 5px;
+  position: relative;
+  z-index: 1;
 }
 
 .action-card p {
-font-size: 0.9rem;
-color: #6c757d;
+  font-size: 0.9rem;
+  color: #6c757d;
+  z-index: 1;
 }

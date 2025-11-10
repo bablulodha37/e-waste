@@ -13,16 +13,11 @@ export default function UserDashboard() {
     api(`/api/auth/user/${id}`).then(setUser).catch(console.error);
   };
 
+  // ✅ Fetch real stats from backend
   const fetchStats = () => {
-    setTimeout(() => {
-      setStats({
-        total: 5,
-        pending: 1,
-        approved: 3,
-        completed: 1,
-      });
-    }, 500);
-    // api(`/api/requests/stats/${id}`).then(setStats).catch(console.error);
+    api(`/api/auth/user/${id}/stats`)
+      .then(setStats)
+      .catch(console.error);
   };
 
   useEffect(() => {

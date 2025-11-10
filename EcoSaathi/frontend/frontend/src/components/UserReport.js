@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import html2pdf from 'html2pdf.js'; // 🔑 Import the library
+import html2pdf from 'html2pdf.js';
 import { api } from '../api';
-import '../css/UserReport.css'; // We'll create this CSS file
+import '../css/UserReport.css';
 
 export default function UserReport() {
     const { id } = useParams();
@@ -12,23 +12,16 @@ export default function UserReport() {
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
-    // 🔑 NEW: Ref to the DOM element we want to convert to PDF
-    const reportRef = useRef(null); 
-
-    // --- Data Fetching Logic (Combined) ---
+    const reportRef = useRef(null);
 
     useEffect(() => {
         const fetchReportData = async () => {
             try {
-                // 1. Fetch User Details
                 const userData = await api(`/api/auth/user/${id}`);
                 setUser(userData);
 
-                // 2. Fetch Request History
                 const requestsData = await api(`/api/auth/user/${id}/requests`);
                 setRequests(requestsData);
-
             } catch (err) {
                 setError('Failed to load report data. Please check user ID and API.');
                 console.error('Error fetching report data:', err);
@@ -36,17 +29,11 @@ export default function UserReport() {
                 setLoading(false);
             }
         };
-
-        if (id) {
-            fetchReportData();
-        }
+        if (id) fetchReportData();
     }, [id]);
 
-    // --- PDF Generation Logic ---
-
     const generatePdf = () => {
-        const element = reportRef.current; // Get the content to convert
-
+        const element = reportRef.current;
         if (element) {
             const options = {
                 margin: 10,
@@ -55,13 +42,9 @@ export default function UserReport() {
                 html2canvas: { scale: 2 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
-
-            // Use html2pdf to generate and download the PDF
             html2pdf().from(element).set(options).save();
         }
     };
-
-    // --- Utility Function for Status Badge ---
 
     const getStatusClass = (status) => {
         if (status === 'SCHEDULED') return 'status-scheduled';
@@ -70,32 +53,24 @@ export default function UserReport() {
         return 'status-pending';
     };
 
-    // --- Render Logic ---
-
     if (loading) return <div className="container">Generating Report...</div>;
     if (error) return <div className="container error-msg">❌ {error}</div>;
     if (!user) return <div className="container">User not found.</div>;
 
-
     return (
         <div className="container report-page">
             <div className="report-controls">
-                <h2>User E-Waste Report</h2>
-                <button 
-                    className="pdf-download-btn" 
-                    onClick={generatePdf}
-                    title="Download a PDF copy of this report"
-                >
-                    ⬇️ Download as PDF
+                <h2>📊 User E-Waste Report</h2>
+                <button className="pdf-download-btn" onClick={generatePdf}>
+                    ⬇️ Download PDF
                 </button>
             </div>
-            
-            {/* 🔑 The report content is wrapped in a div with the ref */}
+
             <div className="report-content-wrapper" ref={reportRef}>
                 <h1 className="report-main-title">E-Waste Management System Report</h1>
                 <p className="report-date">Generated on: {new Date().toLocaleDateString()}</p>
-                
-                {/* --- Profile Details Section --- */}
+
+                {/* Profile Section */}
                 <div className="report-section profile-section">
                     <h3>👤 Profile Details</h3>
                     <div className="detail-grid">
@@ -107,9 +82,9 @@ export default function UserReport() {
                     <p><strong>Address:</strong> {user.pickupAddress}</p>
                 </div>
 
-                {/* --- Request History Section --- */}
+                {/* Request History Section */}
                 <div className="report-section history-section">
-                    <h3>📋 Request History (Total: {requests.length})</h3>
+                    <h3>📦 Request History (Total: {requests.length})</h3>
                     {requests.length === 0 ? (
                         <p>No e-waste requests submitted by this user.</p>
                     ) : (
@@ -120,6 +95,7 @@ export default function UserReport() {
                                     <th>Device Type</th>
                                     <th>Status</th>
                                     <th>Scheduled Time</th>
+                                    <th>Pickup Person</th>
                                     <th>Description</th>
                                 </tr>
                             </thead>
@@ -138,6 +114,11 @@ export default function UserReport() {
                                                 ? new Date(req.scheduledTime).toLocaleDateString()
                                                 : 'N/A'}
                                         </td>
+                                        <td>
+                                            {req.assignedPickupPerson
+                                                ? `${req.assignedPickupPerson.name} (${req.assignedPickupPerson.phone})`
+                                                : 'Not Assigned'}
+                                        </td>
                                         <td>{req.description}</td>
                                     </tr>
                                 ))}
@@ -145,7 +126,7 @@ export default function UserReport() {
                         </table>
                     )}
                 </div>
-                
+
                 <div className="report-footer">
                     <p>End of Report.</p>
                 </div>

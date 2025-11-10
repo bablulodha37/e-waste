@@ -1,96 +1,192 @@
-/* src/css/Register.css */
+/* ===============================
+   🌱 ECO-SAATHI REGISTER PAGE STYLES
+   Modern Glass + Animated Theme
+   =============================== */
+
 .container {
-    max-width: 700px;
-    margin: 4rem auto;
-    padding: 2rem;
-    background: rgba(255, 255, 255, 0.28);
-    border-radius: 10px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-    animation: slideUp 0.5s ease;
+  max-width: 700px;
+  margin: 5rem auto;
+  padding: 2.5rem 3rem;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  animation: fadeInSlide 0.8s ease forwards;
+  transform: translateY(20px);
+  opacity: 0;
 }
 
+@keyframes fadeInSlide {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* --- Heading --- */
 h2 {
-    text-align: center;
-    color: #198754; /* Green theme */
-    font-weight: 700;
-    margin-bottom: 1.5rem;
+  text-align: center;
+  color: #0b8457;
+  font-weight: 800;
+  font-size: 2.2em;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 4px rgba(11, 132, 87, 0.25);
+  letter-spacing: 0.5px;
 }
 
+/* --- Input & Textarea Fields --- */
 form input,
-form textarea /* ✅ NEW: Added styling for textarea (Pickup Address) */
-{
-    width: 80%; 
-    display: block; 
-    margin: 12px auto 0 auto; 
-    
-    padding: 10px 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-    box-sizing: border-box; /* Ensures width: 80% includes padding */
-    font-family: inherit; /* Inherit font for consistency */
-    font-size: 1em;
-}
-
 form textarea {
-    resize: vertical; /* Allows vertical resizing */
-    min-height: 80px; /* Minimum height for the address box */
+  width: 85%;
+  display: block;
+  margin: 14px auto;
+  padding: 13px 15px;
+  border: 1px solid rgba(11, 132, 87, 0.35);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #084c26;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-weight: 500;
 }
 
+/* --- Focus Glow --- */
 form input:focus,
 form textarea:focus {
-    border-color: #198754;
-    box-shadow: 0 0 6px rgba(25, 135, 84, 0.3);
-    outline: none;
+  border-color: #0b8457;
+  box-shadow: 0 0 14px rgba(11, 132, 87, 0.5);
+  transform: scale(1.02);
+  outline: none;
+  background: #fff;
 }
 
+/* --- Textarea --- */
+form textarea {
+  resize: vertical;
+  min-height: 90px;
+  line-height: 1.4;
+}
+
+/* --- Submit Button --- */
 form button {
-    width: 80%; 
-    display: block; 
-    margin: 18px auto 0 auto;
-    
-    background: linear-gradient(90deg, #198754, #34d399);
-    color: white;
-    border: none;
-    padding: 12px; /* Increased padding slightly for better feel */
-    border-radius: 6px;
-    font-weight: 600;
-    font-size: 1.1em;
+  width: 85%;
+  display: block;
+  margin: 25px auto 0 auto;
+  background: linear-gradient(90deg, #0b8457, #1a9667);
+  color: white;
+  border: none;
+  padding: 14px 0;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1.15em;
+  letter-spacing: 0.5px;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
 }
 
+/* --- Button Hover --- */
 form button:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 10px rgba(25, 135, 84, 0.4); /* Increased shadow on hover */
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(11, 132, 87, 0.4);
+  background: linear-gradient(90deg, #1a9667, #0b8457);
 }
 
-/* --- Error/Success Messages (Integrated) --- */
-.error, .error-msg {
-    width: 80%;
-    margin: 15px auto 0 auto; /* Center like other elements */
-    padding: 8px;
-    background-color: #f0fdf4; /* Very light green background */
-    color: #198754;
-    border: 1px solid #c8e6cb;
-    border-radius: 5px;
-    text-align: center;
-    font-size: 0.95rem;
-    box-sizing: border-box;
+/* --- Button Shine Effect --- */
+form button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.25);
+  transform: skewX(-45deg);
+  transition: left 0.6s;
+}
+form button:hover::after {
+  left: 200%;
 }
 
+/* --- Error Message --- */
+.error,
+.error-msg {
+  width: 85%;
+  margin: 18px auto 0 auto;
+  padding: 10px;
+  background-color: rgba(255, 240, 240, 0.85);
+  color: #c9302c;
+  border: 1px solid rgba(201, 48, 44, 0.4);
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1rem;
+  box-sizing: border-box;
+  animation: shake 0.4s ease;
+}
+
+/* --- Success Message (if you ever add it later) --- */
 .success-msg {
-    width: 80%;
-    margin: 15px auto 0 auto;
-    padding: 8px;
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-    border-radius: 5px;
-    text-align: center;
-    font-size: 0.95rem;
-    box-sizing: border-box;
+  width: 85%;
+  margin: 18px auto 0 auto;
+  padding: 10px;
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1rem;
+  box-sizing: border-box;
 }
 
-@keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+/* --- Animations --- */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-4px); }
+}
+
+/* --- Subtle Fade-Up Entry for Each Input --- */
+form input,
+form textarea,
+form button {
+  opacity: 0;
+  transform: translateY(15px);
+  animation: fadeUp 0.6s ease forwards;
+}
+form input:nth-child(1) { animation-delay: 0.1s; }
+form input:nth-child(2) { animation-delay: 0.15s; }
+form input:nth-child(3) { animation-delay: 0.2s; }
+form input:nth-child(4) { animation-delay: 0.25s; }
+form input:nth-child(5) { animation-delay: 0.3s; }
+form textarea { animation-delay: 0.35s; }
+form button { animation-delay: 0.45s; }
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+  .container {
+    padding: 1.8rem 1.5rem;
+    margin: 3rem 1rem;
+  }
+
+  h2 {
+    font-size: 1.9em;
+  }
+
+  form input,
+  form textarea,
+  form button {
+    width: 95%;
+  }
 }

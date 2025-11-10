@@ -6,8 +6,9 @@ import com.lodha.EcoSaathi.Service.RequestService;
 import com.lodha.EcoSaathi.Service.UserService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.List;
 
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -22,24 +23,31 @@ public class AuthController {
         this.requestService = requestService;
     }
 
-    // ✅ UPDATED: User is registered and DIRECTLY VERIFIED. No OTP is sent.
+    // Register user
     @PostMapping("/register")
     public User register(@RequestBody User user) {
         return userService.registerUser(user);
     }
 
+    // Login user
     @PostMapping("/login")
     public User login(@RequestBody User user) {
-        // user.getEmail() and user.getPassword() are used directly from the request body
         return userService.login(user.getEmail(), user.getPassword());
     }
 
+    // Update user
     @PutMapping("/user/{id}")
     public User update(@PathVariable Long id, @RequestBody User userDetails) {
         return userService.updateUser(id, userDetails);
     }
 
-    // Endpoint for profile picture upload/update
+    // ✅ User stats endpoint for dashboard/certificate
+    @GetMapping("/user/{id}/stats")
+    public Map<String, Long> getUserStats(@PathVariable Long id) {
+        return requestService.getUserStats(id);
+    }
+
+    // Upload profile picture
     @PostMapping("/user/{id}/profile-picture")
     public User uploadProfilePicture(
             @PathVariable Long id,
@@ -47,39 +55,34 @@ public class AuthController {
         return userService.updateProfilePicture(id, file);
     }
 
-    // 🔄 UPDATED: User submits a request with multiple photos (using multipart/form-data)
+    // User submits a request with multiple photos
     @PostMapping("/user/{id}/request")
     public Request submitRequest(
             @PathVariable Long id,
-            // Request details are now sent as separate form-data parameters
             @RequestParam("type") String type,
             @RequestParam("description") String description,
-            @RequestParam(value = "pickupLocation", required = false) String pickupLocation, // Optional address
-
-            // Accept a List of MultipartFiles (for up to 5 photos)
+            @RequestParam(value = "pickupLocation", required = false) String pickupLocation,
             @RequestParam("files") List<MultipartFile> files) {
 
-        // 1. Validation for photo count (maximum 5 photos)
         if (files.isEmpty() || files.size() > 5) {
             throw new RuntimeException("The request must contain between 1 and 5 photos.");
         }
 
-        // 2. Create the Request object from the form data
         Request requestDetails = new Request();
         requestDetails.setType(type);
         requestDetails.setDescription(description);
         requestDetails.setPickupLocation(pickupLocation);
 
-        // 3. Call the new service method (which handles file saving and request creation)
         return requestService.submitRequestWithPhotos(id, requestDetails, files);
     }
 
-    // User views their own requests
+    // User requests list
     @GetMapping("/user/{id}/requests")
     public List<Request> getUserRequests(@PathVariable Long id) {
         return requestService.getRequestsByUser(id);
     }
 
+    // Get user details
     @GetMapping("/user/{id}")
     public User getUser(@PathVariable Long id) {
         return userService.findById(id);

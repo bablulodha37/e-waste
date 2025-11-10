@@ -6,7 +6,6 @@ import html2pdf from 'html2pdf.js';
 import { api } from '../api';
 import '../css/Certificate.css';
 
-// The required minimum number of completed requests
 const MIN_COMPLETED_REQUESTS = 10;
 
 export default function CertificateGenerator() {
@@ -20,31 +19,22 @@ export default function CertificateGenerator() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Fetch User Data
                 const userData = await api(`/api/auth/user/${id}`);
                 setUser(userData);
 
-                // Fetch Stats Data (using a mock for now, replace with actual API call later)
-                // NOTE: The stats data should come from your API via 'api('/api/user/stats/${id}')' or similar
-                const statsData = await new Promise(resolve => {
-                    setTimeout(() => {
-                        // **MOCK DATA:** Assuming 'completed' is the count you need.
-                        // You should replace this with your actual API call.
-                        resolve({ total: 15, pending: 3, approved: 0, completed: 12 });
-                    }, 500);
-                });
+                // ✅ Fetch real stats from backend
+                const statsData = await api(`/api/auth/user/${id}/stats`);
                 setStats(statsData);
+
             } catch (err) {
-                setError('Failed to load user and stats data.');
+                setError('Failed to load user or stats data.');
                 console.error('Error fetching data for certificate:', err);
             } finally {
                 setLoading(false);
             }
         };
 
-        if (id) {
-            fetchData();
-        }
+        if (id) fetchData();
     }, [id]);
 
     const generatePdf = () => {
@@ -69,12 +59,10 @@ export default function CertificateGenerator() {
 
     return (
         <div className="container certificate-page">
-            
             {isEligible ? (
-                // ✅ RENDER ELIGIBLE CONTENT
                 <>
                     <div className="eligibility-status success">
-                        🎉 **Congratulations!** You have completed **{completedCount}** requests and are eligible for a certificate!
+                        🎉 <strong>Congratulations!</strong> You have completed <strong>{completedCount}</strong> requests and are eligible for a certificate!
                     </div>
 
                     <button 
@@ -84,7 +72,6 @@ export default function CertificateGenerator() {
                         ⬇️ Download Certificate (PDF)
                     </button>
 
-                    {/* Certificate Content - This is what gets converted to PDF */}
                     <div className="certificate-container" ref={certificateRef}>
                         <div className="certificate-border">
                             <div className="certificate-content">
@@ -93,15 +80,13 @@ export default function CertificateGenerator() {
                                 <p className="cert-subtext">Proudly presented to</p>
                                 <h2 className="cert-name">{user.firstName} {user.lastName || user.email}</h2>
                                 <p className="cert-subtext-large">
-                                    For outstanding commitment to **environmental sustainability** and 
+                                    For outstanding commitment to <strong>environmental sustainability</strong> and 
                                     responsible e-waste disposal by successfully completing 
                                 </p>
                                 <p className="cert-count-highlight">
                                     {completedCount} E-Waste Collection Requests
                                 </p>
-                                <p className="cert-subtext-large">
-                                    through the EcoSaathi.
-                                </p>
+                                <p className="cert-subtext-large">through the EcoSaathi.</p>
                                 <div className="cert-footer">
                                     <div className="cert-signature">
                                         <p className="signature-name">Bablu Lodha</p> 
@@ -117,10 +102,9 @@ export default function CertificateGenerator() {
                     </div>
                 </>
             ) : (
-                // 🛑 RENDER INELIGIBLE MESSAGE
                 <div className="eligibility-status warning">
-                    **Ineligible for Certificate.** You have completed **{completedCount}** requests. 
-                    You must complete at least **{MIN_COMPLETED_REQUESTS}** requests to be eligible.
+                    ❌ <strong>Ineligible for Certificate.</strong> You have completed <strong>{completedCount}</strong> requests. 
+                    You must complete at least <strong>{MIN_COMPLETED_REQUESTS}</strong> requests to be eligible.
                 </div>
             )}
         </div>

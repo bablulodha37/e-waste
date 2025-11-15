@@ -110,6 +110,13 @@ public class RequestService {
         return requestRepository.save(requestDetails);
     }
 
+
+    public List<Request> getRequestsByPickupPerson(Long pickupPersonId) {
+        return requestRepository.findByAssignedPickupPersonId(pickupPersonId);
+    }
+
+
+
     public List<Request> getRequestsByUser(Long userId) {
         return requestRepository.findByUserId(userId);
     }

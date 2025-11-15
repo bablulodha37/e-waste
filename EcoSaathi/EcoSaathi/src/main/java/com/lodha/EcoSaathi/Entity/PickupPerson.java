@@ -13,8 +13,7 @@ public class PickupPerson {
 
     private String name;
     private String phone;
-    // Assuming email is optional, but good for contact
     private String email;
 
-    // You might later want a field for 'assignedArea' or 'isAvailable'
+    private String password; // ✅ Added for login authentication
 }

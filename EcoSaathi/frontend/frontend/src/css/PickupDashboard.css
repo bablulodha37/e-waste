@@ -1,0 +1,92 @@
+.pickup-container {
+  padding: 30px;
+  max-width: 1000px;
+  margin: 0 auto;
+  background: #f8fff8;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 128, 0, 0.1);
+}
+
+h1 {
+  color: #0b8457;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.subtitle {
+  text-align: center;
+  color: #555;
+  margin-bottom: 25px;
+}
+
+.pickup-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
+}
+
+.pickup-table th, .pickup-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.pickup-table th {
+  background: #0b8457;
+  color: white;
+}
+
+.pickup-table tr:hover {
+  background: #f2fff2;
+}
+
+.complete-btn {
+  background: #0b8457;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.complete-btn:hover {
+  background: #087a4d;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-badge.pending {
+  background: #ffe5b4;
+  color: #a06b00;
+}
+
+.status-badge.scheduled {
+  background: #d7f3ff;
+  color: #0078b8;
+}
+
+.status-badge.completed {
+  background: #d4f8d4;
+  color: #056608;
+}
+
+.no-requests {
+  text-align: center;
+  color: #777;
+  margin-top: 20px;
+}
+
+.error {
+  color: red;
+  text-align: center;
+}

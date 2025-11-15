@@ -5,12 +5,14 @@ import NavBar from "./components/NavBar";
 import Services from "./components/Services";
 import AboutUs from "./components/AboutUs";
 import Contact from "./components/Contact";
+import PickupProfile from "./components/PickupProfile";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./ProtectedRoute";
 import CopyrightBar from "./components/CopyrightBar";
 import AdminRoute from "./AdminRoute";
 import "./css/App.css";
 
+const PickupDashboard = lazy(() => import("./components/PickupDashboard"));
 const Home = lazy(() => import("./components/Home"));
 const Login = lazy(() => import("./components/Login"));
 const Register = lazy(() => import("./components/Register"));
@@ -44,6 +46,10 @@ export default function App() {
             }
           >
             <Routes>
+
+<Route path="/pickup-dashboard/:id" element={<ProtectedRoute><PickupDashboard /></ProtectedRoute>} />
+<Route path="/pickup-profile/:id" element={<ProtectedRoute><PickupProfile /></ProtectedRoute>} />
+
               {/* Public routes */}
               <Route path="/" element={<Home />} />
               <Route path="/services" element={<Services />} />

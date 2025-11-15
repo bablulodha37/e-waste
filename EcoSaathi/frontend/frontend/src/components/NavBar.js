@@ -1,4 +1,3 @@
-// src/components/NavBar.js  (Final Corrected – unchanged logic)
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../css/NavBar.css";
@@ -10,6 +9,7 @@ export default function NavBar() {
 
   const user = JSON.parse(localStorage.getItem("user"));
   const isAdmin = user && user.role === "ADMIN";
+  const isPickupPerson = user && user.role === "PICKUP_PERSON";
 
   const isHomePage = location.pathname === "/";
   const showQuickLinks = user || (!user && isHomePage);
@@ -23,8 +23,11 @@ export default function NavBar() {
   const homeDestination = user
     ? isAdmin
       ? "/admin"
+      : isPickupPerson
+      ? `/pickup-dashboard/${user.id}`
       : `/dashboard/${user.id}`
     : "/";
+
   const homeLinkText = user ? "Dashboard" : "Home";
 
   const isAdminLinkShown = isAdmin;
@@ -47,6 +50,10 @@ export default function NavBar() {
   const navigateToCertificate = () => navigateTo(`/certificate/${user.id}`);
   const navigateToReport = () => navigateTo(`/report/${user.id}`);
 
+  // --- Pickup Person helpers ---
+  const navigateToPickupProfile = () => navigateTo(`/pickup-profile/${user.id}`);
+  const navigateToPickupDashboard = () => navigateTo(`/pickup-dashboard/${user.id}`);
+
   // --- ADMIN NAVIGATION HELPERS ---
   const handleAdminTab = (tab) => {
     window.dispatchEvent(new CustomEvent("adminTabChange", { detail: tab }));
@@ -67,16 +74,27 @@ export default function NavBar() {
       </Link>
 
       <div className="nav-links">
-        {/* ✅ Changed from "Admin" to "Admin Dashboard" */}
+        {/* ✅ Admin Section */}
         {isAdmin && (
           <button className="nav-btn" onClick={() => navigate("/admin")}>
             Admin Dashboard
           </button>
         )}
 
-        {/* 👇 Dashboard/Home logic */}
+        {/* ✅ Pickup Person Dashboard Button */}
+        {isPickupPerson && (
+          <button
+            className="nav-btn"
+            onClick={() => navigate(`/pickup-dashboard/${user.id}`)}
+            style={homeNeedsAutoMargin ? { marginLeft: "auto" } : {}}
+          >
+            Pickup Dashboard
+          </button>
+        )}
+
+        {/* ✅ Normal User Buttons */}
         {showQuickLinks &&
-          (!user || (user && !isAdmin)) &&
+          (!user || (user && !isAdmin && !isPickupPerson)) &&
           (user ? (
             <button
               className="nav-btn"
@@ -106,14 +124,21 @@ export default function NavBar() {
             Sign In
           </Link>
         )}
-
         {!user && !isHomePage && <Link to="/register">Sign Up</Link>}
 
+        {/* ✅ Profile + Logout Buttons (common for all logged-in) */}
         {user && (
           <>
-            <button className="nav-btn" onClick={navigateToProfile}>
-              Profile
-            </button>
+            {!isPickupPerson && (
+              <button className="nav-btn" onClick={navigateToProfile}>
+                Profile
+              </button>
+            )}
+            {isPickupPerson && (
+              <button className="nav-btn" onClick={navigateToPickupProfile}>
+                Profile
+              </button>
+            )}
             <button className="nav-btn logout-btn" onClick={logout}>
               Logout
             </button>
@@ -122,7 +147,7 @@ export default function NavBar() {
       </div>
 
       {/* --- USER DROPDOWN MENU --- */}
-      {user && !isAdmin && menuOpen && (
+      {user && !isAdmin && !isPickupPerson && menuOpen && (
         <div className="dropdown-menu">
           <button onClick={navigateToDashboard}>🏠 Dashboard</button>
           <button onClick={navigateToRequestSubmit}>➕ Submit Request</button>
@@ -144,6 +169,16 @@ export default function NavBar() {
           <button onClick={() => handleAdminTab("users")}>🧑‍💼 User Management</button>
           <button onClick={() => handleAdminTab("requests")}>📦 Request Management</button>
           <button onClick={() => handleAdminTab("pickups")}>🚛 Pickup Persons</button>
+          <hr className="menu-divider" />
+          <button onClick={logout}>🚪 Logout</button>
+        </div>
+      )}
+
+      {/* --- PICKUP PERSON DROPDOWN MENU --- */}
+      {user && isPickupPerson && menuOpen && (
+        <div className="dropdown-menu">
+          <button onClick={navigateToPickupDashboard}>🚛 Assigned Requests</button>
+          <button onClick={navigateToPickupProfile}>👤 Profile</button>
           <hr className="menu-divider" />
           <button onClick={logout}>🚪 Logout</button>
         </div>

@@ -2,6 +2,7 @@ package com.lodha.EcoSaathi.Service;
 
 import com.lodha.EcoSaathi.Entity.PickupPerson;
 import com.lodha.EcoSaathi.Repository.PickupPersonRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,50 +11,64 @@ import java.util.List;
 public class PickupPersonService {
 
     private final PickupPersonRepository pickupPersonRepository;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public PickupPersonService(PickupPersonRepository pickupPersonRepository) {
         this.pickupPersonRepository = pickupPersonRepository;
     }
 
-    // CREATE: Add a new Pickup Person
+    // ✅ CREATE: Add a new Pickup Person
     public PickupPerson addPickupPerson(PickupPerson pickupPerson) {
-        // Basic validation: check for required fields, e.g., name or phone
         if (pickupPerson.getName() == null || pickupPerson.getName().trim().isEmpty()) {
             throw new RuntimeException("Pickup person must have a name.");
         }
+
+        if (pickupPerson.getPassword() == null || pickupPerson.getPassword().isEmpty()) {
+            throw new RuntimeException("Pickup person must have a password.");
+        }
+
+        pickupPerson.setPassword(passwordEncoder.encode(pickupPerson.getPassword()));
         return pickupPersonRepository.save(pickupPerson);
     }
 
-    // READ: Get all Pickup Persons
+    // ✅ LOGIN via EMAIL
+    public PickupPerson login(String email, String password) {
+        PickupPerson person = pickupPersonRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Pickup Person not found with email: " + email));
+
+        if (!passwordEncoder.matches(password, person.getPassword())) {
+            throw new RuntimeException("Invalid credentials for Pickup Person.");
+        }
+
+        return person;
+    }
+
+    // ✅ READ
     public List<PickupPerson> getAllPickupPersons() {
         return pickupPersonRepository.findAll();
     }
 
-    // READ: Get a single Pickup Person by ID
     public PickupPerson getPickupPersonById(Long id) {
         return pickupPersonRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pickup Person not found with id: " + id));
     }
 
-    // UPDATE: Update existing Pickup Person details
+    // ✅ UPDATE
     public PickupPerson updatePickupPerson(Long id, PickupPerson updatedDetails) {
         PickupPerson existingPerson = getPickupPersonById(id);
 
-        // Update fields if provided
-        if (updatedDetails.getName() != null) {
-            existingPerson.setName(updatedDetails.getName());
-        }
-        if (updatedDetails.getPhone() != null) {
-            existingPerson.setPhone(updatedDetails.getPhone());
-        }
-        if (updatedDetails.getEmail() != null) {
-            existingPerson.setEmail(updatedDetails.getEmail());
+        if (updatedDetails.getName() != null) existingPerson.setName(updatedDetails.getName());
+        if (updatedDetails.getPhone() != null) existingPerson.setPhone(updatedDetails.getPhone());
+        if (updatedDetails.getEmail() != null) existingPerson.setEmail(updatedDetails.getEmail());
+
+        if (updatedDetails.getPassword() != null && !updatedDetails.getPassword().isEmpty()) {
+            existingPerson.setPassword(passwordEncoder.encode(updatedDetails.getPassword()));
         }
 
         return pickupPersonRepository.save(existingPerson);
     }
 
-    // DELETE: Remove a Pickup Person
+    // ✅ DELETE
     public void deletePickupPerson(Long id) {
         PickupPerson existingPerson = getPickupPersonById(id);
         pickupPersonRepository.delete(existingPerson);

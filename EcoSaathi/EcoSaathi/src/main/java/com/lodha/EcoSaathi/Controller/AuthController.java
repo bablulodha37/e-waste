@@ -23,31 +23,31 @@ public class AuthController {
         this.requestService = requestService;
     }
 
-    // Register user
+    // ✅ Register user
     @PostMapping("/register")
     public User register(@RequestBody User user) {
         return userService.registerUser(user);
     }
 
-    // Login user
+    // ✅ Login user
     @PostMapping("/login")
     public User login(@RequestBody User user) {
         return userService.login(user.getEmail(), user.getPassword());
     }
 
-    // Update user
+    // ✅ Update user profile
     @PutMapping("/user/{id}")
     public User update(@PathVariable Long id, @RequestBody User userDetails) {
         return userService.updateUser(id, userDetails);
     }
 
-    // ✅ User stats endpoint for dashboard/certificate
+    // ✅ Stats endpoint (for dashboard/certificate)
     @GetMapping("/user/{id}/stats")
     public Map<String, Long> getUserStats(@PathVariable Long id) {
         return requestService.getUserStats(id);
     }
 
-    // Upload profile picture
+    // ✅ Upload profile picture
     @PostMapping("/user/{id}/profile-picture")
     public User uploadProfilePicture(
             @PathVariable Long id,
@@ -55,17 +55,20 @@ public class AuthController {
         return userService.updateProfilePicture(id, file);
     }
 
-    // User submits a request with multiple photos
+    // ✅ Submit new e-waste pickup request
     @PostMapping("/user/{id}/request")
     public Request submitRequest(
             @PathVariable Long id,
             @RequestParam("type") String type,
             @RequestParam("description") String description,
             @RequestParam(value = "pickupLocation", required = false) String pickupLocation,
-            @RequestParam("files") List<MultipartFile> files) {
+            @RequestParam("files") MultipartFile[] files) {
 
-        if (files.isEmpty() || files.size() > 5) {
-            throw new RuntimeException("The request must contain between 1 and 5 photos.");
+        if (files == null || files.length == 0) {
+            throw new RuntimeException("❌ At least one photo (Top Side) is required.");
+        }
+        if (files.length > 5) {
+            throw new RuntimeException("❌ Maximum 5 photos allowed per request.");
         }
 
         Request requestDetails = new Request();
@@ -73,16 +76,16 @@ public class AuthController {
         requestDetails.setDescription(description);
         requestDetails.setPickupLocation(pickupLocation);
 
-        return requestService.submitRequestWithPhotos(id, requestDetails, files);
+        return requestService.submitRequestWithPhotos(id, requestDetails, List.of(files));
     }
 
-    // User requests list
+    // ✅ Fetch user's requests
     @GetMapping("/user/{id}/requests")
     public List<Request> getUserRequests(@PathVariable Long id) {
         return requestService.getRequestsByUser(id);
     }
 
-    // Get user details
+    // ✅ Get user profile
     @GetMapping("/user/{id}")
     public User getUser(@PathVariable Long id) {
         return userService.findById(id);

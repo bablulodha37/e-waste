@@ -7,7 +7,8 @@ import axios from 'axios';
 const initialPerson = {
     name: '',
     phone: '',
-    email: ''
+    email: '',
+    password: '' // ✅ added password for backend consistency
 };
 
 export default function PickupPersonManagement({ API_BASE_URL }) {
@@ -82,7 +83,12 @@ export default function PickupPersonManagement({ API_BASE_URL }) {
 
     // --- 5. Edit Initialization ---
     const startEdit = (person) => {
-        setFormData({ name: person.name, phone: person.phone, email: person.email });
+        setFormData({ 
+            name: person.name, 
+            phone: person.phone, 
+            email: person.email, 
+            password: '' // optional during update
+        });
         setEditId(person.id);
         setIsEditing(true);
     };
@@ -120,6 +126,14 @@ export default function PickupPersonManagement({ API_BASE_URL }) {
                         value={formData.email} 
                         onChange={handleChange} 
                         placeholder="Email (Optional)" 
+                    />
+                    <input
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        placeholder={isEditing ? "Enter new password (optional)" : "Create password"}
+                        required={!isEditing}
                     />
                     <button type="submit">
                         {isEditing ? 'Update Person' : 'Add Person'}

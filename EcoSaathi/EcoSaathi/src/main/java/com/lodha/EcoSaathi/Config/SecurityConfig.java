@@ -11,14 +11,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Disable CSRF for API testing
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // Allow register, login, etc.
-                        .requestMatchers("/api/admin/**").permitAll() // Secure this with .hasRole("ADMIN") later!
-
-                        //  Allow public access to the image serving endpoint
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/pickup/**").permitAll()
+                        .requestMatchers("/api/admin/**").permitAll()
                         .requestMatchers("/images/**").permitAll()
-
                         .anyRequest().authenticated()
                 );
         return http.build();

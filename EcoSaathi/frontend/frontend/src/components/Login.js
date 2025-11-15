@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api";
 import "../css/Login.css";
+import axios from "axios";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
+  const [emailOrPhone, setEmailOrPhone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
@@ -12,25 +13,53 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    try {
-      const user = await api("/api/auth/login", {
-        method: "POST",
-        body: { email, password },
-      });
+    setError("");
 
+    try {
+      let user = null;
+
+      // 1️⃣ Try to login as Pickup Person (using email)
+      try {
+        const pickupResponse = await axios.post(
+          `http://localhost:8080/api/pickup/login?email=${emailOrPhone}&password=${password}`
+        );
+        if (pickupResponse.data && pickupResponse.data.id) {
+          user = pickupResponse.data;
+          user.role = "PICKUP_PERSON";
+        }
+      } catch {
+        // ignore if not found, try next
+      }
+
+      // 2️⃣ Try to login as Normal User/Admin (backend /api/auth/login)
+      if (!user) {
+        user = await api("/api/auth/login", {
+          method: "POST",
+          body: { email: emailOrPhone, password },
+        });
+      }
+
+      if (!user) throw new Error("Invalid credentials");
+
+      // ✅ Save user to localStorage
       localStorage.setItem("user", JSON.stringify(user));
 
-      if (user.isAdmin) navigate("/admin");
-      else navigate(`/Dashboard/${user.id}`);
+      // ✅ Redirect based on role
+      if (user.role === "ADMIN" || user.isAdmin) {
+        navigate("/admin");
+      } else if (user.role === "PICKUP_PERSON") {
+        navigate(`/pickup-dashboard/${user.id}`);
+      } else {
+        navigate(`/dashboard/${user.id}`);
+      }
     } catch (err) {
-      setError("Invalid credentials or server error");
       console.error(err);
+      setError("Invalid credentials or server error");
     }
   };
 
   return (
     <div className="login-wrapper">
-      {/* 🌳 Animated Tree (SVG, no PNG) */}
       <div className="tree-container">
         <svg
           className={`tree-svg ${isPasswordFocused ? "sleep" : "watch"}`}
@@ -60,19 +89,20 @@ export default function Login() {
         </svg>
       </div>
 
-      {/* 🌿 Login Box */}
       <div className="container fadeIn">
         <h2>Welcome Back 🌱</h2>
-        <p className="tagline">Sign in and grow with nature</p>
+        <p className="tagline">Sign in with your email (User, Admin, or Pickup Person)</p>
+
         <form onSubmit={handleLogin}>
           <input
             type="email"
             placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={emailOrPhone}
+            onChange={(e) => setEmailOrPhone(e.target.value)}
             required
             onFocus={() => setIsPasswordFocused(false)}
           />
+
           <input
             type="password"
             placeholder="Enter your password"

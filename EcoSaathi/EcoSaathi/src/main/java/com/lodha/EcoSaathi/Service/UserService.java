@@ -25,12 +25,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final FileStorageProperties fileStorageProperties;
+    private final EmailService emailService;
 
-    public UserService(UserRepository userRepository, FileStorageProperties fileStorageProperties) {
+    public UserService(UserRepository userRepository, FileStorageProperties fileStorageProperties, EmailService emailService) {
         this.userRepository = userRepository;
         this.fileStorageProperties = fileStorageProperties;
+        this.emailService = emailService;
 
-        // सुनिश्चित करें कि फ़ाइल अपलोड डायरेक्टरी मौजूद है
+        // Ensure file upload directory exists
         try {
             Path fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize();
             Files.createDirectories(fileStorageLocation);
@@ -47,12 +49,22 @@ public class UserService {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole("USER");
-
         user.setVerified(false);
 
-
-
         User savedUser = userRepository.save(user);
+
+        // Send welcome email to the newly registered user
+        try {
+            emailService.sendUserWelcomeEmail(
+                    savedUser.getEmail(),
+                    savedUser.getFirstName(),
+                    savedUser.getLastName()
+            );
+        } catch (Exception e) {
+            System.err.println("Failed to send welcome email to user: " + savedUser.getEmail());
+            e.printStackTrace();
+            // Don't fail registration if email fails
+        }
 
         return savedUser;
     }

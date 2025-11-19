@@ -67,7 +67,7 @@ export default function UserReport() {
             </div>
 
             <div className="report-content-wrapper" ref={reportRef}>
-                <h1 className="report-main-title">E-Waste Management System Report</h1>
+                <h1 className="report-main-title">EcoSaathi Report</h1>
                 <p className="report-date">Generated on: {new Date().toLocaleDateString()}</p>
 
                 {/* Profile Section */}

@@ -25,16 +25,19 @@ public class RequestService {
     private final UserRepository userRepository;
     private final PickupPersonService pickupPersonService;
     private final FileStorageProperties fileStorageProperties;
+    private final EmailService emailService;
 
-    // 🧩 Constructor
+    // Constructor
     public RequestService(RequestRepository requestRepository,
                           UserRepository userRepository,
                           FileStorageProperties fileStorageProperties,
-                          PickupPersonService pickupPersonService) {
+                          PickupPersonService pickupPersonService,
+                          EmailService emailService) {
         this.requestRepository = requestRepository;
         this.userRepository = userRepository;
         this.fileStorageProperties = fileStorageProperties;
         this.pickupPersonService = pickupPersonService;
+        this.emailService = emailService;
 
         // Ensure upload folder exists
         try {
@@ -107,10 +110,25 @@ public class RequestService {
 
         requestDetails.setPhotoUrls(photoUrls);
         requestDetails.setStatus("PENDING");
-        return requestRepository.save(requestDetails);
+        Request savedRequest = requestRepository.save(requestDetails);
+
+        // 👉 NEW: Send email immediately after request submission
+        try {
+            emailService.sendRequestSubmitEmail(
+                    user.getEmail(),
+                    user.getFirstName() + " " + user.getLastName(),
+                    savedRequest.getId()
+            );
+        } catch (Exception e) {
+            System.err.println("Failed to send request submission email for request: " + savedRequest.getId());
+            e.printStackTrace();
+        }
+
+        return savedRequest;
     }
 
 
+    // pickup person dek sakta hai sab request ko
     public List<Request> getRequestsByPickupPerson(Long pickupPersonId) {
         return requestRepository.findByAssignedPickupPersonId(pickupPersonId);
     }
@@ -136,8 +154,26 @@ public class RequestService {
             throw new RuntimeException("Only PENDING requests can be APPROVED.");
         }
 
+        String oldStatus = request.getStatus();
         request.setStatus("APPROVED");
-        return requestRepository.save(request);
+        Request savedRequest = requestRepository.save(request);
+
+        // Send status update email to user
+        try {
+            User user = savedRequest.getUser();
+            emailService.sendRequestStatusUpdateEmail(
+                    user.getEmail(),
+                    user.getFirstName() + " " + user.getLastName(),
+                    savedRequest.getId(),
+                    oldStatus,
+                    "APPROVED"
+            );
+        } catch (Exception e) {
+            System.err.println("Failed to send approval email for request: " + requestId);
+            e.printStackTrace();
+        }
+
+        return savedRequest;
     }
 
     public Request rejectRequest(Long requestId) {
@@ -148,8 +184,26 @@ public class RequestService {
             throw new RuntimeException("Only PENDING or APPROVED requests can be REJECTED.");
         }
 
+        String oldStatus = request.getStatus();
         request.setStatus("REJECTED");
-        return requestRepository.save(request);
+        Request savedRequest = requestRepository.save(request);
+
+        // Send status update email to user
+        try {
+            User user = savedRequest.getUser();
+            emailService.sendRequestStatusUpdateEmail(
+                    user.getEmail(),
+                    user.getFirstName() + " " + user.getLastName(),
+                    savedRequest.getId(),
+                    oldStatus,
+                    "REJECTED"
+            );
+        } catch (Exception e) {
+            System.err.println("Failed to send rejection email for request: " + requestId);
+            e.printStackTrace();
+        }
+
+        return savedRequest;
     }
 
     public Request scheduleRequest(Long requestId, LocalDateTime scheduledTime, Long pickupPersonId) {
@@ -162,11 +216,46 @@ public class RequestService {
 
         PickupPerson pickupPerson = pickupPersonService.getPickupPersonById(pickupPersonId);
 
+        String oldStatus = request.getStatus();
         request.setAssignedPickupPerson(pickupPerson);
         request.setPickupPersonAssigned(true);
         request.setScheduledTime(scheduledTime);
         request.setStatus("SCHEDULED");
-        return requestRepository.save(request);
+        Request savedRequest = requestRepository.save(request);
+
+        User user = savedRequest.getUser();
+
+        // Send status update email to user
+        try {
+            emailService.sendRequestStatusUpdateEmail(
+                    user.getEmail(),
+                    user.getFirstName() + " " + user.getLastName(),
+                    savedRequest.getId(),
+                    oldStatus,
+                    "SCHEDULED"
+            );
+        } catch (Exception e) {
+            System.err.println("Failed to send schedule email to user for request: " + requestId);
+            e.printStackTrace();
+        }
+
+        // Send pickup assignment email to pickup person
+        try {
+            emailService.sendPickupAssignmentEmail(
+                    pickupPerson.getEmail(),
+                    pickupPerson.getName(),
+                    savedRequest.getId(),
+                    user.getPickupAddress(),
+                    user.getFirstName() + " " + user.getLastName(),
+                    user.getPhone(),
+                    scheduledTime
+            );
+        } catch (Exception e) {
+            System.err.println("Failed to send assignment email to pickup person for request: " + requestId);
+            e.printStackTrace();
+        }
+
+        return savedRequest;
     }
 
     public Request completeRequest(Long requestId) {
@@ -177,8 +266,26 @@ public class RequestService {
             throw new RuntimeException("Only SCHEDULED requests can be marked as COMPLETED.");
         }
 
+        String oldStatus = request.getStatus();
         request.setStatus("COMPLETED");
-        return requestRepository.save(request);
+        Request savedRequest = requestRepository.save(request);
+
+        // Send completion email to user
+        try {
+            User user = savedRequest.getUser();
+            emailService.sendRequestStatusUpdateEmail(
+                    user.getEmail(),
+                    user.getFirstName() + " " + user.getLastName(),
+                    savedRequest.getId(),
+                    oldStatus,
+                    "COMPLETED"
+            );
+        } catch (Exception e) {
+            System.err.println("Failed to send completion email for request: " + requestId);
+            e.printStackTrace();
+        }
+
+        return savedRequest;
     }
 
     public List<Request> getAllRequests() {

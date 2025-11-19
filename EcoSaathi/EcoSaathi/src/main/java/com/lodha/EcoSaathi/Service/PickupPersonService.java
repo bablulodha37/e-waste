@@ -12,9 +12,11 @@ public class PickupPersonService {
 
     private final PickupPersonRepository pickupPersonRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final EmailService emailService;
 
-    public PickupPersonService(PickupPersonRepository pickupPersonRepository) {
+    public PickupPersonService(PickupPersonRepository pickupPersonRepository, EmailService emailService) {
         this.pickupPersonRepository = pickupPersonRepository;
+        this.emailService = emailService;
     }
 
     // ✅ CREATE: Add a new Pickup Person
@@ -27,8 +29,28 @@ public class PickupPersonService {
             throw new RuntimeException("Pickup person must have a password.");
         }
 
+        // Store plain password temporarily for email
+        String plainPassword = pickupPerson.getPassword();
+
+        // Encrypt password before saving
         pickupPerson.setPassword(passwordEncoder.encode(pickupPerson.getPassword()));
-        return pickupPersonRepository.save(pickupPerson);
+        PickupPerson savedPerson = pickupPersonRepository.save(pickupPerson);
+
+        // Send welcome email with credentials
+        try {
+            emailService.sendPickupPersonWelcomeEmail(
+                    savedPerson.getEmail(),
+                    savedPerson.getName(),
+                    savedPerson.getEmail(),
+                    plainPassword  // Send plain password in email
+            );
+        } catch (Exception e) {
+            System.err.println("Failed to send welcome email to pickup person: " + savedPerson.getEmail());
+            e.printStackTrace();
+            // Don't fail creation if email fails
+        }
+
+        return savedPerson;
     }
 
     // ✅ LOGIN via EMAIL

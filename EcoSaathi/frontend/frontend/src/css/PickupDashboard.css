@@ -1,92 +1,177 @@
-.pickup-container {
-  padding: 30px;
-  max-width: 1000px;
-  margin: 0 auto;
-  background: #f8fff8;
+.container.dashboard-page {
+  max-width: 10000px;
+  padding: 2.5rem;
+  background: #e9f5ef;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 128, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  text-align: left;
+  animation: fadeIn 0.8s ease-in-out;
 }
 
-h1 {
+/* Header */
+.dashboard-page h2 {
   color: #0b8457;
-  margin-bottom: 5px;
-  text-align: center;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-align: left;
 }
 
-.subtitle {
-  text-align: center;
-  color: #555;
+.dashboard-subheading {
+  font-size: 1rem;
+  color: #444;
   margin-bottom: 25px;
+  opacity: 0.9;
 }
 
+/* Stats section */
+.stats-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  flex: 1;
+  padding: 40px 50px;
+  border-radius: 22px;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card.total { background: #6f8f73; }
+.stat-card.pending { background: #4b6559; }
+.stat-card.approved { background: #b48cef; }
+.stat-card.completed { background: #54a8e4; }
+
+.stat-card h3 {
+  font-size: 1.3rem;
+  opacity: 0.9;
+}
+
+.stat-card .value {
+  font-size: 2.4rem;
+  font-weight: bold;
+  text-align: right;
+}
+
+/* Quick links */
+.quick-actions-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #0b8457;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+}
+
+.quick-actions-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.action-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 50px 30px;
+  border-radius: 12px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  text-decoration: none;
+  color: #333;
+  transition: all 0.4s ease;
+  transform: translateY(0);
+  overflow: hidden;
+  position: relative;
+}
+
+.action-card:hover {
+  border-color: #0b8457;
+  transform: translateY(-4px);
+}
+
+.action-icon {
+  font-size: 2rem;
+  color: #0b8457;
+}
+
+/* Table */
 .pickup-table {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
+  margin-top: 30px;
+  background: white;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
-}
-
-.pickup-table th, .pickup-table td {
-  padding: 12px 16px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
 }
 
 .pickup-table th {
   background: #0b8457;
   color: white;
+  padding: 15px;
 }
 
-.pickup-table tr:hover {
-  background: #f2fff2;
-}
-
-.complete-btn {
-  background: #0b8457;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.complete-btn:hover {
-  background: #087a4d;
+.pickup-table td {
+  padding: 14px;
+  border-bottom: 1px solid #ddd;
 }
 
 .status-badge {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 8px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
   font-weight: 600;
-  text-transform: capitalize;
 }
 
 .status-badge.pending {
-  background: #ffe5b4;
-  color: #a06b00;
+  background: #ffeeba;
+  color: #8a6d3b;
 }
 
-.status-badge.scheduled {
-  background: #d7f3ff;
-  color: #0078b8;
+.status-badge.approved {
+  background: #d7e3ff;
+  color: #3b5998;
 }
 
 .status-badge.completed {
-  background: #d4f8d4;
-  color: #056608;
+  background: #c8f7ce;
+  color: #2d7a32;
+}
+
+/* Buttons */
+.complete-btn {
+  background: #0b8457;
+  border: none;
+  padding: 8px 14px;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.track-btn {
+  background: #555;
+  border: none;
+  padding: 8px 14px;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
 .no-requests {
-  text-align: center;
-  color: #777;
   margin-top: 20px;
-}
-
-.error {
-  color: red;
+  padding: 20px;
   text-align: center;
+  border: 1px dashed #bbb;
+  background: white;
 }

@@ -16,4 +16,8 @@ public class PickupPerson {
     private String email;
 
     private String password; // ✅ Added for login authentication
+
+    private Double latitude;
+    private Double longitude;
+
 }

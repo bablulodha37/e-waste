@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import PickupLiveSender from "../components/PickupLiveSender";
 import "../css/PickupDashboard.css";
 
 export default function PickupDashboard() {
@@ -12,7 +13,6 @@ export default function PickupDashboard() {
 
   const API_BASE_URL = "http://localhost:8080/api/pickup";
 
-  // ✅ Fetch assigned requests
   const fetchRequests = async () => {
     try {
       const res = await axios.get(`${API_BASE_URL}/${id}/requests`);
@@ -22,19 +22,6 @@ export default function PickupDashboard() {
       setError("Failed to load assigned requests.");
     } finally {
       setLoading(false);
-    }
-  };
-
-  // ✅ Mark request as completed
-  const completeRequest = async (requestId) => {
-    if (!window.confirm("Mark this request as completed?")) return;
-    try {
-      await axios.put(`${API_BASE_URL}/request/complete/${requestId}`);
-      alert("✅ Request marked as completed!");
-      fetchRequests(); // refresh after update
-    } catch (err) {
-      console.error("Error completing request:", err);
-      alert("❌ Failed to complete request. Try again.");
     }
   };
 
@@ -51,52 +38,71 @@ export default function PickupDashboard() {
   if (loading) return <div className="pickup-container">Loading assigned requests...</div>;
   if (error) return <div className="pickup-container error">{error}</div>;
 
-  return (
-    <div className="pickup-container">
-      <h1>🚛 Pickup Dashboard</h1>
-      <p className="subtitle">All requests assigned to you</p>
+  const user = JSON.parse(localStorage.getItem("user"));
 
-      {requests.length === 0 ? (
-        <p className="no-requests">No requests assigned yet.</p>
-      ) : (
-        <table className="pickup-table">
-          <thead>
-            <tr>
-              <th>Request ID</th>
-              <th>User Name</th>
-              <th>Pickup Address</th>
-              <th>Scheduled Time</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {requests.map((req) => (
-              <tr key={req.id}>
-                <td>{req.id}</td>
-                <td>{req.user?.firstName} {req.user?.lastName}</td>
-                <td>{req.user?.pickupAddress || "N/A"}</td>
-                <td>{req.scheduledTime ? req.scheduledTime.replace("T", " ") : "Not Scheduled"}</td>
-                <td>
-                  <span className={`status-badge ${req.status.toLowerCase()}`}>
-                    {req.status}
-                  </span>
-                </td>
-                <td>
-                  {req.status !== "COMPLETED" && (
-                    <button
-                      className="complete-btn"
-                      onClick={() => completeRequest(req.id)}
-                    >
-                      ✅ Mark Complete
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+  // === REAL DASHBOARD STATS ===
+  const total = requests.length;
+  const completed = requests.filter((r) => r.status === "COMPLETED").length;
+  const pending = requests.filter((r) => r.status === "PENDING").length;
+  const assigned = total - completed;
+
+  return (
+    <div className="dashboard-page container">
+
+      {/* Live GPS Sender */}
+      <PickupLiveSender pickupPersonId={user.id} />
+
+      <h2>🚛 Pickup Dashboard</h2>
+      <p className="dashboard-subheading">Overview of your assigned pickups</p>
+
+      {/* === STAT CARDS === */}
+      <div className="stats-cards-container">
+        <div className="stat-card total">
+          <h3>Total Requests</h3>
+          <div className="value">{total}</div>
+        </div>
+
+        <div className="stat-card pending">
+          <h3>Pending</h3>
+          <div className="value">{pending}</div>
+        </div>
+
+        <div className="stat-card approved">
+          <h3>Assigned</h3>
+          <div className="value">{assigned}</div>
+        </div>
+
+        <div className="stat-card completed">
+          <h3>Completed</h3>
+          <div className="value">{completed}</div>
+        </div>
+      </div>
+
+      {/* === QUICK ACTIONS === */}
+      <h3 className="quick-actions-title">Quick Actions</h3>
+
+      <div className="quick-actions-container">
+
+        {/* Profile */}
+        <Link to={`/pickup-profile/${user.id}`} className="action-card">
+          <div className="action-icon">👤</div>
+          <p>Profile</p>
+        </Link>
+
+        {/* View Map */}
+        <Link to={`/track/user/${user.id}`} className="action-card">
+          <div className="action-icon">🗺️</div>
+          <p>View Map</p>
+        </Link>
+
+        {/* Request Management */}
+        <Link to={`/pickup/requests/${user.id}`} className="action-card">
+          <div className="action-icon">📦</div>
+          <p>Request Management</p>
+        </Link>
+
+      </div>
+
     </div>
   );
 }

@@ -95,4 +95,9 @@ public class PickupPersonService {
         PickupPerson existingPerson = getPickupPersonById(id);
         pickupPersonRepository.delete(existingPerson);
     }
+
+    public PickupPerson save(PickupPerson person) {
+        return pickupPersonRepository.save(person);
+    }
+
 }

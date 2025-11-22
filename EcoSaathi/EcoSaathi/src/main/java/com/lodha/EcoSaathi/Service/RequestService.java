@@ -133,6 +133,10 @@ public class RequestService {
         return requestRepository.findByAssignedPickupPersonId(pickupPersonId);
     }
 
+    public Request findById(Long requestId) {
+        return requestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Request not found with id: " + requestId));
+    }
 
 
     public List<Request> getRequestsByUser(Long userId) {

@@ -1,9 +1,11 @@
-// src/App.js  (fixed routes: removed duplicates and mapped to proper components)
+// src/App.js
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Services from "./components/Services";
 import AboutUs from "./components/AboutUs";
+import UserTrackPickup from "./pages/UserTrackPickup";
+import PickupTrackUser from "./pages/PickupTrackUser";
 import Contact from "./components/Contact";
 import PickupProfile from "./components/PickupProfile";
 import Footer from "./components/Footer";
@@ -12,7 +14,10 @@ import CopyrightBar from "./components/CopyrightBar";
 import AdminRoute from "./AdminRoute";
 import "./css/App.css";
 
+// Lazy loaded components
 const PickupDashboard = lazy(() => import("./components/PickupDashboard"));
+const PickupRequestManagement = lazy(() => import("./components/PickupRequestManagement"));
+
 const Home = lazy(() => import("./components/Home"));
 const Login = lazy(() => import("./components/Login"));
 const Register = lazy(() => import("./components/Register"));
@@ -28,7 +33,7 @@ const NotFound = lazy(() => import("./components/NotFound"));
 
 function ConditionalFooter() {
   const location = useLocation();
-  const isHomePage = location.pathname === '/';
+  const isHomePage = location.pathname === "/";
   return isHomePage ? <Footer /> : null;
 }
 
@@ -37,6 +42,7 @@ export default function App() {
     <div className="app-container">
       <Router>
         <NavBar />
+
         <main className="main-content">
           <Suspense
             fallback={
@@ -47,10 +53,14 @@ export default function App() {
           >
             <Routes>
 
-<Route path="/pickup-dashboard/:id" element={<ProtectedRoute><PickupDashboard /></ProtectedRoute>} />
-<Route path="/pickup-profile/:id" element={<ProtectedRoute><PickupProfile /></ProtectedRoute>} />
+              {/* PICKUP PERSON ROUTES */}
+              <Route path="/pickup-dashboard/:id" element={<ProtectedRoute><PickupDashboard /></ProtectedRoute>} />
+              <Route path="/pickup-profile/:id" element={<ProtectedRoute><PickupProfile /></ProtectedRoute>} />
 
-              {/* Public routes */}
+              {/* Request Management (TABLE PAGE) */}
+              <Route path="/pickup/requests/:id" element={<ProtectedRoute><PickupRequestManagement /></ProtectedRoute>} />
+
+              {/* Public Routes */}
               <Route path="/" element={<Home />} />
               <Route path="/services" element={<Services />} />
               <Route path="/about" element={<AboutUs />} />
@@ -58,7 +68,7 @@ export default function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
 
-              {/* Protected user routes */}
+              {/* USER ROUTES */}
               <Route path="/dashboard/:id" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
               <Route path="/request/submit/:id" element={<ProtectedRoute><RequestForm /></ProtectedRoute>} />
               <Route path="/profile/:id/history" element={<ProtectedRoute><RequestHistory /></ProtectedRoute>} />
@@ -67,14 +77,20 @@ export default function App() {
               <Route path="/profile/:id/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
               <Route path="/report/:id" element={<ProtectedRoute><UserReport /></ProtectedRoute>} />
 
-              {/* Admin route */}
+              {/* ADMIN */}
               <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
+
+              {/* TRACKING ROUTES */}
+              <Route path="/track/pickup/:requestId" element={<ProtectedRoute><UserTrackPickup /></ProtectedRoute>} />
+              <Route path="/track/user/:requestId" element={<ProtectedRoute><PickupTrackUser /></ProtectedRoute>} />
 
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
+
             </Routes>
           </Suspense>
         </main>
+
         <ConditionalFooter />
         <CopyrightBar />
       </Router>

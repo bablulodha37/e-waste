@@ -1,12 +1,12 @@
-// src/components/RequestHistory.js
-
 import React, { useEffect, useState } from 'react';
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { api } from '../api';
 import "../css/RequestHistory.css";
 
 export default function RequestHistory() {
     const { id } = useParams();
+    const navigate = useNavigate();
+
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -41,7 +41,6 @@ export default function RequestHistory() {
         return 'status-pending';
     };
     
-    // 🧩 Filter logic
     const filteredRequests = requests.filter(req => 
         filterStatus === 'ALL' || req.status === filterStatus
     );
@@ -50,7 +49,6 @@ export default function RequestHistory() {
         <div className="container request-history-card">
             <h3>Your Requests</h3>
             
-            {/* 🧩 Filter Dropdown */}
             <div className="status-filter">
                 <label>Filter Status: </label>
                 <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
@@ -76,6 +74,7 @@ export default function RequestHistory() {
                         <th>Status</th>
                         <th>Scheduled Time</th>
                         <th>Pickup Person</th>
+                        <th>Track</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -95,11 +94,21 @@ export default function RequestHistory() {
                                     : 'Awaiting Schedule'}
                             </td>
 
-                            {/* ✅ Show only Pickup Person name & phone if assigned */}
                             <td>
                                 {req.assignedPickupPerson
                                     ? `${req.assignedPickupPerson.name} (${req.assignedPickupPerson.phone})`
                                     : 'Not Assigned Yet'}
+                            </td>
+
+                            <td>
+                                {req.status === "SCHEDULED" && (
+                                    <button
+                                        className="track-btn"
+                                        onClick={() => navigate(`/track/pickup/${req.id}`)}
+                                    >
+                                        🚛 Track Pickup Person
+                                    </button>
+                                )}
                             </td>
                         </tr>
                     ))}

@@ -6,7 +6,9 @@ import com.lodha.EcoSaathi.Service.PickupPersonService;
 import com.lodha.EcoSaathi.Service.RequestService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/pickup")
@@ -21,7 +23,9 @@ public class PickupPersonController {
         this.requestService = requestService;
     }
 
-    // ⃣ Pickup Person Login by Email
+    // ---------------------------------------------------------------
+    // LOGIN
+    // ---------------------------------------------------------------
     @PostMapping("/login")
     public PickupPerson loginPickupPerson(
             @RequestParam String email,
@@ -30,23 +34,59 @@ public class PickupPersonController {
         return pickupPersonService.login(email, password);
     }
 
-    //  Get Assigned Requests for Logged-in Pickup Person
+    // ---------------------------------------------------------------
+    // GET ASSIGNED REQUESTS
+    // ---------------------------------------------------------------
     @GetMapping("/{id}/requests")
     public List<Request> getAssignedRequests(@PathVariable Long id) {
         return requestService.getRequestsByPickupPerson(id);
     }
 
-    //  Get Details of a Pickup Person by ID
+    // ---------------------------------------------------------------
+    // GET PICKUP PERSON BY ID
+    // ---------------------------------------------------------------
     @GetMapping("/{id}")
     public PickupPerson getPickupPersonById(@PathVariable Long id) {
         return pickupPersonService.getPickupPersonById(id);
     }
 
-
-    // ⃣Mark Request Completed
+    // ---------------------------------------------------------------
+    // MARK REQUEST AS COMPLETED
+    // ---------------------------------------------------------------
     @PutMapping("/request/complete/{requestId}")
     public Request markRequestAsCompleted(@PathVariable Long requestId) {
         return requestService.completeRequest(requestId);
     }
-}
 
+    // ---------------------------------------------------------------
+    // UPDATE PICKUP PERSON LIVE LOCATION
+    // ---------------------------------------------------------------
+    @PutMapping("/location/update/{id}")
+    public PickupPerson updateLocation(
+            @PathVariable Long id,
+            @RequestParam Double latitude,
+            @RequestParam Double longitude
+    ) {
+        PickupPerson person = pickupPersonService.getPickupPersonById(id);
+        person.setLatitude(latitude);
+        person.setLongitude(longitude);
+        return pickupPersonService.save(person);
+    }
+
+    // ---------------------------------------------------------------
+    // FETCH PICKUP PERSON LIVE LOCATION FOR USER
+    // ---------------------------------------------------------------
+    @GetMapping("/request/{requestId}/pickup-location")
+    public Map<String, Object> getPickupPersonLocation(@PathVariable Long requestId) {
+
+        Request request = requestService.findById(requestId);
+        PickupPerson person = request.getAssignedPickupPerson();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", person.getName());
+        data.put("latitude", person.getLatitude());
+        data.put("longitude", person.getLongitude());
+
+        return data;
+    }
+}

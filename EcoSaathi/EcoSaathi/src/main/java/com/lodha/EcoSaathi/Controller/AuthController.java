@@ -90,4 +90,11 @@ public class AuthController {
     public User getUser(@PathVariable Long id) {
         return userService.findById(id);
     }
+
+    // ✅ Get Single Request Details (For GPS tracking)
+    @GetMapping("/request/{requestId}")
+    public Request getRequestById(@PathVariable Long requestId) {
+        return requestService.findById(requestId);
+    }
+
 }

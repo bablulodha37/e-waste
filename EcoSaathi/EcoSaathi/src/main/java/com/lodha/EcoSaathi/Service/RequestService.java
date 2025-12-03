@@ -8,6 +8,9 @@ import com.lodha.EcoSaathi.Repository.RequestRepository;
 import com.lodha.EcoSaathi.Repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.client.RestTemplate;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -16,7 +19,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.UUID;
 
 @Service
 public class RequestService {
@@ -27,7 +29,6 @@ public class RequestService {
     private final FileStorageProperties fileStorageProperties;
     private final EmailService emailService;
 
-    // Constructor
     public RequestService(RequestRepository requestRepository,
                           UserRepository userRepository,
                           FileStorageProperties fileStorageProperties,
@@ -39,7 +40,6 @@ public class RequestService {
         this.pickupPersonService = pickupPersonService;
         this.emailService = emailService;
 
-        // Ensure upload folder exists
         try {
             Path fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize();
             Files.createDirectories(fileStorageLocation);
@@ -48,24 +48,41 @@ public class RequestService {
         }
     }
 
-    // ✅ Get Stats for a Specific User (for dashboard & certificate)
-    public Map<String, Long> getUserStats(Long userId) {
-        List<Request> userRequests = requestRepository.findByUserId(userId);
+    // ---------------------------------------------------------------
+    // HELPER METHODS (OTP, FILE UPLOAD & GEOCODING)
+    // ---------------------------------------------------------------
 
-        long total = userRequests.size();
-        long pending = userRequests.stream().filter(r -> "PENDING".equals(r.getStatus())).count();
-        long approved = userRequests.stream().filter(r -> "APPROVED".equals(r.getStatus())).count();
-        long completed = userRequests.stream().filter(r -> "COMPLETED".equals(r.getStatus())).count();
-
-        Map<String, Long> stats = new HashMap<>();
-        stats.put("total", total);
-        stats.put("pending", pending);
-        stats.put("approved", approved);
-        stats.put("completed", completed);
-        return stats;
+    private String generateOTP() {
+        Random random = new Random();
+        int number = 100000 + random.nextInt(900000);
+        return String.valueOf(number);
     }
 
-    // --- File Upload Helper for Multiple Files ---
+    private double[] getCoordinatesFromAddress(String address) {
+        if (address == null || address.trim().isEmpty()) {
+            return new double[]{0.0, 0.0};
+        }
+        try {
+            String url = "https://nominatim.openstreetmap.org/search?q=" +
+                    address.replace(" ", "+") + "&format=json&limit=1";
+
+            RestTemplate restTemplate = new RestTemplate();
+            String response = restTemplate.getForObject(url, String.class);
+
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(response);
+
+            if (root.isArray() && root.size() > 0) {
+                double lat = root.get(0).get("lat").asDouble();
+                double lon = root.get(0).get("lon").asDouble();
+                return new double[]{lat, lon};
+            }
+        } catch (Exception e) {
+            System.err.println("Geocoding failed for address: " + address + " | Error: " + e.getMessage());
+        }
+        return new double[]{0.0, 0.0};
+    }
+
     private List<String> saveMultipleFiles(List<MultipartFile> files) {
         List<String> fileUrls = new ArrayList<>();
 
@@ -82,7 +99,7 @@ public class RequestService {
                 Path targetLocation = Paths.get(fileStorageProperties.getUploadDir()).resolve(fileName);
 
                 Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-                fileUrls.add("/images/" + fileName);
+                fileUrls.add("http://localhost:8080/images/" + fileName);
             } catch (Exception ex) {
                 System.err.println("Multiple File Storage Error: " + ex.getMessage());
                 throw new RuntimeException("Could not store file " + file.getOriginalFilename() + ". Please try again!", ex);
@@ -91,7 +108,51 @@ public class RequestService {
         return fileUrls;
     }
 
-    // --- USER ACTIONS ---
+    // ---------------------------------------------------------------
+    // STATS
+    // ---------------------------------------------------------------
+
+    public Map<String, Long> getUserStats(Long userId) {
+        List<Request> userRequests = requestRepository.findByUserId(userId);
+
+        long total = userRequests.size();
+        long pending = userRequests.stream().filter(r -> "PENDING".equals(r.getStatus())).count();
+        long approved = userRequests.stream().filter(r -> "APPROVED".equals(r.getStatus())).count();
+        long completed = userRequests.stream().filter(r -> "COMPLETED".equals(r.getStatus())).count();
+
+        Map<String, Long> stats = new HashMap<>();
+        stats.put("total", total);
+        stats.put("pending", pending);
+        stats.put("approved", approved);
+        stats.put("completed", completed);
+        return stats;
+    }
+
+    // 🔹 NEW: ADMIN DASHBOARD STATS (for chatbot / admin page)
+    public Map<String, Long> getAdminStats() {
+        List<Request> all = requestRepository.findAll();
+
+        long total = all.size();
+        long pending = all.stream().filter(r -> "PENDING".equals(r.getStatus())).count();
+        long approved = all.stream().filter(r -> "APPROVED".equals(r.getStatus())).count();
+        long scheduled = all.stream().filter(r -> "SCHEDULED".equals(r.getStatus())).count();
+        long completed = all.stream().filter(r -> "COMPLETED".equals(r.getStatus())).count();
+        long rejected = all.stream().filter(r -> "REJECTED".equals(r.getStatus())).count();
+
+        Map<String, Long> stats = new HashMap<>();
+        stats.put("totalRequests", total);
+        stats.put("pendingRequests", pending);
+        stats.put("approvedRequests", approved);
+        stats.put("scheduledRequests", scheduled);
+        stats.put("completedRequests", completed);
+        stats.put("rejectedRequests", rejected);
+        return stats;
+    }
+
+    // ---------------------------------------------------------------
+    // USER ACTIONS
+    // ---------------------------------------------------------------
+
     public Request submitRequestWithPhotos(Long userId, Request requestDetails, List<MultipartFile> files) {
         if (files.isEmpty()) {
             throw new RuntimeException("At least one photo must be uploaded for the request.");
@@ -110,14 +171,18 @@ public class RequestService {
 
         requestDetails.setPhotoUrls(photoUrls);
         requestDetails.setStatus("PENDING");
+
+        requestDetails.setPickupOtp(generateOTP());
+
         Request savedRequest = requestRepository.save(requestDetails);
 
-        // 👉 NEW: Send email immediately after request submission
         try {
+            // ✅ FIXED: Argument order swapped. Method expects (to, userName, requestId, otp)
             emailService.sendRequestSubmitEmail(
                     user.getEmail(),
                     user.getFirstName() + " " + user.getLastName(),
-                    savedRequest.getId()
+                    savedRequest.getId(),       // Long
+                    savedRequest.getPickupOtp() // String
             );
         } catch (Exception e) {
             System.err.println("Failed to send request submission email for request: " + savedRequest.getId());
@@ -127,154 +192,93 @@ public class RequestService {
         return savedRequest;
     }
 
-
-    // pickup person dek sakta hai sab request ko
-    public List<Request> getRequestsByPickupPerson(Long pickupPersonId) {
-        return requestRepository.findByAssignedPickupPersonId(pickupPersonId);
-    }
-
-    public Request findById(Long requestId) {
-        return requestRepository.findById(requestId)
-                .orElseThrow(() -> new RuntimeException("Request not found with id: " + requestId));
-    }
-
-
     public List<Request> getRequestsByUser(Long userId) {
         return requestRepository.findByUserId(userId);
     }
 
-    // --- ADMIN ACTIONS ---
-    public List<Request> getAllPendingRequests() {
-        return requestRepository.findAll().stream()
-                .filter(r -> "PENDING".equals(r.getStatus()))
-                .collect(Collectors.toList());
+    // ---------------------------------------------------------------
+    // PICKUP PERSON ACTIONS & TRACKING
+    // ---------------------------------------------------------------
+
+    public List<Request> getRequestsByPickupPerson(Long pickupPersonId) {
+        return requestRepository.findByAssignedPickupPersonId(pickupPersonId);
     }
 
-    public Request approveRequest(Long requestId) {
-        Request request = requestRepository.findById(requestId)
-                .orElseThrow(() -> new RuntimeException("Request not found with id: " + requestId));
+    public Map<String, Object> calculateDistanceAndTime(Long requestId, Double pickupLat, Double pickupLng) {
+        Request request = findById(requestId);
 
-        if (!"PENDING".equals(request.getStatus())) {
-            throw new RuntimeException("Only PENDING requests can be APPROVED.");
+        if (pickupLat == null || pickupLng == null || pickupLat == 0.0) {
+            Map<String, Object> errorResult = new HashMap<>();
+            errorResult.put("error", "Pickup Person GPS Offline");
+            return errorResult;
         }
 
-        String oldStatus = request.getStatus();
-        request.setStatus("APPROVED");
-        Request savedRequest = requestRepository.save(request);
+        double[] userCoords = getCoordinatesFromAddress(request.getPickupLocation());
+        double userLat = userCoords[0];
+        double userLng = userCoords[1];
 
-        // Send status update email to user
-        try {
-            User user = savedRequest.getUser();
-            emailService.sendRequestStatusUpdateEmail(
-                    user.getEmail(),
-                    user.getFirstName() + " " + user.getLastName(),
-                    savedRequest.getId(),
-                    oldStatus,
-                    "APPROVED"
-            );
-        } catch (Exception e) {
-            System.err.println("Failed to send approval email for request: " + requestId);
-            e.printStackTrace();
+        if (userLat == 0.0 || userLng == 0.0) {
+            Map<String, Object> result = new HashMap<>();
+            result.put("pickupLat", pickupLat);
+            result.put("pickupLng", pickupLng);
+            result.put("userLat", null);
+            result.put("userLng", null);
+            result.put("distanceKm", "N/A");
+            result.put("estimatedTime", "Checking Address...");
+            return result;
         }
 
-        return savedRequest;
+        double distanceKm = calculateHaversineDistance(pickupLat, pickupLng, userLat, userLng);
+
+        double timeHours = distanceKm / 30.0;
+        int timeMinutes = (int) (timeHours * 60);
+
+        String timeString;
+        if (timeMinutes < 1) {
+            timeString = "Arriving Now";
+        } else if (timeMinutes > 60) {
+            timeString = String.format("%d hr %d min", timeMinutes / 60, timeMinutes % 60);
+        } else {
+            timeString = timeMinutes + " mins";
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("distanceKm", String.format("%.2f", distanceKm));
+        result.put("estimatedTime", timeString);
+        result.put("pickupLat", pickupLat);
+        result.put("pickupLng", pickupLng);
+        result.put("userLat", userLat);
+        result.put("userLng", userLng);
+
+        return result;
     }
 
-    public Request rejectRequest(Long requestId) {
-        Request request = requestRepository.findById(requestId)
-                .orElseThrow(() -> new RuntimeException("Request not found with id: " + requestId));
-
-        if (!"PENDING".equals(request.getStatus()) && !"APPROVED".equals(request.getStatus())) {
-            throw new RuntimeException("Only PENDING or APPROVED requests can be REJECTED.");
-        }
-
-        String oldStatus = request.getStatus();
-        request.setStatus("REJECTED");
-        Request savedRequest = requestRepository.save(request);
-
-        // Send status update email to user
-        try {
-            User user = savedRequest.getUser();
-            emailService.sendRequestStatusUpdateEmail(
-                    user.getEmail(),
-                    user.getFirstName() + " " + user.getLastName(),
-                    savedRequest.getId(),
-                    oldStatus,
-                    "REJECTED"
-            );
-        } catch (Exception e) {
-            System.err.println("Failed to send rejection email for request: " + requestId);
-            e.printStackTrace();
-        }
-
-        return savedRequest;
+    private double calculateHaversineDistance(double lat1, double lon1, double lat2, double lon2) {
+        final int R = 6371;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
     }
 
-    public Request scheduleRequest(Long requestId, LocalDateTime scheduledTime, Long pickupPersonId) {
-        Request request = requestRepository.findById(requestId)
-                .orElseThrow(() -> new RuntimeException("Request not found with id: " + requestId));
-
-        if (!"APPROVED".equals(request.getStatus())) {
-            throw new RuntimeException("Cannot schedule a request that is not APPROVED.");
-        }
-
-        PickupPerson pickupPerson = pickupPersonService.getPickupPersonById(pickupPersonId);
-
-        String oldStatus = request.getStatus();
-        request.setAssignedPickupPerson(pickupPerson);
-        request.setPickupPersonAssigned(true);
-        request.setScheduledTime(scheduledTime);
-        request.setStatus("SCHEDULED");
-        Request savedRequest = requestRepository.save(request);
-
-        User user = savedRequest.getUser();
-
-        // Send status update email to user
-        try {
-            emailService.sendRequestStatusUpdateEmail(
-                    user.getEmail(),
-                    user.getFirstName() + " " + user.getLastName(),
-                    savedRequest.getId(),
-                    oldStatus,
-                    "SCHEDULED"
-            );
-        } catch (Exception e) {
-            System.err.println("Failed to send schedule email to user for request: " + requestId);
-            e.printStackTrace();
-        }
-
-        // Send pickup assignment email to pickup person
-        try {
-            emailService.sendPickupAssignmentEmail(
-                    pickupPerson.getEmail(),
-                    pickupPerson.getName(),
-                    savedRequest.getId(),
-                    user.getPickupAddress(),
-                    user.getFirstName() + " " + user.getLastName(),
-                    user.getPhone(),
-                    scheduledTime
-            );
-        } catch (Exception e) {
-            System.err.println("Failed to send assignment email to pickup person for request: " + requestId);
-            e.printStackTrace();
-        }
-
-        return savedRequest;
-    }
-
-    public Request completeRequest(Long requestId) {
-        Request request = requestRepository.findById(requestId)
-                .orElseThrow(() -> new RuntimeException("Request not found with id: " + requestId));
+    public Request completeRequestWithOtp(Long requestId, String enteredOtp) {
+        Request request = findById(requestId);
 
         if (!"SCHEDULED".equals(request.getStatus())) {
             throw new RuntimeException("Only SCHEDULED requests can be marked as COMPLETED.");
+        }
+
+        if (request.getPickupOtp() == null || !request.getPickupOtp().equals(enteredOtp)) {
+            throw new RuntimeException("❌ Invalid OTP! Verification failed.");
         }
 
         String oldStatus = request.getStatus();
         request.setStatus("COMPLETED");
         Request savedRequest = requestRepository.save(request);
 
-        // Send completion email to user
         try {
             User user = savedRequest.getUser();
             emailService.sendRequestStatusUpdateEmail(
@@ -292,7 +296,128 @@ public class RequestService {
         return savedRequest;
     }
 
+    // ---------------------------------------------------------------
+    // ADMIN ACTIONS
+    // ---------------------------------------------------------------
+
+    public List<Request> getAllPendingRequests() {
+        return requestRepository.findAll().stream()
+                .filter(r -> "PENDING".equals(r.getStatus()))
+                .collect(Collectors.toList());
+    }
+
     public List<Request> getAllRequests() {
         return requestRepository.findAll();
+    }
+
+    public Request findById(Long requestId) {
+        return requestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Request not found with id: " + requestId));
+    }
+
+    public Request approveRequest(Long requestId) {
+        Request request = findById(requestId);
+
+        if (!"PENDING".equals(request.getStatus())) {
+            throw new RuntimeException("Only PENDING requests can be APPROVED.");
+        }
+
+        String oldStatus = request.getStatus();
+        request.setStatus("APPROVED");
+        Request savedRequest = requestRepository.save(request);
+
+        try {
+            User user = savedRequest.getUser();
+            emailService.sendRequestStatusUpdateEmail(
+                    user.getEmail(),
+                    user.getFirstName() + " " + user.getLastName(),
+                    savedRequest.getId(),
+                    oldStatus,
+                    "APPROVED"
+            );
+        } catch (Exception e) { e.printStackTrace(); }
+
+        return savedRequest;
+    }
+
+    public Request rejectRequest(Long requestId) {
+        Request request = findById(requestId);
+
+        if (!"PENDING".equals(request.getStatus()) && !"APPROVED".equals(request.getStatus())) {
+            throw new RuntimeException("Only PENDING or APPROVED requests can be REJECTED.");
+        }
+
+        String oldStatus = request.getStatus();
+        request.setStatus("REJECTED");
+        Request savedRequest = requestRepository.save(request);
+
+        try {
+            User user = savedRequest.getUser();
+            emailService.sendRequestStatusUpdateEmail(
+                    user.getEmail(),
+                    user.getFirstName() + " " + user.getLastName(),
+                    savedRequest.getId(),
+                    oldStatus,
+                    "REJECTED"
+            );
+        } catch (Exception e) { e.printStackTrace(); }
+
+        return savedRequest;
+    }
+
+    public Request scheduleRequest(Long requestId, LocalDateTime scheduledTime, Long pickupPersonId) {
+        Request request = findById(requestId);
+
+        if (!"APPROVED".equals(request.getStatus())) {
+            throw new RuntimeException("Cannot schedule a request that is not APPROVED.");
+        }
+
+        PickupPerson pickupPerson = pickupPersonService.getPickupPersonById(pickupPersonId);
+
+        String oldStatus = request.getStatus();
+        request.setAssignedPickupPerson(pickupPerson);
+        request.setPickupPersonAssigned(true);
+        request.setScheduledTime(scheduledTime);
+        request.setStatus("SCHEDULED");
+        Request savedRequest = requestRepository.save(request);
+
+        User user = savedRequest.getUser();
+
+        // 1. Notify User of Status Update (Generic)
+        try {
+            emailService.sendRequestStatusUpdateEmail(
+                    user.getEmail(),
+                    user.getFirstName() + " " + user.getLastName(),
+                    savedRequest.getId(),
+                    oldStatus,
+                    "SCHEDULED"
+            );
+        } catch (Exception e) { e.printStackTrace(); }
+
+        // 2. Notify User of Scheduled Pickup (With Vehicle Details)
+        // ✅ FIXED: Now calls sendPickupAssignmentEmail which is designed for the User and supports vehicle info
+        try {
+            emailService.sendPickupAssignmentEmail(
+                    user.getEmail(),
+                    pickupPerson.getName(),
+                    pickupPerson.getVehicleNumber(),
+                    pickupPerson.getVehicleType(),
+                    savedRequest.getId(),
+                    scheduledTime
+            );
+        } catch (Exception e) { e.printStackTrace(); }
+
+        return savedRequest;
+    }
+
+    public Request completeRequest(Long requestId) {
+        Request request = findById(requestId);
+
+        if (request.getPickupOtp() != null) {
+            return completeRequestWithOtp(requestId, request.getPickupOtp());
+        }
+
+        request.setStatus("COMPLETED");
+        return requestRepository.save(request);
     }
 }

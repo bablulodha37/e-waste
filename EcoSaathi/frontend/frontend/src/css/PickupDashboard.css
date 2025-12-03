@@ -175,3 +175,47 @@
   border: 1px dashed #bbb;
   background: white;
 }
+
+.pickup-graph-wrapper {
+  margin-top: 35px;
+  background: #ffffff;
+  padding: 22px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.pickup-graph-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #0b8457;
+  margin-bottom: 12px;
+}
+
+/* LEGEND */
+.pickup-graph-legend {
+  display: flex;
+  gap: 18px;
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.pickup-graph-legend .legend-line {
+  width: 18px;
+  height: 3px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+/* Line colors = your stat card colors */
+.legend-line.total { background: #6f8f73; }
+.legend-line.pending { background: #4b6559; }
+.legend-line.assigned { background: #b48cef; }
+.legend-line.completed { background: #54a8e4; }
+
+/* Chart container */
+.pickup-line-chart-container {
+  width: 100%;
+  height: 280px;
+}

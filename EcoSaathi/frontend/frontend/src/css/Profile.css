@@ -22,7 +22,9 @@
   animation: moveGradient 8s ease-in-out infinite alternate;
   z-index: 0;
   opacity: 0.5;
+  pointer-events: none;  /* 👈 yeh line add karo */
 }
+
 
 @keyframes moveGradient {
   0% { transform: translate(0, 0); }

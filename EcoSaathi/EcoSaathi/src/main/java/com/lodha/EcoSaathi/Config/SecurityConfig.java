@@ -17,6 +17,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/pickup/**").permitAll()
                         .requestMatchers("/api/admin/**").permitAll()
                         .requestMatchers("/images/**").permitAll()
+                        .requestMatchers("/api/issues/**").permitAll()
+                        .requestMatchers("/api/bot/**").permitAll()
                         .anyRequest().authenticated()
                 );
         return http.build();

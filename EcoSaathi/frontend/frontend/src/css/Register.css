@@ -1,192 +1,259 @@
-/* ===============================
-   🌱 ECO-SAATHI REGISTER PAGE STYLES
-   Modern Glass + Animated Theme
-   =============================== */
-
-.container {
-  max-width: 700px;
-  margin: 5rem auto;
-  padding: 2.5rem 3rem;
-  background: rgba(255, 255, 255, 0.25);
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  animation: fadeInSlide 0.8s ease forwards;
-  transform: translateY(20px);
-  opacity: 0;
+/* MAIN PAGE */
+.register-page {
+  width: 100%;
+  min-height: calc(100vh - 64px);
+  display: flex;
+  background: #f3f4f6;
 }
 
-@keyframes fadeInSlide {
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+/* -----------------------------------
+   LEFT GREEN PANEL  (FIXED + CLEAN)
+   ----------------------------------- */
+.register-left {
+  flex: 1.1;
+  background: linear-gradient(160deg, #1dbf73, #0aa567, #087e55);
+  color: #ffffff;
+
+  display: flex;
+  align-items: flex-start;     /* top aligned */
+  justify-content: center;
+
+  padding-top: 60px;
+  padding-bottom: 60px;
 }
 
-/* --- Heading --- */
-h2 {
-  text-align: center;
-  color: #0b8457;
+.register-left-inner {
+  padding: 0 50px;
+  max-width: 520px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  gap: 20px;
+}
+
+/* BRAND */
+.brand-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.brand-sub {
+  opacity: 0.95;
+  margin: 0;
+}
+
+/* HEADING + DESCRIPTION */
+.main-heading {
+  font-size: 2.4rem;
   font-weight: 800;
-  font-size: 2.2em;
-  margin-bottom: 1.5rem;
-  text-shadow: 0 2px 4px rgba(11, 132, 87, 0.25);
-  letter-spacing: 0.5px;
+  max-width: 420px;
+  line-height: 1.25;
+  margin-top: 5px;
 }
 
-/* --- Input & Textarea Fields --- */
-form input,
-form textarea {
-  width: 85%;
-  display: block;
-  margin: 14px auto;
-  padding: 13px 15px;
-  border: 1px solid rgba(11, 132, 87, 0.35);
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.9);
-  color: #084c26;
+.main-heading span {
+  color: #d7ffe6;
+}
+
+.main-sub {
+  margin-top: 5px;
   font-size: 1rem;
-  transition: all 0.3s ease;
-  box-sizing: border-box;
-  font-family: inherit;
-  font-weight: 500;
+  opacity: 0.95;
+  max-width: 430px;
 }
 
-/* --- Focus Glow --- */
-form input:focus,
-form textarea:focus {
-  border-color: #0b8457;
-  box-shadow: 0 0 14px rgba(11, 132, 87, 0.5);
-  transform: scale(1.02);
+/* STATS */
+.stats {
+  display: flex;
+  gap: 18px;
+  margin-top: 25px;
+}
+
+.stat-box {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 16px 20px;
+  border-radius: 18px;
+  text-align: center;
+}
+
+.stat-box h3 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.stat-box p {
+  margin: 3px 0 0;
+  opacity: 0.95;
+}
+
+/* -----------------------------------
+   RIGHT WHITE FORM PANEL
+   ----------------------------------- */
+.register-right {
+  flex: 1;
+  padding: 40px 30px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* FORM CARD */
+.register-card {
+  width: 100%;
+  max-width: 450px;
+  background: #ffffff;
+  padding: 40px 36px;
+  border-radius: 22px;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+}
+
+.register-card h2 {
+  margin: 0;
+  font-size: 1.9rem;
+  font-weight: 700;
+}
+
+.register-sub {
+  margin: 6px 0 26px;
+  font-size: 0.95rem;
+  color: #6b7280;
+}
+
+/* -----------------------------------
+   NAME ROW (FIRST + LAST NAME)
+   ----------------------------------- */
+.name-row {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.name-field {
+  flex: 1;
+}
+
+/* FORM LABELS */
+.register-card form label {
+  display: block;
+  margin-top: 14px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* INPUTS + TEXTAREA */
+.register-card form input,
+.register-card form textarea {
+  width: 100%;
+  margin-top: 5px;
+
+  padding: 11px 13px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+
+  font-size: 0.95rem;
+  background: #ffffff;
   outline: none;
-  background: #fff;
 }
 
-/* --- Textarea --- */
-form textarea {
+.register-card form input:focus,
+.register-card form textarea:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 1px #10b98140;
+}
+
+.register-card form textarea {
   resize: vertical;
   min-height: 90px;
-  line-height: 1.4;
 }
 
-/* --- Submit Button --- */
-form button {
-  width: 85%;
-  display: block;
-  margin: 25px auto 0 auto;
-  background: linear-gradient(90deg, #0b8457, #1a9667);
-  color: white;
-  border: none;
-  padding: 14px 0;
-  border-radius: 12px;
-  font-weight: 700;
-  font-size: 1.15em;
-  letter-spacing: 0.5px;
-  transition: all 0.4s ease;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-/* --- Button Hover --- */
-form button:hover:not(:disabled) {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 20px rgba(11, 132, 87, 0.4);
-  background: linear-gradient(90deg, #1a9667, #0b8457);
-}
-
-/* --- Button Shine Effect --- */
-form button::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
+/* SUBMIT BUTTON */
+.register-btn {
   width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.25);
-  transform: skewX(-45deg);
-  transition: left 0.6s;
-}
-form button:hover::after {
-  left: 200%;
-}
+  margin-top: 24px;
+  padding: 12px;
 
-/* --- Error Message --- */
-.error,
-.error-msg {
-  width: 85%;
-  margin: 18px auto 0 auto;
-  padding: 10px;
-  background-color: rgba(255, 240, 240, 0.85);
-  color: #c9302c;
-  border: 1px solid rgba(201, 48, 44, 0.4);
-  border-radius: 8px;
-  text-align: center;
+  border: none;
+  border-radius: 12px;
+
   font-size: 1rem;
-  box-sizing: border-box;
-  animation: shake 0.4s ease;
+  font-weight: 700;
+  color: white;
+
+  cursor: pointer;
+  background: linear-gradient(90deg, #16a34a, #0ea5e9);
+  box-shadow: 0 8px 20px rgba(16, 163, 74, 0.35);
 }
 
-/* --- Success Message (if you ever add it later) --- */
-.success-msg {
-  width: 85%;
-  margin: 18px auto 0 auto;
+.register-btn:hover {
+  filter: brightness(1.05);
+}
+
+/* ERROR BOX */
+.error {
+  margin-top: 12px;
   padding: 10px;
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
+  background: #fee2e2;
+  color: #b91c1c;
   border-radius: 8px;
+  border: 1px solid #fecaca;
+  font-size: 0.9rem;
+}
+
+/* FOOTER TEXT */
+.signup-text {
+  margin-top: 16px;
   text-align: center;
-  font-size: 1rem;
-  box-sizing: border-box;
+  font-size: 0.95rem;
+  color: #4b5563;
 }
 
-/* --- Animations --- */
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-4px); }
+.signup-text a {
+  color: #059669;
+  font-weight: 600;
+  text-decoration: none;
 }
 
-/* --- Subtle Fade-Up Entry for Each Input --- */
-form input,
-form textarea,
-form button {
-  opacity: 0;
-  transform: translateY(15px);
-  animation: fadeUp 0.6s ease forwards;
-}
-form input:nth-child(1) { animation-delay: 0.1s; }
-form input:nth-child(2) { animation-delay: 0.15s; }
-form input:nth-child(3) { animation-delay: 0.2s; }
-form input:nth-child(4) { animation-delay: 0.25s; }
-form input:nth-child(5) { animation-delay: 0.3s; }
-form textarea { animation-delay: 0.35s; }
-form button { animation-delay: 0.45s; }
-
-@keyframes fadeUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.signup-text a:hover {
+  text-decoration: underline;
 }
 
-/* --- Responsive Adjustments --- */
+/* -----------------------------------
+   RESPONSIVE FIXES
+   ----------------------------------- */
+
+/* Mobile: Name fields stack */
 @media (max-width: 768px) {
-  .container {
-    padding: 1.8rem 1.5rem;
-    margin: 3rem 1rem;
+  .name-row {
+    flex-direction: column;
+  }
+}
+
+/* Tablet fix: Left + Right stack cleanly */
+@media (max-width: 900px) {
+  .register-page {
+    flex-direction: column;
   }
 
-  h2 {
-    font-size: 1.9em;
+  .register-left {
+    text-align: center;
+    align-items: center;
   }
 
-  form input,
-  form textarea,
-  form button {
-    width: 95%;
+  .register-left-inner {
+    padding: 40px 24px;
+    gap: 16px;
+  }
+
+  .stats {
+    justify-content: center;
+  }
+
+  .register-right {
+    padding: 30px 16px 40px;
   }
 }

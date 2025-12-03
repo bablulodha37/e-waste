@@ -6,6 +6,8 @@ import com.lodha.EcoSaathi.Service.PickupPersonService;
 import com.lodha.EcoSaathi.Service.RequestService;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,12 +56,58 @@ public class PickupPersonController {
     // MARK REQUEST AS COMPLETED
     // ---------------------------------------------------------------
     @PutMapping("/request/complete/{requestId}")
-    public Request markRequestAsCompleted(@PathVariable Long requestId) {
-        return requestService.completeRequest(requestId);
+    public Request markRequestAsCompleted(
+            @PathVariable Long requestId,
+            @RequestBody Map<String, String> payload) {
+
+        String otp = payload.get("otp");
+        if (otp == null || otp.isEmpty()) {
+            throw new RuntimeException("OTP is required to complete the request.");
+        }
+        return requestService.completeRequestWithOtp(requestId, otp);
     }
 
     // ---------------------------------------------------------------
-    // UPDATE PICKUP PERSON LIVE LOCATION
+    // TRACK REQUEST → ONLY GOOGLE MAP LINK (NO CUSTOM MAP)
+    // ---------------------------------------------------------------
+    @GetMapping("/request/{requestId}/track")
+    public Map<String, Object> trackRequest(@PathVariable Long requestId) {
+
+        Request request = requestService.findById(requestId);
+        PickupPerson person = request.getAssignedPickupPerson();
+
+        if (person == null) {
+            throw new RuntimeException("No Pickup Person assigned yet.");
+        }
+
+        Map<String, Object> data = new HashMap<>();
+
+        String origin = request.getPickupLocation();
+        String destination = person.getLatitude() + "," + person.getLongitude();
+
+        String encodedOrigin = origin != null ?
+                URLEncoder.encode(origin, StandardCharsets.UTF_8) :
+                "";
+
+        String encodedDestination = URLEncoder.encode(destination, StandardCharsets.UTF_8);
+
+        String googleMapsUrl =
+                "https://www.google.com/maps/dir/?api=1&origin="
+                        + encodedOrigin
+                        + "&destination="
+                        + encodedDestination;
+
+        data.put("pickupPersonName", person.getName());
+        data.put("pickupLatitude", person.getLatitude());
+        data.put("pickupLongitude", person.getLongitude());
+        data.put("userAddress", origin);
+        data.put("googleMapsUrl", googleMapsUrl);
+
+        return data;
+    }
+
+    // ---------------------------------------------------------------
+    // UPDATE LIVE LOCATION
     // ---------------------------------------------------------------
     @PutMapping("/location/update/{id}")
     public PickupPerson updateLocation(
@@ -74,7 +122,7 @@ public class PickupPersonController {
     }
 
     // ---------------------------------------------------------------
-    // FETCH PICKUP PERSON LIVE LOCATION FOR USER
+    // FETCH PICKUP PERSON LOCATION (ONLY GOOGLE MAP URL)
     // ---------------------------------------------------------------
     @GetMapping("/request/{requestId}/pickup-location")
     public Map<String, Object> getPickupPersonLocation(@PathVariable Long requestId) {
@@ -82,10 +130,29 @@ public class PickupPersonController {
         Request request = requestService.findById(requestId);
         PickupPerson person = request.getAssignedPickupPerson();
 
+        if (person == null) {
+            throw new RuntimeException("No Pickup Person assigned yet.");
+        }
+
         Map<String, Object> data = new HashMap<>();
         data.put("name", person.getName());
         data.put("latitude", person.getLatitude());
         data.put("longitude", person.getLongitude());
+        data.put("pickupAddress", request.getPickupLocation());
+
+        String origin = request.getPickupLocation();
+        String destination = person.getLatitude() + "," + person.getLongitude();
+
+        String encodedOrigin = URLEncoder.encode(origin, StandardCharsets.UTF_8);
+        String encodedDestination = URLEncoder.encode(destination, StandardCharsets.UTF_8);
+
+        String googleMapsUrl =
+                "https://www.google.com/maps/dir/?api=1&origin="
+                        + encodedOrigin
+                        + "&destination="
+                        + encodedDestination;
+
+        data.put("googleMapsUrl", googleMapsUrl);
 
         return data;
     }

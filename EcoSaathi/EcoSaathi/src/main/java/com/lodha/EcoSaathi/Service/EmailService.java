@@ -51,6 +51,32 @@ public class EmailService {
         }
     }
 
+    public void sendForgotPasswordOtp(String to, String otp) {
+        String subject = "🔐 EcoSaathi - Password Reset OTP";
+        String html = "<html><body>" +
+                "<h2>Password Reset Request</h2>" +
+                "<p>You requested to reset your password. Use the OTP below:</p>" +
+                "<h1 style='color:#0b8457; font-size: 32px; letter-spacing: 5px;'>" + otp + "</h1>" +
+                "<p>This OTP is valid for 10 minutes.</p>" +
+                "</body></html>";
+        sendHtmlEmail(to, subject, html);
+    }
+    public void sendIssueUpdate(String to, Long issueId, String subject, String newMessage, String senderName) {
+        String emailSubject = "📢 New Reply on Issue #" + issueId;
+        String html = "<html><body>" +
+                "<div style='background-color: #0b8457; color: white; padding: 15px;'><h3>Issue Update: " + subject + "</h3></div>" +
+                "<div style='padding: 20px; border: 1px solid #ddd;'>" +
+                "<p><strong>" + senderName + "</strong> replied:</p>" +
+                "<blockquote style='background: #f0f0f0; padding: 15px; border-left: 4px solid #0b8457;'>" + newMessage + "</blockquote>" +
+                "<p>Log in to the app to reply.</p>" +
+                "</div></body></html>";
+        sendHtmlEmail(to, emailSubject, html);
+    }
+
+    public void sendIssueClosed(String to, Long issueId) {
+        String html = "<html><body><h3 style='color:red;'>Issue #" + issueId + " is now CLOSED.</h3><p>If you have further problems, please raise a new ticket.</p></body></html>";
+        sendHtmlEmail(to, "Issue #" + issueId + " Closed", html);
+    }
     /**
      * Send welcome email to newly registered user
      */
@@ -81,26 +107,65 @@ public class EmailService {
     /**
      * Send pickup assignment notification to pickup person
      */
-    public void sendPickupAssignmentEmail(String to, String pickupPersonName, Long requestId,
-                                          String userAddress, String userName, String userPhone,
-                                          LocalDateTime scheduledTime) {
-        String subject = "🚛 New Pickup Assignment - Request #" + requestId;
-        String htmlContent = buildPickupAssignmentEmail(pickupPersonName, requestId, userAddress,
-                userName, userPhone, scheduledTime);
-        sendHtmlEmail(to, subject, htmlContent);
-    }
+    // --- 4. PICKUP ASSIGNMENT (WITH VEHICLE DETAILS) ---
+    public void sendPickupAssignmentEmail(String to, String pickupPersonName, String vehicleNo, String vehicleType,
+                                          Long requestId, LocalDateTime scheduledTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a");
+        String timeStr = scheduledTime.format(formatter);
 
+        String subject = "🚛 Pickup Scheduled for Request #" + requestId;
+        String html = "<html><body>" +
+                "<h2>Pickup Scheduled!</h2>" +
+                "<p>Your pickup agent <strong>" + pickupPersonName + "</strong> is assigned.</p>" +
+                "<h3>Vehicle Details:</h3>" +
+                "<ul>" +
+                "<li><strong>Vehicle Type:</strong> " + (vehicleType != null ? vehicleType : "N/A") + "</li>" +
+                // ✅ FIXED: Changed 'vehicleNumber' to 'vehicleNo' to match the parameter above
+                "<li><strong>Vehicle Number:</strong> " + (vehicleNo != null ? vehicleNo : "N/A") + "</li>" +
+                "</ul>" +
+                "<p><strong>Scheduled Time:</strong> " + timeStr + "</p>" +
+                "</body></html>";
+        sendHtmlEmail(to, subject, html);
+    }
     /**
      * Send gmail new request submit
      */
-    public void sendRequestSubmitEmail(String to, String userName, Long requestId) {
-        String subject = "📨 EcoSaathi - Request Submitted Successfully!";
-
-        String htmlContent = buildRequestSubmitEmail(userName, requestId);
-
-        sendHtmlEmail(to, subject, htmlContent);
+    public void sendRequestSubmitEmail(String to, String userName, Long requestId, String pickupOtp) {
+        String subject = "📨 EcoSaathi - Request Submitted (Save your OTP!)";
+        String html = "<html><body style='font-family: Arial;'>" +
+                "<div style='background:#0b8457; color:white; padding:20px; text-align:center;'><h1>Request Received!</h1></div>" +
+                "<div style='padding:20px;'>" +
+                "<p>Hello " + userName + ",</p>" +
+                "<p>Your request <strong>#" + requestId + "</strong> is pending approval.</p>" +
+                "<div style='background:#e0f2fe; padding:15px; border: 1px dashed #0b8457; text-align:center;'>" +
+                "<h3>🔐 YOUR PICKUP OTP</h3>" +
+                "<h1 style='color:#0b8457; margin:0;'>" + pickupOtp + "</h1>" +
+                "<p style='font-size:12px;'>Share this with the pickup person only when they arrive.</p>" +
+                "</div></div></body></html>";
+        sendHtmlEmail(to, subject, html);
     }
 
+    public void sendIssueReplyEmail(String to, String userName, Long ticketId, String subject, String reply) {
+        String emailSubject = "📢 Update on Support Ticket #" + ticketId;
+        String htmlContent = buildIssueReplyEmail(userName, ticketId, subject, reply);
+        sendHtmlEmail(to, emailSubject, htmlContent);
+    }
+
+    private String buildIssueReplyEmail(String userName, Long ticketId, String subject, String reply) {
+        return "<html><body style='font-family: Arial, sans-serif; color: #333;'>" +
+                "<div style='background-color: #0b8457; color: white; padding: 20px; text-align: center;'>" +
+                "<h2>Support Ticket Update</h2></div>" +
+                "<div style='padding: 20px;'>" +
+                "<p>Hello <strong>" + userName + "</strong>,</p>" +
+                "<p>There is a new update on your support ticket <strong>#" + ticketId + "</strong>.</p>" +
+                "<div style='background: #f0f0f0; padding: 15px; border-left: 5px solid #0b8457; margin: 10px 0;'>" +
+                "<p><strong>Subject:</strong> " + subject + "</p>" +
+                "<p><strong>New Message:</strong><br>" + reply + "</p>" +
+                "</div>" +
+                "<p>Log in to your dashboard to reply.</p>" +
+                "<p>Best Regards,<br>Team EcoSaathi</p>" +
+                "</div></body></html>";
+    }
 
     // ==================== HTML Email Templates ====================
 

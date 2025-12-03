@@ -1,5 +1,3 @@
-// src/components/CertificateGenerator.js
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import html2pdf from 'html2pdf.js';
@@ -56,9 +54,43 @@ export default function CertificateGenerator() {
 
     const completedCount = stats?.completed || 0;
     const isEligible = completedCount >= MIN_COMPLETED_REQUESTS;
+    const progressPercent = Math.min(
+        100,
+        Math.round((completedCount / MIN_COMPLETED_REQUESTS) * 100)
+    );
+    const remaining = Math.max(0, MIN_COMPLETED_REQUESTS - completedCount);
 
     return (
         <div className="container certificate-page">
+
+            {/* 📊 Certificate ke bilkul paas progress graph */}
+            <div className="certificate-progress-box">
+                <h3>Certificate Progress</h3>
+                <p className="certificate-progress-text">
+                    Completed <strong>{completedCount}</strong> out of{" "}
+                    <strong>{MIN_COMPLETED_REQUESTS}</strong> required requests
+                </p>
+
+                <div className="certificate-progress-bar">
+                    <div
+                        className="certificate-progress-fill"
+                        style={{ width: `${progressPercent}%` }}
+                    />
+                </div>
+
+                {!isEligible && (
+                    <p className="certificate-progress-remaining">
+                        You need <strong>{remaining}</strong> more request(s) to unlock your certificate.
+                    </p>
+                )}
+
+                {isEligible && (
+                    <p className="certificate-progress-eligible">
+                        ✅ Certificate unlocked! You can download it below.
+                    </p>
+                )}
+            </div>
+
             {isEligible ? (
                 <>
                     <div className="eligibility-status success">

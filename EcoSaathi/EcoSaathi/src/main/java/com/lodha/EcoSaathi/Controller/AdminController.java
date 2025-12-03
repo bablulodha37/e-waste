@@ -6,13 +6,16 @@ import com.lodha.EcoSaathi.Entity.Request;
 import com.lodha.EcoSaathi.Entity.User;
 import com.lodha.EcoSaathi.Service.PickupPersonService;
 import com.lodha.EcoSaathi.Service.RequestService;
+import com.lodha.EcoSaathi.Entity.Issue;
+import com.lodha.EcoSaathi.Service.IssueService;
 import com.lodha.EcoSaathi.Service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
-//  DTO-like class/record for scheduling now includes pickupPersonId
+//  DTO-like class/record for scheduling
 record ScheduleRequest(LocalDateTime scheduledTime, Long pickupPersonId) {}
 
 @RestController
@@ -23,12 +26,30 @@ public class AdminController {
     private final UserService userService;
     private final RequestService requestService;
     private final PickupPersonService pickupPersonService;
+    private final IssueService issueService;
 
-    // Constructor remains unchanged
-    public AdminController(UserService userService, RequestService requestService, PickupPersonService pickupPersonService) {
+    public AdminController(UserService userService, RequestService requestService, PickupPersonService pickupPersonService , IssueService issueService) {
         this.userService = userService;
         this.requestService = requestService;
         this.pickupPersonService = pickupPersonService;
+        this.issueService = issueService;
+    }
+
+    // --- ISSUE MANAGEMENT ---
+
+    @GetMapping("/all")
+    public List<Issue> getAllIssues() {
+        return issueService.getAllIssues();
+    }
+
+
+    @PutMapping("/issue/reply/{id}")
+    public Issue replyToIssue(@PathVariable Long id, @RequestBody Map<String, String> payload) {
+        String reply = payload.get("reply");
+
+        // ✅ FIXED: Calls the new 'addReply' method
+        // Role is "ADMIN", Sender ID is 0 (Admin ID placeholder)
+        return issueService.addReply(id, "ADMIN", 0L, reply);
     }
 
     // --- USER MANAGEMENT ---
@@ -75,14 +96,12 @@ public class AdminController {
         return requestService.rejectRequest(id);
     }
 
-    // 🔄 UPDATED: Admin schedules an APPROVED request
     @PutMapping("/request/schedule/{id}")
     public Request scheduleRequest(@PathVariable Long id, @RequestBody ScheduleRequest scheduleDetails) {
-        // 🔑 Pass the new pickupPersonId to the service layer
         return requestService.scheduleRequest(
                 id,
                 scheduleDetails.scheduledTime(),
-                scheduleDetails.pickupPersonId() // 🆕 Now passing the PickupPerson ID
+                scheduleDetails.pickupPersonId()
         );
     }
 

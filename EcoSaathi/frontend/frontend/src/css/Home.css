@@ -1,8 +1,26 @@
-/* --- HERO BANNER WITH ENVIRONMENT IMAGE AND DIALOGUE --- */
+/* ================= GLOBAL VARIABLES & BASE ================= */
+:root {
+  --primary: #4caf50;
+  --primary-dark: #45a049;
+  --accent: #6a8e40;
+  --light-bg: #f3f9f1;
+  --text: rgb(26, 26, 25);
+  --text-light: #555;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+.home-container {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+}
+
+/* ================= HERO BANNER ================= */
 .hero-banner {
   position: relative;
   width: 100%;
-  height: 70vh;
+  height: 95vh;
   overflow: hidden;
 }
 
@@ -20,85 +38,209 @@
 
 .hero-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  color: #fff;
   padding: 20px;
-  
-  /* 🌟 THE BLENDING EFFECT IS HERE 🌟 */
-  /* This creates a dark overlay for text readability AND a gradient at the bottom for blending */
-  background: linear-gradient(/* 1. Dark overlay for text at the top (from transparent dark to less transparent dark) */ rgb(23 91 50 / 40%), rgb(179 173 173 / 20%), /* 2. Transition to the light-bg color at the very bottom (last 15% of the height) */ #737976 95%, #fff 100%);
+  color: #fff;
+  text-align: center;
+  background: linear-gradient(rgb(138 118 118 / 60%), rgb(73 70 70 / 40%), rgb(109 105 105 / 0%));
+  backdrop-filter: blur(2px);
+  animation: fadeOverlay 2s ease-in-out;
+}
+
+@keyframes fadeOverlay {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 .hero-dialogue {
-  font-size: 2em;
-  font-weight: 600;
-  max-width: 800px;
+  font-size: 2.3em;
+  font-weight: 700;
+  max-width: 900px;
   line-height: 1.5;
   animation: fadeIn 1.5s ease-in-out;
+  text-shadow: 0px 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 768px) {
-  .hero-dialogue {
-    font-size: 1.4em;
-  }
+  .hero-dialogue { font-size: 1.5em; }
 }
 
-/* --- COLOR VARIABLES (Updated light background) --- */
-:root {
-  --primary: #4caf50;
-  --primary-dark: #45a049;
-  --accent: #6a8e40;
-  /* Key change: Using a very light green */
-  --light-bg: #f3f9f1; 
-  --text: wheat;
-  --text-light: #555;
-  --shadow: rgba(0, 0, 0, 0.1);
-}
-.home-container {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: var(--text);
-  margin: 0;
-  padding: 0;
+/* ================= BRAND LOGO ================= */
+.branding-logo {
+  position: absolute;
+  top: 40px;
+  right: 60px;
+  display: flex;
+  align-items: center;
+  color: #4fdfa2;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+  z-index: 10;
+  animation: slideInRight 1.2s ease;
 }
 
-/* --- IMAGE-FOCUSED INFO SECTION (Updated background and padding) --- */
-.info-cards-section {
-  padding: 20px 20px; 
-  background-color: #cee9dfad; /* This must match the last color stop in the gradient */
-  max-width: 100%;
-  margin: 0 auto;
+@keyframes slideInRight {
+  from { transform: translateX(80px); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+
+.branding-logo .logo-icon { font-size: 3rem; }
+
+.branding-logo .logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.branding-logo .main-text { font-size: 2rem; }
+
+.branding-logo .domain-text {
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+@media (max-width: 768px) {
+  .branding-logo { top: 10px; right: 10px; }
+  .branding-logo .logo-icon { font-size: 2rem; }
+}
+
+/* HERO extra content */
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 900px;
+  width: 100%;
+}
+
+/* Glass card jaise tumne photo bheja tha */
+.hero-glass-box {
+  margin-top: 50px;
+  padding: 18px 26px;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  width: 95%;
+  max-width: 1050px;
+}
+
+.hero-subtitle {
+  font-size: 0.95rem;
+  color: #f4fff9;
+  max-width: 700px;
+  line-height: 1.5;
+}
+
+/* buttons row */
+.hero-glass-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.hero-glass-btn {
+  padding: 15px 30px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+/* primary green button */
+.hero-glass-btn.primary {
+  background: #15d46f;
+  color: #05341b;
+}
+
+.hero-glass-btn.primary:hover {
+  transform: translateY(-2px);
+}
+
+/* secondary outline button */
+.hero-glass-btn.secondary {
+  background: transparent;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+}
+
+.hero-glass-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* stats row */
+.hero-glass-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+  color: #ffffff;
+}
+
+.glass-stat {
   text-align: center;
 }
 
-/* We need an inner container to keep the content centered and constrained */
+.glass-stat h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.glass-stat p {
+  margin: 0;
+  font-size: 0.8rem;
+  opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+  .hero-glass-box {
+    padding: 16px 18px;
+    border-radius: 16px;
+  }
+
+  .glass-stat h3 {
+    font-size: 1.05rem;
+  }
+}
+
+
+/* ================= INFO CARDS SECTION ================= */
+.info-cards-section {
+  padding: 20px 20px;
+  background-color: #cee9dfad;
+  width: 100%;
+  text-align: center;
+}
+
 .info-cards-section > h2,
 .info-cards-section > p,
 .info-cards-section > section {
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 20px;
-    padding-right: 20px;
+  max-width: 1000px;
+  margin: auto;
+  padding: 0 20px;
 }
-
 
 .info-cards-section h2 {
   color: var(--primary);
@@ -108,7 +250,7 @@
 
 .section-subtitle {
   font-size: 1.2em;
-  color:#0c512f;
+  color: #0c512f;
   margin-bottom: 60px;
 }
 
@@ -118,11 +260,10 @@
   margin-bottom: 80px;
   gap: 40px;
   text-align: left;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  /* Added a background and padding to the card itself to lift it off the background */
-  background-color: #b5fdc4; 
+  background-color: #b5fdc4;
   padding: 30px;
   border-radius: 10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .info-card:hover {
@@ -131,24 +272,22 @@
 }
 
 .info-image-container {
-  position: relative;
   flex: 1;
   min-width: 45%;
-  box-shadow: 0 10px 25px var(--shadow);
   border-radius: 10px;
   overflow: hidden;
+  box-shadow: 0 10px 25px var(--shadow);
 }
 
 .info-image-container img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
   transition: transform 0.3s ease;
   border-radius: 10px;
 }
 
-.info-card:hover .info-image-container img {
+.info-card:hover img {
   transform: scale(1.05);
 }
 
@@ -166,174 +305,342 @@
 
 .info-content p {
   font-size: 1.1em;
+  color: #000;
   line-height: 1.7;
-  color: #000000;
+}
+
+.right-image-layout { flex-direction: row-reverse; }
+
+@media (max-width: 992px) {
+  .info-card { flex-direction: column; text-align: center; padding: 20px; }
+  .right-image-layout { flex-direction: column; }
+  .info-image-container, .info-content { min-width: 100%; }
+  .info-image-container { margin-bottom: 20px; }
+  .info-cards-section h2 { font-size: 2em; }
+}
+
+/* ================= IMPACT SECTION ================= */
+.impact-section {
+  padding: 90px 20px;
+  background: linear-gradient(135deg, #e2f7e6, #d4f2e0);
+  text-align: center;
+  animation: fadeUp 1.2s ease;
+}
+
+.impact-section h2 {
+  font-size: 2.7rem;
+  font-weight: 700;
+  color: #0f5c37;
+}
+
+.impact-grid {
+  margin-top: 45px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.impact-card {
+  background: white;
+  padding: 35px 20px;
+  border-radius: 22px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  transition: 0.3s ease;
+}
+
+.impact-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.impact-card h3 {
+  font-size: 2.3rem;
+  color: #067a45;
+}
+
+/* ================= WHAT WE COLLECT ================= */
+.collect-section {
+  padding: 90px 20px;
+  background: #f8fffb;
+  text-align: center;
+}
+
+.collect-grid {
+  margin-top: 45px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.collect-card {
+  background: white;
+  padding: 35px;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  transition: 0.3s ease;
+}
+
+.collect-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+}
+
+.collect-card .icon {
+  font-size: 3.2rem;
+  animation: floatIcon 3s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+.rate-button {
+  margin-top: 35px;
+  padding: 14px 28px;
+  background: #0a5c35;
+  color: white;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: 0.3s ease;
+  display: inline-block;
+}
+
+.rate-button:hover {
+  background: #13a85c;
+  transform: scale(1.06);
+}
+
+/* ================= FEEDBACK ================= */
+.feedback-section {
+  padding: 90px 20px;
+  background: linear-gradient(135deg, #d1ffe6, #afffd6);
+  text-align: center;
+}
+
+.feedback-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 35px;
+  margin-top: 40px;
+}
+
+.feedback-card {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  transition: 0.3s ease;
+  font-style: italic;
+}
+
+.feedback-card:hover {
+  transform: translateY(-10px);
+}
+
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(25px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ================= FAQ ================= */
+
+.faq-section {
+  padding: 80px 20px;
+  background: radial-gradient(circle at top left, #f4faf6 0, #ffffff 55%);
+  max-width: 960px;
+  margin: 0 auto;
+  animation: fadeUp 0.8s ease;
+}
+
+.faq-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.faq-header h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #053321;
+  margin-bottom: 8px;
+}
+
+.faq-header p {
+  color: #5f6b66;
+  font-size: 0.98rem;
+}
+
+/* FAQ list */
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Each item */
+
+.faq-item {
+  background: #f7fbf9;
+  border-radius: 16px;
+  padding: 18px 20px;
+  border: 1px solid rgba(5, 87, 52, 0.06);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease,
+    background 0.18s ease;
+}
+
+.faq-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.05);
+  border-color: rgba(12, 119, 69, 0.2);
+  background: #f1faf5;
+}
+
+/* Remove default marker */
+
+.faq-item summary {
+  list-style: none;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Summary layout */
+
+.faq-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #0d5c34;
+}
+
+.faq-item summary span:first-child {
+  flex: 1;
+}
+
+/* Icon */
+
+.faq-icon {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(13, 92, 52, 0.15);
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+/* When open, rotate to look like "-" */
+
+.faq-item[open] .faq-icon {
+  transform: rotate(45deg);
+  background: #0d5c34;
+  color: #ffffff;
+  border-color: transparent;
+}
+
+/* Content */
+
+.faq-item p {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.06);
+  color: #3a3f3d;
+  font-size: 0.97rem;
+  line-height: 1.6;
+}
+
+/* Small animation for open */
+
+.faq-item[open] p {
+  animation: fadeIn 0.18s ease;
+}
+
+/* Animations */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive tweaks */
+
+@media (min-width: 768px) {
+  .faq-header h2 {
+    font-size: 2.2rem;
+  }
+
+  .faq-section {
+    padding: 90px 24px;
+  }
+
+  .faq-item {
+    padding: 20px 22px;
+  }
 }
 
 
-
-/* --- LAYOUT SWITCHING --- */
-.right-image-layout {
-  flex-direction: row-reverse;
-}
-
-/* --- CALL TO ACTION --- */
+/* ================= CTA & FOOTER ================= */
 .call-to-action {
   text-align: center;
   padding: 80px 20px;
-  /* Kept this section separate with a slightly darker background */
-  background-color: #107d4c; 
+  background-color:#b5ffd9;
   color: var(--text);
-  border-top: 1px solid #ddd;
 }
 
 .call-to-action h2 {
   font-size: 2.2em;
   margin-bottom: 20px;
-  color: #f7e8e8;
+  color: #054926;
   animation: slideInFromBottom 1s ease-out forwards;
 }
+
 @keyframes slideInFromBottom {
-    0% {
-        /* Animation ke shuru mein (at the start) */
-        transform: translateY(30px); /* Element ko 30px neeche shift kiya */
-        opacity: 0; /* Usko poora chhipa diya */
-    }
-    100% {
-        /* Animation ke ant (at the end) mein */
-        transform: translateY(0); /* Uski asli jagah par wapas le aaye */
-        opacity: 1; /* Usko poora dikha diya */
-    }
+  from { transform: translateY(30px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
 }
 
-.call-to-action p {
-  font-size: 1.2em;
-  margin-bottom: 40px;
-}
+.call-to-action p { font-size: 1.2em; margin-bottom: 40px; }
 
 .cta-button {
-  display: inline-block;
   padding: 15px 30px;
   border-radius: 50px;
   color: #39370a;
-  font-size: 1.1em;
   text-decoration: none;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 1.1em;
+  transition: 0.3s ease;
 }
 
-.cta-button.secondary {
-  background-color: #c2e317;
-}
+.cta-button.secondary { background-color: #c2e317; }
 
 .cta-button.secondary:hover {
   background-color: #03f066;
   transform: scale(1.05);
 }
 
-/* --- FOOTER --- */
-.footer {
-  text-align: center;
-  padding: 30px 20px;
-  color: white;
-  background-color: #333;
-  font-size: 0.9em;
-}
-
-/* --- RESPONSIVE ADJUSTMENTS --- */
-@media (max-width: 992px) {
-  /* Resetting margin and padding for info-cards-section h2/p for mobile */
-  .info-cards-section > h2,
-  .info-cards-section > p {
-      padding-left: 0;
-      padding-right: 0;
-  }
-
-  .info-card {
-    flex-direction: column;
-    text-align: center;
-    padding: 20px; /* Reduced padding on card for smaller screens */
-  }
-
-  .right-image-layout {
-    flex-direction: column;
-  }
-
-  .info-image-container,
-  .info-content {
-    min-width: 100%;
-  }
-
-  .info-image-container {
-    margin-bottom: 20px;
-  }
-
-  .info-step-number {
-    top: 10px;
-    right: 10px;
-    left: auto;
-  }
-
-  .info-cards-section h2 {
-    font-size: 2em;
-  }
-}
-
-
-
-.branding-logo {
-    position: absolute;
-    top: 40px; /* Distance from the top */
-    right: 60px; /* Distance from the right */
-    display: flex; /* To align the icon and text next to each other */
-    align-items: center;
-    color: #4fdfa2; /* Text color for visibility on the image */
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6); /* Optional: Shadow for better contrast */
-    z-index: 10; /* Ensure it's above the image and overlay */
-}
-
-/* Styles for the recycle icon */
-.branding-logo .logo-icon {
-    font-size: 3rem; /* Make the emoji bigger */
-    margin-right: 0px;
-    margin-top: 0px;
-}
-
-/* Container for the two-line text */
-.branding-logo .logo-text {
-    display: flex; /* Use flexbox to arrange the two spans vertically */
-    flex-direction: column;
-    line-height: 1.1; /* Adjust line spacing */
-    font-weight: bold;
-}
-
-/* EcoSaathi text - bigger font */
-.branding-logo .main-text {
-    font-size: 2rem;
-}
-
-/* .com text - smaller font on the line below */
-.branding-logo .domain-text {
-    font-size: 1rem;
-    font-weight: normal; /* Less bold for the .com part */
-}
-
-/* Optional: Adjust for smaller screens */
-@media (max-width: 768px) {
-    .branding-logo {
-        top: 10px;
-        right: 10px;
-    }
-    .branding-logo .logo-icon {
-        font-size: 1.8rem;
-
-    }
-    .branding-logo .main-text {
-      margin-right: 30px;
-      margin-top: 50px;
-        font-size: 2rem;
-    }
-    .branding-logo .domain-text {
-        font-size: 0.9rem;
-        margin-right: 30px;
-    }
-}

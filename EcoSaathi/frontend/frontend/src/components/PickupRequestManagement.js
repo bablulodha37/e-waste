@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import "../css/PickupDashboard.css";
+import "../css/PickupRequestManagement.css";
 
 export default function PickupRequestManagement() {
   const { id } = useParams();
@@ -10,7 +10,7 @@ export default function PickupRequestManagement() {
 
   const API_BASE_URL = "http://localhost:8080/api/pickup";
 
-  // Fetch all assigned requests
+  // Fetch all assigned pickup requests
   const fetchRequests = async () => {
     try {
       const res = await axios.get(`${API_BASE_URL}/${id}/requests`);
@@ -20,18 +20,9 @@ export default function PickupRequestManagement() {
     }
   };
 
-  // === Final Mark Complete Logic (same as Dashboard version) ===
-  const completeRequest = async (requestId) => {
-    if (!window.confirm("Mark this request as completed?")) return;
-
-    try {
-      await axios.put(`${API_BASE_URL}/request/complete/${requestId}`);
-      alert("Request marked as completed!");
-      fetchRequests(); // refresh list
-    } catch (err) {
-      console.error("Error completing request:", err);
-      alert("Failed to complete request. Try again.");
-    }
+  // Navigate to OTP Page
+  const completeRequest = (requestId) => {
+    navigate(`/pickup/verify-otp/${requestId}`);
   };
 
   useEffect(() => {
@@ -39,67 +30,63 @@ export default function PickupRequestManagement() {
   }, [id]);
 
   return (
-    <div className="pickup-container">
-      <h2>Request Management</h2>
+    <div className="pickup-card-main">
+      <h2 className="pickup-title">Assigned Pickup Requests</h2>
 
-      {requests.length === 0 ? (
-        <p>No assigned requests.</p>
-      ) : (
-        <table className="pickup-table">
-          <thead>
-            <tr>
-              <th>Request ID</th>
-              <th>User Name</th>
-              <th>Pickup Address</th>
-              <th>Scheduled Time</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
+      <div className="pickup-card-grid">
+        {requests.length === 0 ? (
+          <p>No assigned requests.</p>
+        ) : (
+          requests.map((req) => (
+            <div key={req.id} className="pickup-card">
+              {/* HEADER */}
+              <div className="pickup-card-header">
+                <h3>Request #{req.id}</h3>
+                <span className={`pickup-status status-${req.status.toLowerCase()}`}>
+                  {req.status}
+                </span>
+              </div>
 
-          <tbody>
-            {requests.map((req) => (
-              <tr key={req.id}>
-                <td>{req.id}</td>
-                <td>
-                  {req.user?.firstName} {req.user?.lastName}
-                </td>
-                <td>{req.user?.pickupAddress || "N/A"}</td>
-                <td>
+              {/* CARD CONTENT */}
+              <div className="pickup-info">
+                <p>
+                  <strong>User:</strong> {req.user?.firstName} {req.user?.lastName}
+                </p>
+                <p>
+                  <strong>Pickup Address:</strong> {req.pickupLocation}
+                </p>
+                <p>
+                  <strong>Scheduled Time:</strong>{" "}
                   {req.scheduledTime
                     ? req.scheduledTime.replace("T", " ")
                     : "Not Scheduled"}
-                </td>
+                </p>
+              </div>
 
-                <td>
-                  <span className={`status-badge ${req.status.toLowerCase()}`}>
-                    {req.status}
-                  </span>
-                </td>
-
-                <td>
-                  {/* Show Mark Complete only if not completed */}
-                  {req.status?.toLowerCase() !== "completed" && (
-                    <button
-                      className="complete-btn"
-                      onClick={() => completeRequest(req.id)}
-                    >
-                      Mark Complete
-                    </button>
-                  )}
-
+              {/* ACTION BUTTONS */}
+              <div className="pickup-card-actions">
+                {req.status?.toLowerCase() !== "completed" && (
                   <button
-                    className="track-btn"
-                    onClick={() => navigate(`/track/user/${req.id}`)}
+                    className="pickup-complete-btn"
+                    onClick={() => completeRequest(req.id)}
                   >
-                    Track User
+                    Mark Complete
                   </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+                )}
+
+                <button
+                  className="pickup-track-btn"
+                  onClick={() =>
+                    (window.location.href = `/track/user/${req.id}`)
+                  }
+                >
+                  Track User
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }

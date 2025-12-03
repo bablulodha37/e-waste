@@ -1,4 +1,42 @@
 /* src/css/RequestForm.css */
+/* --- FORM GRID ROWS --- */
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-field label {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+/* Success / error messages (className ke saath match kare) */
+.success-message {
+    color: #1a7e44;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.error-message {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 15px;
+    font-weight: bold;
+}
 
 /* --- GENERAL FORM CONTAINER STYLES --- */
 .request-form-card {
@@ -6,7 +44,7 @@
     padding: 30px;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
+    max-width: 800px;
     margin: 30px auto;
     text-align: left;
    

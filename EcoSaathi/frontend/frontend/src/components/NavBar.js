@@ -1,24 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../css/NavBar.css";
+
+
+const API_BASE_URL = "http://localhost:8080";
 
 export default function NavBar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [menuOpen, setMenuOpen] = useState(false);
+
+  const [userSidebarOpen, setUserSidebarOpen] = useState(false);
+  const [pickupSidebarOpen, setPickupSidebarOpen] = useState(false);
+  const [adminSidebarOpen, setAdminSidebarOpen] = useState(false);
+
+  const openUserSidebar = () => setUserSidebarOpen(true);
+  const closeUserSidebar = () => setUserSidebarOpen(false);
+
+  const openPickupSidebar = () => setPickupSidebarOpen(true);
+  const closePickupSidebar = () => setPickupSidebarOpen(false);
+
+  const openAdminSidebar = () => setAdminSidebarOpen(true);
+  const closeAdminSidebar = () => setAdminSidebarOpen(false);
 
   const user = JSON.parse(localStorage.getItem("user"));
   const isAdmin = user && user.role === "ADMIN";
   const isPickupPerson = user && user.role === "PICKUP_PERSON";
 
   const isHomePage = location.pathname === "/";
+
   const showQuickLinks = user || (!user && isHomePage);
   const showPublicQuickLinks = !user && isHomePage;
-
-  const logout = () => {
-    localStorage.removeItem("user");
-    navigate("/login");
-  };
 
   const homeDestination = user
     ? isAdmin
@@ -34,153 +45,344 @@ export default function NavBar() {
   const homeNeedsAutoMargin = showQuickLinks && !isAdminLinkShown;
   const loginNeedsAutoMargin = !user && !isHomePage && !isAdminLinkShown;
 
-  const toggleMenu = () => setMenuOpen(!menuOpen);
-  const closeMenu = () => setMenuOpen(false);
+  const logout = () => {
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
 
-  // --- Navigation helpers for users ---
   const navigateTo = (path) => {
     navigate(path);
-    closeMenu();
   };
 
-  const navigateToProfile = () => navigateTo(`/profile/${user.id}`);
-  const navigateToDashboard = () => navigateTo(`/dashboard/${user.id}`);
-  const navigateToRequestSubmit = () => navigateTo(`/request/submit/${user.id}`);
-  const navigateToHistory = () => navigateTo(`/profile/${user.id}/history`);
-  const navigateToCertificate = () => navigateTo(`/certificate/${user.id}`);
-  const navigateToReport = () => navigateTo(`/report/${user.id}`);
+  // Profile image URL (same idea as ProfilePictureUploader)
+  const profileImageUrl =
+    user && user.profilePictureUrl
+      ? user.profilePictureUrl.startsWith("./images/")
+        ? `${API_BASE_URL}${user.profilePictureUrl}`
+        : user.profilePictureUrl
+      : null;
 
-  // --- Pickup Person helpers ---
-  const navigateToPickupProfile = () => navigateTo(`/pickup-profile/${user.id}`);
-  const navigateToPickupDashboard = () => navigateTo(`/pickup-dashboard/${user.id}`);
-
-  // --- ADMIN NAVIGATION HELPERS ---
-  const handleAdminTab = (tab) => {
-    window.dispatchEvent(new CustomEvent("adminTabChange", { detail: tab }));
-    navigate("/admin");
-    closeMenu();
-  };
+  const userInitial =
+    (user && (user.firstName?.[0] || user.email?.[0]))?.toUpperCase() || "U";
 
   return (
     <nav className="navbar">
+      {/* ☰ MENU ICON – opens correct sidebar AFTER LOGIN */}
       {user && (
-        <div className="menu-icon" onClick={toggleMenu}>
+        <div
+          className="menu-icon"
+          onClick={
+            isAdmin
+              ? openAdminSidebar
+              : isPickupPerson
+              ? openPickupSidebar
+              : openUserSidebar
+          }
+        >
           ☰
         </div>
       )}
 
+      {/* LOGO */}
       <Link to={homeDestination} className="logo-link">
         <img src="/logo.webp" alt="EcoSaathi Logo" className="logo-img" />
       </Link>
 
       <div className="nav-links">
-        {/* ✅ Admin Section */}
-        {isAdmin && (
-          <button className="nav-btn" onClick={() => navigate("/admin")}>
-            Admin Dashboard
-          </button>
+        {/* ======================== */}
+        {/* 🔹 PRE-LOGIN NAV */}
+        {/* ======================== */}
+        {!user && (
+          <>
+            {showQuickLinks &&
+              (!user || (user && !isAdmin && !isPickupPerson)) &&
+              (user ? (
+                <button
+                  className="nav-btn"
+                  onClick={() => navigate(`/dashboard/${user.id}`)}
+                  style={homeNeedsAutoMargin ? { marginLeft: "auto" } : {}}
+                >
+                  {homeLinkText}
+                </button>
+              ) : (
+                <Link
+                  to={homeDestination}
+                  style={homeNeedsAutoMargin ? { marginLeft: "auto" } : {}}
+                >
+                  {homeLinkText}
+                </Link>
+              ))}
+
+            {/* Public links on Home page */}
+            {showPublicQuickLinks && <Link to="/services">Services</Link>}
+            {showPublicQuickLinks && <Link to="/about">About Us</Link>}
+            {showPublicQuickLinks && <Link to="/contact">Contact</Link>}
+
+            {/* Sign in / Sign up when not on home page */}
+            {!user && !isHomePage && (
+              <Link
+                to="/login"
+                style={loginNeedsAutoMargin ? { marginLeft: "auto" } : {}}
+              >
+                Sign In
+              </Link>
+            )}
+            {!user && !isHomePage && <Link to="/register">Sign Up</Link>}
+          </>
         )}
 
-        {/* ✅ Pickup Person Dashboard Button */}
-        {isPickupPerson && (
-          <button
-            className="nav-btn"
-            onClick={() => navigate(`/pickup-dashboard/${user.id}`)}
-            style={homeNeedsAutoMargin ? { marginLeft: "auto" } : {}}
-          >
-            Pickup Dashboard
-          </button>
-        )}
-
-        {/* ✅ Normal User Buttons */}
-        {showQuickLinks &&
-          (!user || (user && !isAdmin && !isPickupPerson)) &&
-          (user ? (
-            <button
-              className="nav-btn"
-              onClick={navigateToDashboard}
-              style={homeNeedsAutoMargin ? { marginLeft: "auto" } : {}}
-            >
-              {homeLinkText}
-            </button>
-          ) : (
-            <Link
-              to={homeDestination}
-              style={homeNeedsAutoMargin ? { marginLeft: "auto" } : {}}
-            >
-              {homeLinkText}
-            </Link>
-          ))}
-
-        {showPublicQuickLinks && <Link to="/services">Services</Link>}
-        {showPublicQuickLinks && <Link to="/about">About Us</Link>}
-        {showPublicQuickLinks && <Link to="/contact">Contact</Link>}
-
-        {!user && !isHomePage && (
-          <Link
-            to="/login"
-            style={loginNeedsAutoMargin ? { marginLeft: "auto" } : {}}
-          >
-            Sign In
-          </Link>
-        )}
-        {!user && !isHomePage && <Link to="/register">Sign Up</Link>}
-
-        {/* ✅ Profile + Logout Buttons (common for all logged-in) */}
+        {/* ======================== */}
+        {/* 🔹 AFTER LOGIN NAV */}
+        {/* ======================== */}
         {user && (
           <>
-            {!isPickupPerson && (
-              <button className="nav-btn" onClick={navigateToProfile}>
-                Profile
+            {!isAdmin && !isPickupPerson && (
+              <button
+                className="nav-btn"
+                onClick={() => navigate(`/dashboard/${user.id}`)}
+              >
+                Dashboard
               </button>
             )}
+
             {isPickupPerson && (
-              <button className="nav-btn" onClick={navigateToPickupProfile}>
-                Profile
+              <button
+                className="nav-btn"
+                onClick={() => navigate(`/pickup-dashboard/${user.id}`)}
+              >
+                Pickup Dashboard
               </button>
             )}
+
+            {isAdmin && (
+              <button className="nav-btn" onClick={() => navigate("/admin")}>
+                Admin Dashboard
+              </button>
+            )}
+
             <button className="nav-btn logout-btn" onClick={logout}>
               Logout
             </button>
+
+            {/* 👉 Logout ke aage user photo + notification */}
+            <div className="nav-user-section">
+              {profileImageUrl ? (
+                <img
+                  src={profileImageUrl}
+                  alt="Profile"
+                  className="nav-user-avatar"
+                />
+              ) : (
+                <div className="nav-user-avatar nav-user-avatar-placeholder">
+                  {userInitial}
+                </div>
+              )}
+              
+            </div>
           </>
         )}
       </div>
 
-      {/* --- USER DROPDOWN MENU --- */}
-      {user && !isAdmin && !isPickupPerson && menuOpen && (
-        <div className="dropdown-menu">
-          <button onClick={navigateToDashboard}>🏠 Dashboard</button>
-          <button onClick={navigateToRequestSubmit}>➕ Submit Request</button>
-          <button onClick={navigateToHistory}>📋 My Requests</button>
-          <button onClick={navigateToProfile}>👤 Profile</button>
-          <button onClick={navigateToCertificate}>🏅 Certificate</button>
-          <button onClick={navigateToReport}>📊 Reports</button>
-          <hr className="menu-divider" />
-          <button onClick={logout}>🚪 Logout</button>
+      {/* ===================================================== */}
+      {/* ⭐⭐ USER SIDEBAR ⭐⭐ (NORMAL USER, AFTER LOGIN) */}
+      {/* ===================================================== */}
+      {user && !isAdmin && !isPickupPerson && userSidebarOpen && (
+        <div className="pickup-sidebar-overlay" onClick={closeUserSidebar}>
+          <div
+            className="pickup-sidebar"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Yahan pe user ka name + gmail */}
+            <div className="sidebar-user-header">
+              <div className="sidebar-user-name">
+                {user.firstName} {user.lastName}
+              </div>
+              <div className="sidebar-user-email">{user.email}</div>
+            </div>
+
+            <button
+              className="sidebar-btn"
+              onClick={() => navigateTo(`/dashboard/${user.id}`)}
+            >
+              🏠 Dashboard
+            </button>
+            <button
+              className="sidebar-btn"
+              onClick={() => navigateTo(`/request/submit/${user.id}`)}
+            >
+              ➕ Submit Request
+            </button>
+            <button
+              className="sidebar-btn"
+              onClick={() => navigateTo(`/profile/${user.id}/history`)}
+            >
+              📋 My Requests
+            </button>
+            <button
+              className="sidebar-btn"
+              onClick={() => navigateTo(`/profile/${user.id}`)}
+            >
+              👤 Profile
+            </button>
+            <button
+              className="sidebar-btn"
+              onClick={() => navigateTo(`/certificate/${user.id}`)}
+            >
+              🏅 Certificate
+            </button>
+            <button
+              className="sidebar-btn"
+              onClick={() => navigateTo(`/report/${user.id}`)}
+            >
+              📊 Reports
+            </button>
+            <button
+              className="sidebar-btn"
+              onClick={() => navigateTo(`/support/${user.id}`)}
+            >
+              🛠 Support
+            </button>
+
+            {/* Support ke niche Settings → Edit Profile */}
+            <button
+              className="sidebar-btn"
+              onClick={() => navigateTo(`/profile/${user.id}/edit`)}
+            >
+              ⚙️ Settings
+            </button>
+
+            <div className="sidebar-bottom">
+              <button className="sidebar-logout" onClick={logout}>
+                🚪 Logout
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
-      {/* --- ADMIN DROPDOWN MENU --- */}
-      {user && isAdmin && menuOpen && (
-        <div className="dropdown-menu">
-          <button onClick={() => handleAdminTab("dashboard")}>
-            🏠 Admin Dashboard
-          </button>
-          <button onClick={() => handleAdminTab("users")}>🧑‍💼 User Management</button>
-          <button onClick={() => handleAdminTab("requests")}>📦 Request Management</button>
-          <button onClick={() => handleAdminTab("pickups")}>🚛 Pickup Persons</button>
-          <hr className="menu-divider" />
-          <button onClick={logout}>🚪 Logout</button>
+      {/* ===================================================== */}
+      {/* ⭐⭐ PICKUP PERSON SIDEBAR ⭐⭐ */}
+      {/* ===================================================== */}
+      {user && isPickupPerson && pickupSidebarOpen && (
+        <div className="pickup-sidebar-overlay" onClick={closePickupSidebar}>
+          <div
+            className="pickup-sidebar"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="sidebar-title">Pickup Menu</h3>
+
+            <button
+              className="sidebar-btn"
+              onClick={() => navigateTo(`/pickup-dashboard/${user.id}`)}
+            >
+              🚛 Pickup Dashboard
+            </button>
+            <button
+              className="sidebar-btn"
+              onClick={() => navigateTo(`/pickup-profile/${user.id}`)}
+            >
+              👤 Profile
+            </button>
+            <button
+              className="sidebar-btn"
+              onClick={() => navigateTo(`/pickup/requests/${user.id}`)}
+            >
+              📦 Request Management
+            </button>
+
+            <div className="sidebar-bottom">
+              <button className="sidebar-logout" onClick={logout}>
+                🚪 Logout
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
-      {/* --- PICKUP PERSON DROPDOWN MENU --- */}
-      {user && isPickupPerson && menuOpen && (
-        <div className="dropdown-menu">
-          <button onClick={navigateToPickupDashboard}>🚛 Assigned Requests</button>
-          <button onClick={navigateToPickupProfile}>👤 Profile</button>
-          <hr className="menu-divider" />
-          <button onClick={logout}>🚪 Logout</button>
+      {/* ===================================================== */}
+      {/* ⭐⭐ ADMIN SIDEBAR ⭐⭐ */}
+      {/* ===================================================== */}
+      {user && isAdmin && adminSidebarOpen && (
+        <div className="pickup-sidebar-overlay" onClick={closeAdminSidebar}>
+          <div
+            className="pickup-sidebar"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="sidebar-title">Admin Menu</h3>
+
+            <button
+              className="sidebar-btn"
+              onClick={() => {
+                window.dispatchEvent(
+                  new CustomEvent("adminTabChange", { detail: "dashboard" })
+                );
+                navigate("/admin");
+              }}
+            >
+              🏠 Dashboard
+            </button>
+
+            <button
+              className="sidebar-btn"
+              onClick={() => {
+                window.dispatchEvent(
+                  new CustomEvent("adminTabChange", { detail: "users" })
+                );
+                navigate("/admin");
+              }}
+            >
+              👥 User Management
+            </button>
+
+            <button
+              className="sidebar-btn"
+              onClick={() => {
+                window.dispatchEvent(
+                  new CustomEvent("adminTabChange", { detail: "requests" })
+                );
+                navigate("/admin");
+              }}
+            >
+              📦 Request Management
+            </button>
+
+            <button
+              className="sidebar-btn"
+              onClick={() => {
+                window.dispatchEvent(
+                  new CustomEvent("adminTabChange", { detail: "pickups" })
+                );
+                navigate("/admin");
+              }}
+            >
+              🚛 Pickup Person Management
+            </button>
+
+            <button
+              className="sidebar-btn"
+              onClick={() => {
+                window.dispatchEvent(
+                  new CustomEvent("adminTabChange", { detail: "issues" })
+                );
+                navigate("/admin");
+              }}
+            >
+              📩 Issues Management
+            </button>
+
+            <button
+              className="sidebar-btn"
+              onClick={() => navigateTo(`/profile/${user.id}`)}
+            >
+              👤 Profile
+            </button>
+
+            <div className="sidebar-bottom">
+              <button className="sidebar-logout" onClick={logout}>
+                🚪 Logout
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </nav>

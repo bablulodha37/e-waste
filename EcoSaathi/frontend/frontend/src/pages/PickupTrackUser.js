@@ -1,54 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
-import LiveTrackingMap from "../components/LiveTrackingMap";
+import { api } from "../api";
+import PickupLiveSender from "../components/PickupLiveSender";
 
 export default function PickupTrackUser() {
   const { requestId } = useParams();
-  const [coords, setCoords] = useState(null);
+  const user = JSON.parse(localStorage.getItem("user"));
+  const [url, setUrl] = useState(null);
 
-  const fetchUserLocation = async () => {
+  const fetchUrl = async () => {
     try {
-      const res = await axios.get(
-        `http://localhost:8080/api/auth/request/${requestId}`
-      );
+      const data = await api(`/api/pickup/request/${requestId}/pickup-location`);
+      setUrl(data.googleMapsUrl);
 
-      const address = res.data.pickupLocation;
-
-      const geo = await axios.get(
-        "https://nominatim.openstreetmap.org/search",
-        {
-          params: { q: address, format: "json", limit: 1 },
-        }
-      );
-
-      if (geo.data.length > 0) {
-        setCoords({
-          latitude: parseFloat(geo.data[0].lat),
-          longitude: parseFloat(geo.data[0].lon),
-        });
-      }
+      // 🔥 Open in a new tab
+      window.open(data.googleMapsUrl, "_blank");
     } catch (err) {
-      console.error("Error fetching user address:", err);
+      console.error(err);
     }
   };
 
   useEffect(() => {
-    fetchUserLocation();
-  }, []);
-
-  if (!coords)
-    return <p style={{ textAlign: "center" }}>Loading user address…</p>;
+    fetchUrl();
+  }, [requestId]);
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>User Pickup Address</h2>
-
-      <LiveTrackingMap
-        latitude={coords.latitude}
-        longitude={coords.longitude}
-        label="User Pickup Location"
-      />
+    <div style={{ padding: "20px", textAlign: "center" }}>
+      <PickupLiveSender pickupPersonId={user.id} />
+      <h2>Opening Google Maps...</h2>
+      <p>If Google Maps didn’t open, <a href={url} target="_blank">click here</a>.</p>
     </div>
   );
 }

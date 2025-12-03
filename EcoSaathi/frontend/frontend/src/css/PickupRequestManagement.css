@@ -1,0 +1,115 @@
+/* MAIN WRAPPER */
+.pickup-card-main {
+  padding: 20px;
+}
+
+.pickup-title {
+  margin-bottom: 20px;
+  color: #023117;
+}
+
+/* GRID: 2 CARDS PER ROW */
+.pickup-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 20px;
+}
+
+/* CARD BOX */
+.pickup-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 18px;
+  border: 1px solid #d2ded3;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: 0.25s ease;
+  cursor: pointer;
+}
+
+.pickup-card:hover {
+  transform: scale(1.02);
+}
+
+/* HEADER */
+.pickup-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pickup-status {
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* STATUS COLORS */
+.status-pending {
+  background: #ffc107;
+}
+.status-approved {
+  background: #17a2b8;
+}
+.status-scheduled {
+  background: #6f42c1;
+}
+.status-completed {
+  background: #28a745;
+}
+.status-rejected {
+  background: #dc3545;
+}
+
+/* CARD CONTENT */
+.pickup-info {
+  margin-top: 12px;
+  border-top: 1px dashed #ccc;
+  padding-top: 10px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* BUTTONS */
+.pickup-card-actions {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+.pickup-complete-btn {
+  flex: 1;
+  background: #16a34a;
+  border: none;
+  color: white;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.pickup-complete-btn:hover {
+  background: #0e7a32;
+}
+
+.pickup-track-btn {
+  flex: 1;
+  background: #0b6ef7;
+  border: none;
+  color: white;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.pickup-track-btn:hover {
+  background: #0456c2;
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 900px) {
+  .pickup-card-grid {
+    grid-template-columns: 1fr; /* 1 card per row on mobile */
+  }
+}

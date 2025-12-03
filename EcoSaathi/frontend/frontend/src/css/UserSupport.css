@@ -1,0 +1,334 @@
+/* 🌿 Existing report styles yahan pe rahne do ... */
+/* ... tumhara .report-page, .report-controls, etc. ... */
+
+/* ===========================
+   HELP & SUPPORT + FAQ LAYOUT
+   =========================== */
+
+.support-page {
+  padding: 30px 16px;
+  background: radial-gradient(circle at top left, #e6f5ec, #fdfdfd);
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.support-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 24px 30px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.6s ease-in-out;
+  font-family: "Poppins", sans-serif;
+}
+
+.support-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #e0eee7;
+  padding-bottom: 12px;
+}
+
+.support-header h2 {
+  font-size: 1.7rem;
+  color: #023117;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+}
+
+.support-subtitle {
+  font-size: 0.95rem;
+  color: #5a5a5a;
+  margin-top: 4px;
+}
+
+/* MAIN LAYOUT: LEFT (tickets) + RIGHT (FAQ) */
+
+.support-layout {
+  display: flex;
+  gap: 22px;
+  align-items: flex-start;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.support-main {
+  flex: 2 1 55%;
+  min-width: 280px;
+}
+
+.support-faq {
+  flex: 1 1 35%;
+  min-width: 260px;
+  background: linear-gradient(145deg, #e6f5ec, #fdfdfd);
+  border-radius: 14px;
+  padding: 18px 18px 16px;
+  border: 1px solid #d3e7d8;
+  box-shadow: 0 10px 24px rgba(0, 179, 122, 0.12);
+  position: sticky;
+  top: 80px;
+}
+
+/* Tabs */
+
+.tabs {
+  display: inline-flex;
+  background: #f2f6f3;
+  border-radius: 999px;
+  padding: 4px;
+  margin-bottom: 16px;
+  border: 1px solid #d3e7d8;
+}
+
+.tabs button {
+  border: none;
+  background: transparent;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-weight: 500;
+  color: #4a4a4a;
+  transition: all 0.25s ease;
+}
+
+.tabs button.active {
+  background: linear-gradient(135deg, #00b37a, #058f64);
+  color: #ffffff;
+  box-shadow: 0 6px 14px rgba(0, 179, 122, 0.4);
+}
+
+/* Form */
+
+.support-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 18px 18px;
+  border-radius: 12px;
+  border: 1px solid #e4ece7;
+  background: #f8fffb;
+}
+
+.support-form label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #023117;
+}
+
+.support-form input,
+.support-form textarea {
+  border-radius: 8px;
+  border: 1px solid #cddbd1;
+  padding: 9px 11px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+  resize: vertical;
+  font-family: inherit;
+  background: #ffffff;
+}
+
+.support-form input:focus,
+.support-form textarea:focus {
+  border-color: #00b37a;
+  box-shadow: 0 0 0 3px rgba(0, 179, 122, 0.18);
+}
+
+.primary-btn {
+  margin-top: 4px;
+  align-self: flex-end;
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #00b37a, #058f64);
+  color: white;
+  box-shadow: 0 6px 14px rgba(0, 179, 122, 0.5);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.primary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(0, 179, 122, 0.6);
+}
+
+/* Issues list */
+
+.issues-list {
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.empty-text {
+  font-size: 0.9rem;
+  color: #7a7a7a;
+  padding: 10px 0;
+}
+
+.issue-card {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #e4ece7;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.issue-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.07);
+}
+
+.issue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.issue-header h4 {
+  font-size: 0.95rem;
+  color: #023117;
+}
+
+.issue-description {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.admin-reply {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #f2fbff;
+  border-left: 3px solid #0d6efd;
+  font-size: 0.88rem;
+}
+
+/* Status badge generic */
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Example status colors (match backend status if possible) */
+.status-open {
+  background-color: #f0ad4e;
+  color: #333;
+}
+
+.status-in_progress,
+.status-inprogress {
+  background-color: #0d6efd;
+}
+
+.status-resolved,
+.status-closed {
+  background-color: #198754;
+}
+
+/* FAQ styles */
+
+.faq-title {
+  font-size: 1.05rem;
+  color: #023117;
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+
+.faq-subtitle {
+  font-size: 0.85rem;
+  color: #4f6f5d;
+  margin-bottom: 10px;
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.faq-item {
+  border-radius: 10px;
+  border: 1px solid #c9e5d6;
+  background: #ffffff;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+
+.faq-item.faq-open {
+  box-shadow: 0 6px 16px rgba(0, 179, 122, 0.25);
+  background: #f8fffb;
+  transform: translateY(-1px);
+}
+
+.faq-question {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 11px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  font-size: 0.87rem;
+  font-weight: 600;
+  color: #024423;
+}
+
+.faq-icon {
+  font-size: 0.9rem;
+  transition: transform 0.2s ease;
+}
+
+.faq-icon.rotate {
+  transform: rotate(180deg);
+}
+
+.faq-answer {
+  padding: 0 11px 9px;
+  font-size: 0.85rem;
+  color: #4c4c4c;
+}
+
+.faq-footer {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  text-align: center;
+  color: #314338;
+}
+
+.faq-footer span {
+  font-weight: 600;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  .support-layout {
+    flex-direction: column;
+  }
+
+  .support-faq {
+    position: static;
+  }
+}

@@ -1,11 +1,11 @@
 /* === Main Admin Dashboard Container === */
 .admin-container {
-  margin: 2rem ;
- 
+  margin: 1rem;
   background: #cee9dfad;
   border-radius: 15px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
   font-family: "Arial", sans-serif;
+  padding: 2rem;
 }
 
 .admin-container h1 {
@@ -62,10 +62,18 @@
 }
 
 /* Custom colors for cards */
-.admin-card.total { background: #97d877; }
-.admin-card.request { background: rgb(137, 212, 186); }
-.admin-card.pending { background: rgb(137, 88, 133); }
-.admin-card.pickup { background: rgb(113, 102, 160); }
+.admin-card.total {
+  background: #97d877;
+}
+.admin-card.request {
+  background: rgb(137, 212, 186);
+}
+.admin-card.pending {
+  background: rgb(137, 88, 133);
+}
+.admin-card.pickup {
+  background: rgb(113, 102, 160);
+}
 
 /* === Quick Links Section === */
 .quick-links-title {
@@ -127,10 +135,11 @@
   background: white;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.user-table th, .user-table td {
+.user-table th,
+.user-table td {
   padding: 12px 15px;
   border-bottom: 1px solid #ddd;
   text-align: left;
@@ -144,4 +153,81 @@
 
 .user-table tr:hover {
   background-color: #f2f8ff;
+}
+
+/* === Buttons inside table === */
+.verify-btn,
+.reject-btn {
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  margin-right: 6px;
+}
+
+.verify-btn {
+  background: #16a34a;
+  color: #fff;
+}
+
+.reject-btn {
+  background: #dc2626;
+  color: #fff;
+}
+
+/* === Error message === */
+.admin-container.error {
+  color: #dc2626;
+  padding: 2rem;
+}
+
+/* === Line Graph below Quick Navigation === */
+.admin-graph-wrapper {
+  margin-top: 30px;
+  padding: 20px 24px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.admin-graph-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #023117;
+  margin-bottom: 10px;
+}
+
+.admin-graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.admin-graph-legend .legend-line {
+  width: 18px;
+  height: 3px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+/* Legend colors matching cards */
+.admin-graph-legend .legend-line.users {
+  background: #97d877;
+}
+.admin-graph-legend .legend-line.requests {
+  background: rgb(137, 212, 186);
+}
+.admin-graph-legend .legend-line.pending {
+  background: rgb(137, 88, 133);
+}
+
+.admin-line-chart-container {
+  width: 100%;
+  height: 280px;
+  margin-top: 8px;
 }

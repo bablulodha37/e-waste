@@ -82,7 +82,7 @@
 
 .stat-card {
   flex: 1;
-  padding: 50px 55px;
+  padding: 45px 50px;
   border-radius: 22px;
   color: white;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -236,4 +236,57 @@
   font-size: 0.9rem;
   color: #6c757d;
   z-index: 1;
+}
+
+/* --- LINE GRAPH (below cards) --- */
+.stats-graph-wrapper {
+  margin-top: 20px;
+  padding: 20px 24px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.graph-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #023117;
+  margin-bottom: 10px;
+}
+
+.stats-graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.stats-graph-legend .legend-line {
+  width: 18px;
+  height: 3px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+/* Same colors as stat cards */
+.stats-graph-legend .legend-line.total {
+  background: #86967e;
+}
+.stats-graph-legend .legend-line.pending {
+  background: rgb(94, 145, 127);
+}
+.stats-graph-legend .legend-line.approved {
+  background: rgb(201, 156, 255);
+}
+.stats-graph-legend .legend-line.completed {
+  background: rgb(94, 188, 229);
+}
+
+.line-chart-container {
+  width: 100%;
+  height: 280px;
+  margin-top: 8px;
 }

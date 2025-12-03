@@ -2,8 +2,8 @@
 /* --- FOOTER CONTAINER & LAYOUT --- */
 /* -------------------------------------- */
 .footer-container {
-    background-color: #333; /* Dark background */
-    color: #fff; /* White text */
+    background-color: #def0e9; /* Dark background */
+    color: #0c0101; /* White text */
     padding: 40px 20px;
     font-family: Arial, sans-serif;
 }
@@ -33,7 +33,7 @@
 .footer-section p {
     font-size: 0.95em;
     line-height: 1.6;
-    color: #ccc; 
+    color: #080000; 
     margin-bottom: 10px;
 }
 
@@ -58,7 +58,7 @@
 }
 
 .footer-section.links a {
-    color: #ccc; 
+    color: #0b0000; 
     line-height: 1.4;
     text-decoration: none;
     transition: color 0.3s ease;
@@ -79,7 +79,7 @@
 }
 
 .social-icons a {
-    color: #fff; 
+    color: #09f7bf; 
     font-size: 1.5em; 
     transition: color 0.3s ease, transform 0.3s ease;
 }

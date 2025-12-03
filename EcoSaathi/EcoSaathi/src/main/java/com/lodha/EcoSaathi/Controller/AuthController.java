@@ -55,13 +55,18 @@ public class AuthController {
         return userService.updateProfilePicture(id, file);
     }
 
-    // ✅ Submit new e-waste pickup request
+    // ✅ Submit new e-waste pickup request (UPDATED FORM)
     @PostMapping("/user/{id}/request")
     public Request submitRequest(
             @PathVariable Long id,
             @RequestParam("type") String type,
             @RequestParam("description") String description,
             @RequestParam(value = "pickupLocation", required = false) String pickupLocation,
+            @RequestParam("deviceType") String deviceType,
+            @RequestParam("brandModel") String brandModel,
+            @RequestParam("condition") String condition,
+            @RequestParam("quantity") Integer quantity,
+            @RequestParam(value = "additionalRemarks", required = false) String additionalRemarks,
             @RequestParam("files") MultipartFile[] files) {
 
         if (files == null || files.length == 0) {
@@ -75,6 +80,13 @@ public class AuthController {
         requestDetails.setType(type);
         requestDetails.setDescription(description);
         requestDetails.setPickupLocation(pickupLocation);
+
+        // 🔹 NEW FIELDS FROM FORM
+        requestDetails.setDeviceType(deviceType);
+        requestDetails.setBrandModel(brandModel);
+        requestDetails.setCondition(condition);
+        requestDetails.setQuantity(quantity);
+        requestDetails.setAdditionalRemarks(additionalRemarks);
 
         return requestService.submitRequestWithPhotos(id, requestDetails, List.of(files));
     }
@@ -97,4 +109,21 @@ public class AuthController {
         return requestService.findById(requestId);
     }
 
+    // 🔹 Forgot Password - Step 1: Request OTP
+    @PostMapping("/forgot-password")
+    public String forgotPassword(@RequestParam String email) {
+        userService.forgotPassword(email);
+        return "OTP sent to your email.";
+    }
+
+    // 🔹 Forgot Password - Step 2: Reset with OTP
+    @PostMapping("/reset-password")
+    public String resetPassword(@RequestBody Map<String, String> payload) {
+        String email = payload.get("email");
+        String otp = payload.get("otp");
+        String newPassword = payload.get("newPassword");
+
+        userService.resetPassword(email, otp, newPassword);
+        return "Password reset successfully. You can now login.";
+    }
 }

@@ -12,21 +12,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Basic user details
     private String firstName;
     private String lastName;
-
     private String email;
     private String phone;
     private String password;
     private boolean verified = false;
     private String role = "USER";
-
-    //  Pickup Address
     private String pickupAddress;
-
-    //  Profile Picture
     private String profilePictureUrl;
+
+    // 🔹 NEW: Forgot Password OTP fields
+    private String resetPasswordOtp;
+    private LocalDateTime resetPasswordOtpExpiry;
 
     public boolean getIsAdmin() {
         return "ADMIN".equals(this.role);

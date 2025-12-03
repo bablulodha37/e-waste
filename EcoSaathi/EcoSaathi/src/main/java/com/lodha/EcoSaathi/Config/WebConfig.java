@@ -17,7 +17,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // /images/** URL patterns को file.upload-dir (जो ./uploads है) में मैप करें
         String uploadPath = "file:" + fileStorageProperties.getUploadDir() + "/";
 
         registry.addResourceHandler("/images/**")

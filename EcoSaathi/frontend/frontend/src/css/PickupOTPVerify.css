@@ -1,0 +1,68 @@
+.otp-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: rgba(0,0,0,0.1);
+}
+
+.otp-box {
+  background: white;
+  padding: 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.15);
+  width: 350px;
+  text-align: center;
+}
+
+.otp-box h2 {
+  margin-bottom: 10px;
+  color: #023117;
+}
+
+.otp-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #999;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-top: 15px;
+}
+
+.otp-error {
+  margin-top: 10px;
+  color: red;
+  font-weight: bold;
+}
+
+.otp-submit-btn {
+  width: 100%;
+  padding: 12px;
+  background: #16a34a;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.otp-submit-btn:hover {
+  background: #0d7a35;
+}
+
+.otp-cancel-btn {
+  width: 100%;
+  padding: 12px;
+  background: #f44336;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.otp-cancel-btn:hover {
+  background: #c62828;
+}

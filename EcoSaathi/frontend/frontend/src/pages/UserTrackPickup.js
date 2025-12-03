@@ -1,29 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { api } from '../api';
-import LiveTrackingMap from "../components/LiveTrackingMap";
+import { api } from "../api";
+
 export default function UserTrackPickup() {
   const { requestId } = useParams();
-  const [pickup, setPickup] = useState(null);
-  const fetchPickupLocation = async () => {
+  const [url, setUrl] = useState(null);
+
+  const fetchUrl = async () => {
     try {
       const data = await api(`/api/pickup/request/${requestId}/pickup-location`);
-      setPickup(data);
+      setUrl(data.googleMapsUrl);
+
+      // 🔥 Open in new tab
+      window.open(data.googleMapsUrl, "_blank");
     } catch (err) {
-      console.error("Error fetching pickup location:", err);
+      console.error(err);
     }
   };
+
   useEffect(() => {
-    fetchPickupLocation();
-    const interval = setInterval(fetchPickupLocation, 4000);
-    return () => clearInterval(interval);
+    fetchUrl();
   }, [requestId]);
-  if (!pickup) return <p style={{ textAlign: "center" }}>Loading pickup location…</p>;
+
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>🚛 Pickup Person Live Location</h2>
-      <p><strong>Name:</strong> {pickup.name}</p>
-      <LiveTrackingMap latitude={pickup.latitude} longitude={pickup.longitude} label={pickup.name} />
+    <div style={{ padding: "20px", textAlign: "center" }}>
+      <h2>Opening Google Maps...</h2>
+      <p>If Google Maps didn’t open, <a href={url} target="_blank">click here</a>.</p>
     </div>
   );
 }

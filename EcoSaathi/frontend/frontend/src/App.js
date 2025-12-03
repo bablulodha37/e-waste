@@ -7,6 +7,9 @@ import AboutUs from "./components/AboutUs";
 import UserTrackPickup from "./pages/UserTrackPickup";
 import PickupTrackUser from "./pages/PickupTrackUser";
 import Contact from "./components/Contact";
+import ChatBot from "./components/ChatBot";
+import PickupOTPVerify from "./components/PickupOTPVerify";
+import UserSupport from "./components/UserSupport";
 import PickupProfile from "./components/PickupProfile";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./ProtectedRoute";
@@ -17,7 +20,7 @@ import "./css/App.css";
 // Lazy loaded components
 const PickupDashboard = lazy(() => import("./components/PickupDashboard"));
 const PickupRequestManagement = lazy(() => import("./components/PickupRequestManagement"));
-
+const ForgotPassword = lazy(() => import("./components/ForgotPassword"));
 const Home = lazy(() => import("./components/Home"));
 const Login = lazy(() => import("./components/Login"));
 const Register = lazy(() => import("./components/Register"));
@@ -42,6 +45,7 @@ export default function App() {
     <div className="app-container">
       <Router>
         <NavBar />
+        <ChatBot />
 
         <main className="main-content">
           <Suspense
@@ -53,13 +57,15 @@ export default function App() {
           >
             <Routes>
 
+            <Route path="/support/:id" element={<ProtectedRoute><UserSupport /></ProtectedRoute>} />
+            
               {/* PICKUP PERSON ROUTES */}
               <Route path="/pickup-dashboard/:id" element={<ProtectedRoute><PickupDashboard /></ProtectedRoute>} />
               <Route path="/pickup-profile/:id" element={<ProtectedRoute><PickupProfile /></ProtectedRoute>} />
 
               {/* Request Management (TABLE PAGE) */}
               <Route path="/pickup/requests/:id" element={<ProtectedRoute><PickupRequestManagement /></ProtectedRoute>} />
-
+              <Route path="/forgot-password" element={<ForgotPassword />} />
               {/* Public Routes */}
               <Route path="/" element={<Home />} />
               <Route path="/services" element={<Services />} />
@@ -67,6 +73,8 @@ export default function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+<Route path="/pickup/verify-otp/:requestId" element={<PickupOTPVerify />} />
+
 
               {/* USER ROUTES */}
               <Route path="/dashboard/:id" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />

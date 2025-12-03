@@ -14,10 +14,12 @@ public class PickupPerson {
     private String name;
     private String phone;
     private String email;
+    private String password;
 
-    private String password; // ✅ Added for login authentication
+    // 🔹 NEW: Vehicle Details
+    private String vehicleNumber;
+    private String vehicleType; // e.g., "Van", "Truck", "Bike"
 
     private Double latitude;
     private Double longitude;
-
 }

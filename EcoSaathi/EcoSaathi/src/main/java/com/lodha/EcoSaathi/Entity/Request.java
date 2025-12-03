@@ -13,37 +13,35 @@ public class Request {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Type of Device (e.g., "laptop", "Computer")
     private String type;
-
     private String description;
-
-    // The address for the pickup (can default to user's registered address)
     private String pickupLocation;
-
-    // Status can be: PENDING, APPROVED, SCHEDULED, COMPLETED, REJECTED
     private String status = "PENDING";
+    private String pickupOtp;
 
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime scheduledTime; // Admin sets this
 
-    //  5 फ़ोटो के URLs को स्टोर करने के लिए
+    // 🔹 NEW FIELDS FOR REQUEST FORM
+    private String deviceType;         // e.g. Laptop, Mobile, TV, Printer, etc.
+    private String brandModel;         // Brand & Model text
+    @Column(name = "device_condition")
+    private String condition;          // Working / Damaged / Dead
+    private Integer quantity;          // Quantity
+    private String additionalRemarks;  // Additional remarks from user
+
     @ElementCollection
     @CollectionTable(name = "request_photos", joinColumns = @JoinColumn(name = "request_id"))
     @Column(name = "photo_url")
     private List<String> photoUrls;
 
-    // Link the request to a specific user
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // Added FetchType.EAGER to ensure the PickupPerson data is loaded
-    //         immediately, so it appears in the user's request history JSON response.
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "pickup_person_id")
     private PickupPerson assignedPickupPerson;
 
-    //  Field to clearly indicate if a person has been assigned
     private boolean isPickupPersonAssigned = false;
 }

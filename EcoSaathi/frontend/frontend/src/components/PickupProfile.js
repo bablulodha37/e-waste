@@ -27,6 +27,10 @@ export default function PickupProfile() {
         <p><strong>Name:</strong> {profile.name}</p>
         <p><strong>Email:</strong> {profile.email}</p>
         <p><strong>Phone:</strong> {profile.phone}</p>
+        <hr/>
+        <h4>Vehicle Details</h4>
+        <p><strong>Type:</strong> {profile.vehicleType || "N/A"}</p>
+        <p><strong>Number:</strong> {profile.vehicleNumber || "N/A"}</p>
       </div>
     </div>
   );

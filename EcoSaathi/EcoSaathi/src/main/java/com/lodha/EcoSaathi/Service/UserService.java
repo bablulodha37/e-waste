@@ -8,7 +8,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-// ! REMOVED: java.time.LocalDateTime, java.util.Random
+// ✅ ADDED THESE IMPORTS BACK
+import java.time.LocalDateTime;
+import java.util.Random;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -96,9 +98,6 @@ public class UserService {
         // Set verified to false to reject/unverify the user
         user.setVerified(false);
 
-        // Also, optionally change the role to prevent future login if you want a complete block
-        // user.setRole("REJECTED_USER");
-
         return userRepository.save(user);
     }
 
@@ -175,14 +174,57 @@ public class UserService {
         return userRepository.save(existingUser);
     }
 
+    // 🔹 1. Generate OTP for Forgot Password
+    public void forgotPassword(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with this email."));
+
+        // ✅ Random is now imported and will work
+        String otp = String.valueOf(new Random().nextInt(900000) + 100000); // 6 digits
+        user.setResetPasswordOtp(otp);
+
+        // ✅ LocalDateTime is now imported and will work
+        user.setResetPasswordOtpExpiry(LocalDateTime.now().plusMinutes(10)); // Valid for 10 mins
+
+        userRepository.save(user);
+        emailService.sendForgotPasswordOtp(user.getEmail(), otp);
+    }
+
+    // 🔹 2. Verify OTP and Reset Password
+    public void resetPassword(String email, String otp, String newPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found."));
+
+        if (user.getResetPasswordOtp() == null || !user.getResetPasswordOtp().equals(otp)) {
+            throw new RuntimeException("Invalid OTP.");
+        }
+
+        if (user.getResetPasswordOtpExpiry().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("OTP has expired.");
+        }
+
+        // Reset password
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setResetPasswordOtp(null); // Clear OTP
+        user.setResetPasswordOtpExpiry(null);
+
+        userRepository.save(user);
+    }
+
     public User findById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
     }
+
 
     public List<UserDto> findAllUsersDto() {
         return userRepository.findAll().stream()
                 .map(UserDto::new)
                 .collect(Collectors.toList());
     }
+    // 🔹 Add this at the bottom of UserService class
+    public long countAllUsers() {
+        return userRepository.count();
+    }
+
 }

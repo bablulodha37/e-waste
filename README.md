@@ -1,256 +1,286 @@
-🌱 EcoSaathi – Sustainable E-Waste Management Platform
+# ♻️ EcoSaathi – Smart E-Waste Management Platform
 
-EcoSaathi is a full-stack web application designed to promote responsible e-waste recycling, connect users with certified pickup partners, and provide admins with a powerful dashboard for managing users, requests, issues, and pickup personnel.
+EcoSaathi is a full-stack platform designed to simplify and digitize e-waste pickup management.  
+It connects **Users**, **Pickup Agents**, and **Admins** through an automated system featuring:
 
-This platform supports secure data destruction, OTP-based verification, real-time tracking, and automated email notifications.
+- Automated request handling  
+- Live pickup tracking  
+- OTP-based verification  
+- AI Chatbot  
+- Issue/Ticket management  
+- Certificate generation  
+- Email notifications  
+- Admin dashboard  
 
-📌 Features Overview
-👤 Users
+---
 
-Register & Login
+## 🌍 Vision
+To create a cleaner and greener environment by making e-waste recycling simple, accessible, and transparent.
 
-Submit detailed e-waste pickup requests
+---
 
-Upload device photos (1–5 images)
+# 🚀 Features
 
-Real-time pickup tracking (via Google Maps)
+## 👤 **User Features**
+✔ Register & Login  
+✔ Submit e-waste pickup requests with images  
+✔ Track request status  
+✔ Upload profile picture  
+✔ Auto-generated OTP for secure handover  
+✔ View completed request stats  
+✔ Download Eco-Certificate after 10 completed pickups  
+✔ Raise support tickets & chat with admin  
+✔ Live pickup tracking (Google Maps direction)
 
-View request history
+---
 
-Download eco-certificate after 10 successful pickups
+## 🛠️ **Admin Features**
+✔ Manage all users (verify / reject)  
+✔ Manage pickup requests (approve, reject, schedule, complete)  
+✔ Assign Pickup Person  
+✔ Add/Edit/Delete Pickup Persons  
+✔ View platform analytics  
+✔ Issue management (reply, close ticket)  
+✔ Dashboard stats + Line graph  
+✔ Auto-email notifications for every important action  
+✔ Auto Admin creation on first app run  
 
-File support tickets & chat with support
+---
 
-Reset password via OTP
+## 🚛 **Pickup Person App**
+✔ Login via email/password  
+✔ View assigned requests  
+✔ Update live location  
+✔ Mark request completed using OTP  
+✔ View pickup details  
+✔ Simple clean UI  
 
-Update profile & upload profile picture
+---
 
-🚛 Pickup Persons
+## 🤖 AI ChatBot  
+✔ Smart automated replies  
+✔ Page-aware bot  
+✔ User-aware bot  
+✔ Simple REST API: `/api/bot/chat`
 
-Login with email & password
+---
 
-See assigned requests
+## ✉ Email Notification System
+Uses **JavaMailSender** to send rich HTML templates for:
 
-Update live GPS location
+- Welcome Email  
+- Request Submitted  
+- Request Status Updates  
+- Pickup Person account onboarding  
+- Password reset OTP  
+- Issue reply and closure  
 
-Complete pickups using OTP verification
+Asynchronous sending via `@Async`.
 
-Receive email notifications when assigned
+---
 
-🛠️ Admin Panel
+## 🧾 Certificate Generator (HTML → PDF)
+✔ Beautiful certificate template  
+✔ Uses **html2pdf.js**  
+✔ Unlock after completing 10 pickups  
+✔ Auto user name, date, count  
 
-Manage all users (verify/reject)
+---
 
-Manage pickup requests (approve, schedule, assign pickup partner, complete)
+## 🎟 Advanced Support / Ticket System
+✔ Users can raise issues  
+✔ Chat-like conversation panel  
+✔ Admin/Users both can reply  
+✔ Email updates on each reply  
+✔ Ticket statuses: `OPEN`, `WAITING_FOR_USER`, `RESOLVED`, `CLOSED`
 
-Add/update/delete pickup persons
+---
 
-View issue tickets & reply
+# 🏗 Tech Stack
 
-Dashboard analytics: users, requests, graph view
+## Backend (Spring Boot)
+- Java 17  
+- Spring Boot  
+- Spring Security  
+- JPA / Hibernate  
+- MySQL  
+- Java Mail Sender  
+- Lombok  
+- Docker-ready structure  
 
-Auto-generate emails:
+## Frontend (React)
+- React 18  
+- Axios  
+- React Router  
+- Recharts  
+- HTML2PDF.js  
+- Custom UI with CSS  
 
-Welcome mail
+---
 
-OTP mail
+# 📁 Folder Structure (Important)
 
-Request updates
+```
+EcoSaathi/
+ ├── backend/
+ │    ├── Config/
+ │    ├── Controller/
+ │    ├── Entity/
+ │    ├── Service/
+ │    ├── Repository/
+ │    ├── application.properties
+ │    └── EcoSaathiApplication.java
+ │
+ └── frontend/
+      ├── src/components/
+      ├── src/css/
+      ├── src/pages/
+      ├── public/
+      └── package.json
+```
 
-Assignment notifications
+---
 
-Issue replies
+# ⚙ Backend Setup
 
-Certificate eligibility
+### 1. Clone Repository
+```bash
+git clone https://github.com/yourname/EcoSaathi.git
+cd EcoSaathi/backend
+```
 
-🧩 Tech Stack
-Backend
-
-Java 17
-
-Spring Boot
-
-Spring MVC
-
-Spring Security
-
-Spring Data JPA
-
-MySQL
-
-BCrypt Password Encoder
-
-JavaMail Sender (for email notifications)
-
-Frontend
-
-React.js
-
-Axios
-
-Recharts (graphs)
-
-HTML2PDF.js (certificate generator)
-
-Other Integrations
-
-OpenStreetMap Nominatim API (Address autocomplete)
-
-Google Maps Direction API (Live tracking URL)
-
-📂 Project Structure
-Backend (Spring Boot)
-src/
- └── main/java/com/lodha/EcoSaathi
-        ├── Config/         # Security, file storage, data loader
-        ├── Controller/     # User, Admin, Pickup, Auth, Chatbot
-        ├── Service/        # Business logic
-        ├── Repository/     # JPA Repositories
-        ├── Entity/         # Models (User, Request, Issue, PickupPerson)
-
-Frontend (React)
-src/
- ├── components/
- │      ├── AddressAutocomplete.js
- │      ├── Admin.js
- │      ├── ChatBot.js
- │      ├── CertificateGenerator.js
- │      ├── RequestManagement.js
- │      ├── IssueManagement.js
- │      ├── PickupPersonManagement.js
- │      ├── PhotoPreviewModal.js
- │      ├── PickupOTPVerify.js
- │      ├── UserSupport.js
- ├── css/
- │      ├── Home.css
- │      ├── Login.css
- │      ├── Certificate.css
- │      ├── ChatBot.css
- │      ├── UserSupport.css
- │      └── etc…
- ├── pages/
- ├── api.js
-
-⚙️ Backend Setup
-1. Clone the Project
-git clone https://github.com/yourusername/ecosaathi.git
-cd ecosaathi
-
-2. Configure MySQL
-
-Create a database:
-
+### 2. Configure MySQL
+Create DB:
+```sql
 CREATE DATABASE ecosaathi;
+```
 
-3. Configure application.properties
+### 3. Configure `application.properties`
+```
 spring.datasource.url=jdbc:mysql://localhost:3306/ecosaathi
-spring.datasource.username=YOUR_DB_USER
-spring.datasource.password=YOUR_DB_PASSWORD
+spring.datasource.username=root
+spring.datasource.password=YOUR_PASSWORD
 
-file.upload-dir=uploads/
+file.upload-dir=uploads
 
 app.mail.sender=your-email@gmail.com
 app.mail.sender-name=EcoSaathi
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
 spring.mail.username=your-email@gmail.com
-spring.mail.password=your-app-password
+spring.mail.password=app-password
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+```
 
-4. Run Backend
+### 4. Run Backend
+```bash
 mvn spring-boot:run
+```
 
+---
 
-A default admin account will auto-generate:
-Email: admin@ecosaathi.com
+# 🖥 Frontend Setup
 
-Password: Admin@123
-
-🖥️ Frontend Setup (React)
-1. Install Dependencies
+### 1. Install packages
+```bash
+cd ../frontend
 npm install
+```
 
-2. Start Development Server
+### 2. Start React app
+```bash
 npm start
+```
 
-3. Access the App
+Frontend URL: `http://localhost:3000`  
+Backend URL: `http://localhost:8080`
 
-User Panel → http://localhost:3000
+---
 
-Admin Panel → http://localhost:3000/admin
+# 🔑 API Endpoints (Short Overview)
 
-Pickup Dashboard → http://localhost:3000/pickup-dashboard/:id
+## User Auth (`/api/auth`)
+- POST `/register`
+- POST `/login`
+- POST `/forgot-password`
+- POST `/reset-password`
+- POST `/user/{id}/request`
+- GET  `/user/{id}/stats`
+- POST `/user/{id}/profile-picture`
 
-📧 Email Notifications Included
+## Admin (`/api/admin`)
+User Management  
+Pickup Person Management  
+Request Management  
+Issue Management  
 
-User Welcome Email
+## Pickup Person (`/api/pickup`)
+- POST `/login`
+- GET `/id/requests`
+- PUT `/request/complete/{id}`  
 
-Pickup Person Welcome Email
+## Issue System (`/api/issues`)
+- POST `/create/user/{id}`
+- GET `/user/{id}`
+- POST `/{issueId}/reply`
+- GET `/{issueId}`  
 
-Forgot Password OTP
+---
 
-Request Submitted
+# 🗺 Live Tracking
+Uses a Google Maps formatted URL:
+```
+https://www.google.com/maps/dir/?api=1&origin=USER_LOCATION&destination=PICKUP_PERSON_LAT_LNG
+```
 
-Request Approved
+---
 
-Request Scheduled
+# 🎨 UI Features
+- Modern animated home page  
+- Admin dashboard with graphs  
+- Certificates  
+- Chatbot  
+- Ticket system  
+- OTP screens  
+- Photo zoom modal  
+- Clean responsive UI  
 
-Request Completed
+---
 
-Issue Reply / Issue Closed
+# 📸 Screenshots  
+(Add your screenshots later)
 
-Pickup Assignment with vehicle details
+```
+![Dashboard](screenshots/dashboard.png)
+![Requests](screenshots/requests.png)
+![Certificate](screenshots/certificate.png)
+![Chat](screenshots/chat.png)
+```
 
-🔒 Security
+---
 
-Spring Security configuration
+# 🧩 Future Enhancements
+- Mobile app  
+- Push notifications  
+- Real-time live tracking (WebSockets)  
+- Reward system  
+- Route optimization  
 
-BCrypt password encryption
+---
 
-OTP-based request verification
+# 🤝 Contributing
+Pull requests are welcome!  
+For major changes, open an issue first.
 
-Role-based access (USER, ADMIN, PICKUP_PERSON)
+---
 
-🎖️ Certificate Generator
+# 📜 License
+This project is **Open Source** under the **MIT License**.
 
-Auto-unlocks after 10 completed pickups
+---
 
-User can download PDF
+# ❤️ Credits
+Developed by **Bablu Lodha**  
+Made with passion for a cleaner planet! 🌍♻️
 
-Beautiful, professional certificate layout
-
-🗺️ Live Tracking
-
-Pickup person updates GPS →
-User gets a Google Maps navigation link with live coordinates.
-
-💬 Support Chat System
-
-Ticket creation
-
-Real-time conversation
-
-Status updates (OPEN, WAITING_FOR_USER, RESOLVED, CLOSED)
-
-📦 Photo Upload
-
-Upload up to 5 images per request
-
-Preview with zoom & drag modal
-
-🤖 EcoSaathi AI Chatbot
-
-Integrated bot on the website
-
-Helps users with navigation, FAQs, request flow
-
-📄 License
-
-MIT License
-
-🤝 Contributing
-
-Pull requests are welcome!
-Please open an issue first to discuss the change.
-
-📞 Contact
-
-Developer: Bablu Lodha
-📧 Email → bablulodha37@gmail.com

@@ -14,15 +14,18 @@ public class IssueService {
     private final UserRepository userRepository;
     private final PickupPersonRepository pickupPersonRepository;
     private final EmailService emailService;
+    // ✅ NEW: Notification Service
+    private final NotificationService notificationService;
 
     public IssueService(IssueRepository issueRepository, IssueMessageRepository issueMessageRepository,
                         UserRepository userRepository, PickupPersonRepository pickupPersonRepository,
-                        EmailService emailService) {
+                        EmailService emailService, NotificationService notificationService) {
         this.issueRepository = issueRepository;
         this.issueMessageRepository = issueMessageRepository;
         this.userRepository = userRepository;
         this.pickupPersonRepository = pickupPersonRepository;
         this.emailService = emailService;
+        this.notificationService = notificationService;
     }
 
     // 🔒 Security Check Helper
@@ -69,7 +72,7 @@ public class IssueService {
         // Note: passing description as message, role as creator
         addReply(savedIssue.getId(), role, reporterId, description);
 
-        // ✅ 4. SEND EMAIL CONFIRMATION TO CREATOR
+        // ✅ 4. SEND EMAIL & NOTIFICATION TO CREATOR
         try {
             String emailTo = null;
             String name = null;
@@ -83,6 +86,7 @@ public class IssueService {
             }
 
             if (emailTo != null) {
+                // 📧 EMAIL
                 emailService.sendIssueReplyEmail(
                         emailTo,
                         name,
@@ -90,6 +94,11 @@ public class IssueService {
                         savedIssue.getSubject(),
                         "✅ Your support ticket has been created successfully. Our team will review it and reply shortly."
                 );
+
+                // 🔔 NOTIFICATION
+                if(user != null) {
+                    notificationService.createNotification(user, "Support Ticket #" + savedIssue.getId() + " created successfully.", "INFO");
+                }
             }
         } catch (Exception e) {
             System.err.println("Failed to send ticket creation email: " + e.getMessage());
@@ -159,6 +168,7 @@ public class IssueService {
         // Send Email only if Admin replied
         if ("ADMIN".equalsIgnoreCase(role) && emailTo != null) {
             try {
+                // 📧 EMAIL
                 emailService.sendIssueReplyEmail(
                         emailTo,
                         recipientName,
@@ -166,6 +176,17 @@ public class IssueService {
                         issue.getSubject(),
                         messageText
                 );
+
+                // 🔔 NOTIFICATION
+                if(issue.getUser() != null) {
+                    String preview = messageText.length() > 30 ? messageText.substring(0, 30) + "..." : messageText;
+                    notificationService.createNotification(
+                            issue.getUser(),
+                            "New Reply on Ticket #" + issue.getId() + ": " + preview,
+                            "INFO"
+                    );
+                }
+
             } catch (Exception e) {
                 System.out.println("Error sending email: " + e.getMessage());
             }
@@ -190,7 +211,14 @@ public class IssueService {
     public Issue closeIssue(Long issueId, String role) {
         Issue issue = issueRepository.findById(issueId).orElseThrow();
         issue.setStatus("CLOSED");
-        return issueRepository.save(issue);
+        Issue savedIssue = issueRepository.save(issue);
+
+        // 🔔 NOTIFICATION
+        if(issue.getUser() != null) {
+            notificationService.createNotification(issue.getUser(), "Ticket #" + issueId + " has been closed.", "WARNING");
+        }
+
+        return savedIssue;
     }
 
     public List<Issue> getAllIssues() { return issueRepository.findAll(); }

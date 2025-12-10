@@ -8,7 +8,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-// ✅ ADDED THESE IMPORTS BACK
 import java.time.LocalDateTime;
 import java.util.Random;
 
@@ -28,11 +27,17 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final FileStorageProperties fileStorageProperties;
     private final EmailService emailService;
+    // ✅ NEW: Notification Service
+    private final NotificationService notificationService;
 
-    public UserService(UserRepository userRepository, FileStorageProperties fileStorageProperties, EmailService emailService) {
+    public UserService(UserRepository userRepository,
+                       FileStorageProperties fileStorageProperties,
+                       EmailService emailService,
+                       NotificationService notificationService) {
         this.userRepository = userRepository;
         this.fileStorageProperties = fileStorageProperties;
         this.emailService = emailService;
+        this.notificationService = notificationService;
 
         // Ensure file upload directory exists
         try {
@@ -62,10 +67,17 @@ public class UserService {
                     savedUser.getFirstName(),
                     savedUser.getLastName()
             );
+
+            // 🔔 NOTIFICATION
+            notificationService.createNotification(
+                    savedUser,
+                    "Welcome to EcoSaathi! Your account has been created successfully.",
+                    "SUCCESS"
+            );
+
         } catch (Exception e) {
             System.err.println("Failed to send welcome email to user: " + savedUser.getEmail());
             e.printStackTrace();
-            // Don't fail registration if email fails
         }
 
         return savedUser;
@@ -78,8 +90,6 @@ public class UserService {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
-
-
         return user;
     }
 
@@ -88,7 +98,12 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
         user.setVerified(true);
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        // 🔔 NOTIFICATION
+        notificationService.createNotification(savedUser, "Your account has been verified by Admin!", "SUCCESS");
+
+        return savedUser;
     }
 
     public User unverifyUser(Long userId) {
@@ -97,7 +112,6 @@ public class UserService {
 
         // Set verified to false to reject/unverify the user
         user.setVerified(false);
-
         return userRepository.save(user);
     }
 
@@ -127,11 +141,21 @@ public class UserService {
         if (updatedUserDetails.getPhone() != null && !updatedUserDetails.getPhone().isEmpty()) {
             existingUser.setPhone(updatedUserDetails.getPhone());
         }
+
+        // Password Update Logic with Notification
         if (updatedUserDetails.getPassword() != null && !updatedUserDetails.getPassword().isEmpty()) {
             existingUser.setPassword(passwordEncoder.encode(updatedUserDetails.getPassword()));
+
+            // 🔔 NOTIFICATION
+            notificationService.createNotification(existingUser, "Security Alert: Your password was updated recently.", "WARNING");
         }
 
-        return userRepository.save(existingUser);
+        User savedUser = userRepository.save(existingUser);
+
+        // 🔔 GENERAL UPDATE NOTIFICATION
+        notificationService.createNotification(savedUser, "Your profile details have been updated.", "INFO");
+
+        return savedUser;
     }
 
     private String saveFile(MultipartFile file) {
@@ -171,6 +195,9 @@ public class UserService {
         String fileUrl = saveFile(file); // Calls the real save method
         existingUser.setProfilePictureUrl(fileUrl);
 
+        // 🔔 NOTIFICATION
+        notificationService.createNotification(existingUser, "Profile picture updated successfully.", "INFO");
+
         return userRepository.save(existingUser);
     }
 
@@ -179,15 +206,17 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found with this email."));
 
-        // ✅ Random is now imported and will work
         String otp = String.valueOf(new Random().nextInt(900000) + 100000); // 6 digits
         user.setResetPasswordOtp(otp);
-
-        // ✅ LocalDateTime is now imported and will work
         user.setResetPasswordOtpExpiry(LocalDateTime.now().plusMinutes(10)); // Valid for 10 mins
 
         userRepository.save(user);
+
+        // 📧 EMAIL
         emailService.sendForgotPasswordOtp(user.getEmail(), otp);
+
+        // 🔔 NOTIFICATION
+        notificationService.createNotification(user, "OTP sent to your email for password reset.", "WARNING");
     }
 
     // 🔹 2. Verify OTP and Reset Password
@@ -209,6 +238,9 @@ public class UserService {
         user.setResetPasswordOtpExpiry(null);
 
         userRepository.save(user);
+
+        // 🔔 NOTIFICATION
+        notificationService.createNotification(user, "Your password has been reset successfully. You can now login.", "SUCCESS");
     }
 
     public User findById(Long userId) {
@@ -226,5 +258,4 @@ public class UserService {
     public long countAllUsers() {
         return userRepository.count();
     }
-
 }

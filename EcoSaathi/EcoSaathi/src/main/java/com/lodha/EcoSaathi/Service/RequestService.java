@@ -28,17 +28,21 @@ public class RequestService {
     private final PickupPersonService pickupPersonService;
     private final FileStorageProperties fileStorageProperties;
     private final EmailService emailService;
+    // ✅ NEW: Notification Service
+    private final NotificationService notificationService;
 
     public RequestService(RequestRepository requestRepository,
                           UserRepository userRepository,
                           FileStorageProperties fileStorageProperties,
                           PickupPersonService pickupPersonService,
-                          EmailService emailService) {
+                          EmailService emailService,
+                          NotificationService notificationService) {
         this.requestRepository = requestRepository;
         this.userRepository = userRepository;
         this.fileStorageProperties = fileStorageProperties;
         this.pickupPersonService = pickupPersonService;
         this.emailService = emailService;
+        this.notificationService = notificationService;
 
         try {
             Path fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize();
@@ -177,13 +181,21 @@ public class RequestService {
         Request savedRequest = requestRepository.save(requestDetails);
 
         try {
-            // ✅ FIXED: Argument order swapped. Method expects (to, userName, requestId, otp)
+            // 📧 EMAIL
             emailService.sendRequestSubmitEmail(
                     user.getEmail(),
                     user.getFirstName() + " " + user.getLastName(),
                     savedRequest.getId(),       // Long
                     savedRequest.getPickupOtp() // String
             );
+
+            // 🔔 NOTIFICATION
+            notificationService.createNotification(
+                    user,
+                    "Request #" + savedRequest.getId() + " submitted successfully! Check email for OTP.",
+                    "SUCCESS"
+            );
+
         } catch (Exception e) {
             System.err.println("Failed to send request submission email for request: " + savedRequest.getId());
             e.printStackTrace();
@@ -281,6 +293,7 @@ public class RequestService {
 
         try {
             User user = savedRequest.getUser();
+            // 📧 EMAIL
             emailService.sendRequestStatusUpdateEmail(
                     user.getEmail(),
                     user.getFirstName() + " " + user.getLastName(),
@@ -288,6 +301,14 @@ public class RequestService {
                     oldStatus,
                     "COMPLETED"
             );
+
+            // 🔔 NOTIFICATION
+            notificationService.createNotification(
+                    user,
+                    "Request #" + savedRequest.getId() + " Completed! Thank you for recycling.",
+                    "SUCCESS"
+            );
+
         } catch (Exception e) {
             System.err.println("Failed to send completion email for request: " + requestId);
             e.printStackTrace();
@@ -328,6 +349,7 @@ public class RequestService {
 
         try {
             User user = savedRequest.getUser();
+            // 📧 EMAIL
             emailService.sendRequestStatusUpdateEmail(
                     user.getEmail(),
                     user.getFirstName() + " " + user.getLastName(),
@@ -335,6 +357,14 @@ public class RequestService {
                     oldStatus,
                     "APPROVED"
             );
+
+            // 🔔 NOTIFICATION
+            notificationService.createNotification(
+                    user,
+                    "Great News! Your Request #" + savedRequest.getId() + " is APPROVED.",
+                    "SUCCESS"
+            );
+
         } catch (Exception e) { e.printStackTrace(); }
 
         return savedRequest;
@@ -353,6 +383,7 @@ public class RequestService {
 
         try {
             User user = savedRequest.getUser();
+            // 📧 EMAIL
             emailService.sendRequestStatusUpdateEmail(
                     user.getEmail(),
                     user.getFirstName() + " " + user.getLastName(),
@@ -360,6 +391,14 @@ public class RequestService {
                     oldStatus,
                     "REJECTED"
             );
+
+            // 🔔 NOTIFICATION
+            notificationService.createNotification(
+                    user,
+                    "Update: Request #" + savedRequest.getId() + " was REJECTED. Contact support for details.",
+                    "ERROR"
+            );
+
         } catch (Exception e) { e.printStackTrace(); }
 
         return savedRequest;
@@ -385,6 +424,7 @@ public class RequestService {
 
         // 1. Notify User of Status Update (Generic)
         try {
+            // 📧 EMAIL 1
             emailService.sendRequestStatusUpdateEmail(
                     user.getEmail(),
                     user.getFirstName() + " " + user.getLastName(),
@@ -395,8 +435,8 @@ public class RequestService {
         } catch (Exception e) { e.printStackTrace(); }
 
         // 2. Notify User of Scheduled Pickup (With Vehicle Details)
-        // ✅ FIXED: Now calls sendPickupAssignmentEmail which is designed for the User and supports vehicle info
         try {
+            // 📧 EMAIL 2
             emailService.sendPickupAssignmentEmail(
                     user.getEmail(),
                     pickupPerson.getName(),
@@ -405,6 +445,14 @@ public class RequestService {
                     savedRequest.getId(),
                     scheduledTime
             );
+
+            // 🔔 NOTIFICATION
+            notificationService.createNotification(
+                    user,
+                    "Pickup Scheduled for Request #" + savedRequest.getId() + "! Check email for vehicle details.",
+                    "INFO"
+            );
+
         } catch (Exception e) { e.printStackTrace(); }
 
         return savedRequest;

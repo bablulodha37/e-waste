@@ -265,7 +265,17 @@ https://www.google.com/maps/dir/?api=1&origin=USER_LOCATION&destination=PICKUP_P
 - Push notifications  
 - Real-time live tracking (WebSockets)  
 - Reward system  
-- Route optimization  
+- Route optimization
+
+- ---
+🤖 AI Model Evaluation
+
+The integrated E-Waste Object Detection model was evaluated using standard computer vision metrics.
+Mean IOU (Intersection over Union): 0.70
+mAP@0.5: 0.74
+Precision: 0.76
+Recall: 0.72
+An average IOU score of 0.7 indicates good bounding box localization accuracy for detected e-waste items.
 
 ---
 

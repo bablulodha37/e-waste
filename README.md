@@ -49,7 +49,7 @@ To create a cleaner and greener environment by making e-waste recycling simple, 
 
 ## 🚛 **Pickup Person App**
 ✔ Login via email/password  
-✔ View assigned requests  
+✔ View assigned requests 
 ✔ Update live location  
 ✔ Mark request completed using OTP  
 ✔ View pickup details  

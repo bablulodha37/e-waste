@@ -9,7 +9,7 @@ It connects **Users**, **Pickup Agents**, and **Admins** through an automated sy
 - AI Chatbot  
 - Issue/Ticket management  
 - Certificate generation  
-- Email notifications  
+- Email notifications 
 - Admin dashboard  
 
 ---

@@ -10,7 +10,7 @@ It connects **Users**, **Pickup Agents**, and **Admins** through an automated sy
 - Issue/Ticket management  
 - Certificate generation  
 - Email notifications
-- Admin dashboard  
+- Admin dashboard 
 
 ---
 

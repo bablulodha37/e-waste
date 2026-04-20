@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/issues")z
+@RequestMapping("/api/issues")
 @CrossOrigin(origins = "http://localhost:3000") // Allow React Frontend
 public class IssueController {
 

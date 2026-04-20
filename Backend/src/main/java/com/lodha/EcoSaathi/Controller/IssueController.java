@@ -33,7 +33,7 @@ public class IssueController {
 
     // 3. Get All Issues (For Admin)
     @GetMapping("/all")
-    public List<Issue> getAllIssues() {
+    public List<Issue> getAllIssues() {zz
         // Debugging log backend console me dikhega
         System.out.println("Fetching all issues for Admin...");
         return issueService.getAllIssues();

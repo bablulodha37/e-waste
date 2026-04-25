@@ -3,7 +3,7 @@
 EcoSaathi is a full-stack platform designed to simplify and digitize e-waste pickup management.  
 It connects **Users**, **Pickup Agents**, and **Admins** through an automated system featuring:
 
-- Automated request handling  
+- Automated request handling 
 - Live pickup tracking  
 - OTP-based verification  
 - AI Chatbot  

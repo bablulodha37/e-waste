@@ -244,20 +244,7 @@ https://www.google.com/maps/dir/?api=1&origin=USER_LOCATION&destination=PICKUP_P
 - Ticket system  
 - OTP screens  
 - Photo zoom modal  
-- Clean responsive UI  
-
----
-
-# 📸 Screenshots  
-(Add your screenshots later)
-
-```
-![Dashboard](screenshots/dashboard.png)
-![Requests](screenshots/requests.png)
-![Certificate](screenshots/certificate.png)
-![Chat](screenshots/chat.png)
-```
-
+- Clean response 
 ---
 
 # 🧩 Future Enhancements
